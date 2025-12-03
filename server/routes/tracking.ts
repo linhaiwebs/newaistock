@@ -1,5 +1,5 @@
 import express from 'express';
-import { supabase } from '../db/supabase.js';
+import { supabaseAdmin } from '../db/supabaseAdmin.js';
 
 const router = express.Router();
 
@@ -7,7 +7,7 @@ router.post('/session', async (req, res) => {
   try {
     const { sessionId, ipAddress, userAgent, referrer } = req.body;
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('user_sessions')
       .upsert({
         session_id: sessionId,
@@ -34,7 +34,7 @@ router.post('/event', async (req, res) => {
   try {
     const { sessionId, eventType, stockCode, eventData } = req.body;
 
-    const { data: session } = await supabase
+    const { data: session } = await supabaseAdmin
       .from('user_sessions')
       .select('id')
       .eq('session_id', sessionId)
@@ -44,7 +44,7 @@ router.post('/event', async (req, res) => {
       return res.status(404).json({ error: 'Session not found' });
     }
 
-    const { error } = await supabase.from('user_events').insert({
+    const { error } = await supabaseAdmin.from('user_events').insert({
       session_id: session.id,
       event_type: eventType,
       stock_code: stockCode,
@@ -64,7 +64,7 @@ router.post('/conversion', async (req, res) => {
   try {
     const { sessionId, stockCode } = req.body;
 
-    const { data: session } = await supabase
+    const { data: session } = await supabaseAdmin
       .from('user_sessions')
       .select('id')
       .eq('session_id', sessionId)
@@ -74,7 +74,7 @@ router.post('/conversion', async (req, res) => {
       return res.status(404).json({ error: 'Session not found' });
     }
 
-    await supabase
+    await supabaseAdmin
       .from('stock_diagnoses')
       .update({ converted: true })
       .eq('session_id', session.id)
@@ -91,7 +91,7 @@ router.post('/duration', async (req, res) => {
   try {
     const { sessionId, duration } = req.body;
 
-    await supabase
+    await supabaseAdmin
       .from('user_sessions')
       .update({
         session_duration: duration,

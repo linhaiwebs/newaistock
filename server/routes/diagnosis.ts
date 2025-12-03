@@ -1,7 +1,7 @@
 import express from 'express';
 import { analyzeStockWithAI, getFullAIAnalysis } from '../services/aiService.js';
 import { getCachedDiagnosis, setCachedDiagnosis } from '../services/cacheService.js';
-import { supabase } from '../db/supabase.js';
+import { supabaseAdmin } from '../db/supabaseAdmin.js';
 
 const router = express.Router();
 
@@ -32,7 +32,7 @@ router.post('/analyze', async (req, res) => {
     const cached = await getCachedDiagnosis(stockCode);
 
     if (cached) {
-      await supabase.from('stock_diagnoses').insert({
+      await supabaseAdmin.from('stock_diagnoses').insert({
         session_id: sessionId,
         stock_code: stockCode,
         diagnosis_result: cached,
@@ -66,7 +66,7 @@ router.post('/analyze', async (req, res) => {
 
     await setCachedDiagnosis(stockCode, fullResult);
 
-    await supabase.from('stock_diagnoses').insert({
+    await supabaseAdmin.from('stock_diagnoses').insert({
       session_id: sessionId,
       stock_code: stockCode,
       diagnosis_result: fullResult,

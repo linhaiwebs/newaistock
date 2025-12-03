@@ -1,6 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
-import { supabase } from '../db/supabase.js';
+import { supabaseAdmin } from '../db/supabaseAdmin.js';
 import { generateToken, authenticateToken, AuthRequest } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -13,7 +13,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Username and password required' });
     }
 
-    const { data: user, error } = await supabase
+    const { data: user, error } = await supabaseAdmin
       .from('admin_users')
       .select('*')
       .eq('username', username)
@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    await supabase
+    await supabaseAdmin
       .from('admin_users')
       .update({ last_login: new Date().toISOString() })
       .eq('id', user.id);
@@ -73,7 +73,7 @@ router.post('/create-admin', async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('admin_users')
       .insert({
         username,
