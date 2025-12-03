@@ -191,11 +191,9 @@ export function TemplateModern({ template, getContent }: TemplateProps) {
         </div>
       </div>
 
-      {template.footerConfig && (
-        <div className="relative mt-16 border-t border-cyan-500/20">
-          <Footer footerConfig={template.footerConfig} variant="modern" />
-        </div>
-      )}
+      <div className="relative mt-16 border-t border-cyan-500/20">
+        <Footer footerConfig={template.footerConfig} variant="modern" />
+      </div>
     </div>
   );
 }

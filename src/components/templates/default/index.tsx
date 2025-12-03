@@ -182,11 +182,9 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
         </div>
       </div>
 
-      {template.footerConfig && (
-        <div className="border-t border-gray-200">
-          <Footer footerConfig={template.footerConfig} variant="default" />
-        </div>
-      )}
+      <div className="border-t border-gray-200">
+        <Footer footerConfig={template.footerConfig} variant="default" />
+      </div>
     </div>
   );
 }

@@ -239,11 +239,9 @@ export function TemplateProfessional({ template, getContent }: TemplateProps) {
         </div>
       </div>
 
-      {template.footerConfig && (
-        <div className="relative mt-16 border-t border-rose-200">
-          <Footer footerConfig={template.footerConfig} variant="professional" />
-        </div>
-      )}
+      <div className="relative mt-16 border-t border-rose-200">
+        <Footer footerConfig={template.footerConfig} variant="professional" />
+      </div>
     </div>
   );
 }

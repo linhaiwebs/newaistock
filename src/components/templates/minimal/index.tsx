@@ -179,11 +179,9 @@ export function TemplateMinimal({ template, getContent }: TemplateProps) {
         </div>
       </div>
 
-      {template.footerConfig && (
-        <div className="relative mt-16 border-t border-emerald-200">
-          <Footer footerConfig={template.footerConfig} variant="minimal" />
-        </div>
-      )}
+      <div className="relative mt-16 border-t border-emerald-200">
+        <Footer footerConfig={template.footerConfig} variant="minimal" />
+      </div>
     </div>
   );
 }

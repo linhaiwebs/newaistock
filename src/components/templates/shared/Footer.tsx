@@ -2,7 +2,7 @@ import { FooterConfig } from '../../../types/template';
 import ComplianceDisclaimer from './ComplianceDisclaimer';
 
 interface FooterProps {
-  footerConfig: FooterConfig;
+  footerConfig?: FooterConfig;
   variant?: 'default' | 'modern' | 'minimal' | 'professional';
   className?: string;
 }
