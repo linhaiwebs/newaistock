@@ -1,6 +1,7 @@
 import { TemplateProps } from '../../../types/template';
 import { useStockDiagnosis } from '../../../hooks/useStockDiagnosis';
 import { BarChart3, Loader2, ArrowRight, ArrowLeft, Circle, Square, Triangle } from 'lucide-react';
+import Footer from '../shared/Footer';
 
 export function TemplateDefault({ template, getContent }: TemplateProps) {
   const diagnosis = useStockDiagnosis();
@@ -181,11 +182,11 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
         </div>
       </div>
 
-      <div className="border-t border-gray-200 py-8">
-        <div className="max-w-6xl mx-auto px-6 text-center text-sm text-gray-500">
-          <p>{getContent('footer_text', 'Modern Stock Analysis Platform')}</p>
+      {template.footerConfig && (
+        <div className="border-t border-gray-200">
+          <Footer footerConfig={template.footerConfig} variant="default" />
         </div>
-      </div>
+      )}
     </div>
   );
 }

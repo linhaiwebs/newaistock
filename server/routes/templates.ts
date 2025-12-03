@@ -3,6 +3,7 @@ import { supabase } from '../db/supabase.js';
 import { supabaseAdmin } from '../db/supabaseAdmin.js';
 import { authenticateToken, AuthRequest } from '../middleware/auth.js';
 import { templateScanner } from '../services/templateScanner.js';
+import { domainDetector } from '../services/domainDetector.js';
 
 const router = express.Router();
 
@@ -37,6 +38,10 @@ router.get('/active', async (req, res) => {
       };
     });
 
+    // 获取当前域名的配置（包含footer_config）
+    const domainConfig = await domainDetector.getConfigForRequest(req);
+    const footerConfig = domainConfig?.footer_config || null;
+
     res.json({
       template: {
         id: template.id,
@@ -45,6 +50,7 @@ router.get('/active', async (req, res) => {
         config: template.config,
       },
       content: contentMap,
+      footerConfig,
     });
   } catch (error) {
     console.error('Get active template error:', error);

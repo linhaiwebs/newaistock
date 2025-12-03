@@ -1,6 +1,7 @@
 import { TemplateProps } from '../../../types/template';
 import { useStockDiagnosis } from '../../../hooks/useStockDiagnosis';
 import { Rocket, Loader2, ArrowRight, Cpu, Network, Binary, Zap, ArrowLeft } from 'lucide-react';
+import Footer from '../shared/Footer';
 
 export function TemplateModern({ template, getContent }: TemplateProps) {
   const diagnosis = useStockDiagnosis();
@@ -190,9 +191,11 @@ export function TemplateModern({ template, getContent }: TemplateProps) {
         </div>
       </div>
 
-      <div className="relative mt-16 text-center text-sm text-cyan-500/40 font-mono pb-8">
-        <p>{getContent('footer_text', 'POWERED BY QUANTUM AI SYSTEMS')}</p>
-      </div>
+      {template.footerConfig && (
+        <div className="relative mt-16 border-t border-cyan-500/20">
+          <Footer footerConfig={template.footerConfig} variant="modern" />
+        </div>
+      )}
     </div>
   );
 }

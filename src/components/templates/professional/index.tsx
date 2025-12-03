@@ -1,6 +1,7 @@
 import { TemplateProps } from '../../../types/template';
 import { useStockDiagnosis } from '../../../hooks/useStockDiagnosis';
 import { BarChart3, Loader2, ArrowRight, ArrowLeft, Waves, Mountain, Fan } from 'lucide-react';
+import Footer from '../shared/Footer';
 
 export function TemplateProfessional({ template, getContent }: TemplateProps) {
   const diagnosis = useStockDiagnosis();
@@ -238,14 +239,11 @@ export function TemplateProfessional({ template, getContent }: TemplateProps) {
         </div>
       </div>
 
-      <div className="relative mt-16 text-center pb-8">
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <div className="w-8 h-1 bg-rose-400"></div>
-          <div className="w-4 h-1 bg-pink-400"></div>
-          <div className="w-2 h-1 bg-indigo-400"></div>
+      {template.footerConfig && (
+        <div className="relative mt-16 border-t border-rose-200">
+          <Footer footerConfig={template.footerConfig} variant="professional" />
         </div>
-        <p className="text-sm text-indigo-600">{getContent('footer_text', '和の心で紡ぐ投資の未来')}</p>
-      </div>
+      )}
     </div>
   );
 }

@@ -12,6 +12,7 @@ interface DomainConfig {
   robots_config: any;
   ads_txt_content?: string;
   seo_config: any;
+  footer_config?: any;
   is_active: boolean;
   is_default: boolean;
 }

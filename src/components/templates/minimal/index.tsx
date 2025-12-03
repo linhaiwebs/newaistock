@@ -1,6 +1,7 @@
 import { TemplateProps } from '../../../types/template';
 import { useStockDiagnosis } from '../../../hooks/useStockDiagnosis';
 import { Leaf, Loader2, ArrowRight, ArrowLeft, Sun, Trees, Sprout } from 'lucide-react';
+import Footer from '../shared/Footer';
 
 export function TemplateMinimal({ template, getContent }: TemplateProps) {
   const diagnosis = useStockDiagnosis();
@@ -178,9 +179,11 @@ export function TemplateMinimal({ template, getContent }: TemplateProps) {
         </div>
       </div>
 
-      <div className="relative mt-16 text-center text-sm text-emerald-600 pb-8">
-        <p>{getContent('footer_text', '自然と調和する投資分析サービス')}</p>
-      </div>
+      {template.footerConfig && (
+        <div className="relative mt-16 border-t border-emerald-200">
+          <Footer footerConfig={template.footerConfig} variant="minimal" />
+        </div>
+      )}
     </div>
   );
 }
