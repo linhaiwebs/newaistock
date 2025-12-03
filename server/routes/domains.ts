@@ -66,6 +66,10 @@ router.post('/', async (req: AuthRequest, res) => {
       return res.status(400).json({ error: 'Domain and site name are required' });
     }
 
+    const cleanDomain = domain.toLowerCase().trim();
+    const cleanSiteName = site_name.trim();
+    const cleanSiteDescription = site_description ? site_description.trim() : '';
+
     if (is_default) {
       await supabaseAdmin
         .from('domain_configs')
@@ -73,32 +77,54 @@ router.post('/', async (req: AuthRequest, res) => {
         .eq('is_default', true);
     }
 
+    const defaultRobotsConfig = {
+      allow: ['/'],
+      disallow: ['/admin', '/api'],
+      crawlDelay: null,
+      customRules: []
+    };
+
+    const defaultSeoConfig = {
+      title: cleanSiteName,
+      keywords: ['AI', '株式分析', '株価診断', '投資'],
+      author: 'AI Stock Analysis Team',
+      ogImage: '/og-image.jpg',
+      twitterCard: 'summary_large_image',
+      locale: 'ja_JP',
+      language: 'ja'
+    };
+
     const { data, error } = await supabaseAdmin
       .from('domain_configs')
       .insert({
-        domain,
-        site_name,
-        site_description,
-        google_ads_publisher_id,
-        google_verification_code,
-        google_analytics_id,
-        robots_config,
-        ads_txt_content,
-        seo_config,
+        domain: cleanDomain,
+        site_name: cleanSiteName,
+        site_description: cleanSiteDescription,
+        google_ads_publisher_id: google_ads_publisher_id || null,
+        google_verification_code: google_verification_code || null,
+        google_analytics_id: google_analytics_id || null,
+        robots_config: robots_config || defaultRobotsConfig,
+        ads_txt_content: ads_txt_content || null,
+        seo_config: seo_config || defaultSeoConfig,
         is_active: is_active !== undefined ? is_active : true,
         is_default: is_default || false,
       })
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Database error creating domain:', error);
+      throw error;
+    }
 
-    domainDetector.clearCache(domain);
+    domainDetector.clearCache(cleanDomain);
+    domainDetector.clearCache();
 
     res.status(201).json(data);
   } catch (error) {
     console.error('Create domain error:', error);
-    res.status(500).json({ error: 'Failed to create domain' });
+    const errorMessage = error instanceof Error ? error.message : 'Failed to create domain';
+    res.status(500).json({ error: errorMessage });
   }
 });
 

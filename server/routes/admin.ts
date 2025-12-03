@@ -223,29 +223,43 @@ router.post('/redirects', async (req: AuthRequest, res) => {
   try {
     const { user_id, target_url, weight } = req.body;
 
-    if (!target_url) {
-      return res.status(400).json({ error: 'Target URL is required' });
+    if (!target_url || typeof target_url !== 'string' || target_url.trim() === '') {
+      return res.status(400).json({ error: 'Valid target URL is required' });
     }
 
-    const generatedUserId = user_id || `user-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    try {
+      new URL(target_url);
+    } catch (e) {
+      return res.status(400).json({ error: 'Invalid URL format. Please provide a valid URL (e.g., https://example.com)' });
+    }
+
+    const finalUserId = (user_id && typeof user_id === 'string' && user_id.trim() !== '')
+      ? user_id.trim()
+      : `user-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
+    const finalWeight = weight && typeof weight === 'number' && weight >= 1 && weight <= 100 ? weight : 100;
 
     const { data, error } = await supabase
       .from('redirect_links')
       .insert({
-        user_id: generatedUserId,
-        target_url,
-        weight: weight || 100,
+        user_id: finalUserId,
+        target_url: target_url.trim(),
+        weight: finalWeight,
         active: true,
       })
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Database error creating redirect:', error);
+      throw error;
+    }
 
     res.json({ success: true, data });
   } catch (error) {
     console.error('Redirect creation error:', error);
-    res.status(500).json({ error: 'Failed to create redirect' });
+    const errorMessage = error instanceof Error ? error.message : 'Failed to create redirect';
+    res.status(500).json({ error: errorMessage });
   }
 });
 

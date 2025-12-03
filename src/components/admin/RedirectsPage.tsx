@@ -43,8 +43,25 @@ export function RedirectsPage() {
   async function handleCreate() {
     try {
       setError('');
+
+      if (!formData.target_url || formData.target_url.trim() === '') {
+        setError('请输入目标URL。');
+        return;
+      }
+
+      try {
+        new URL(formData.target_url);
+      } catch (e) {
+        setError('请输入有效的URL格式（例如：https://example.com）。');
+        return;
+      }
+
       const token = requireValidToken();
-      await createRedirectLink(token, formData);
+      await createRedirectLink(token, {
+        user_id: formData.user_id.trim() || undefined,
+        target_url: formData.target_url.trim(),
+        weight: formData.weight,
+      });
       setFormData({ user_id: '', target_url: '', weight: 100 });
       setShowAdd(false);
       loadLinks();
@@ -54,7 +71,8 @@ export function RedirectsPage() {
         setError('認証が必要です。再度ログインしてください。');
         setTimeout(() => navigate('/admin/login'), 2000);
       } else {
-        setError('リダイレクトリンクの作成に失敗しました。');
+        const errorMsg = error instanceof Error ? error.message : 'リダイレクトリンクの作成に失敗しました。';
+        setError(errorMsg);
       }
     }
   }
