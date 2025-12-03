@@ -127,46 +127,43 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
               ))}
             </div>
 
-            <p className="text-center text-white/60 text-base mb-8">
+            <p className="text-center text-white/60 text-base mb-12">
               {getContent('selection_hint', 'Please pick 3 most desired categories.')}
             </p>
 
-            <div className="space-y-4">
-              <div className="bg-gray-800/40 rounded-3xl p-6 border border-gray-700/50">
-                <label className="block text-sm font-semibold text-white mb-3">
-                  股票代码
-                </label>
-                <div className="flex gap-3">
-                  <input
-                    type="text"
-                    value={diagnosis.stockCode}
-                    onChange={(e) => diagnosis.setStockCode(e.target.value)}
-                    placeholder="例: 1031"
-                    className="flex-1 px-6 py-4 text-lg border-2 border-gray-600 rounded-2xl focus:border-orange-400 focus:ring-2 focus:ring-orange-400/30 outline-none transition-all bg-white text-gray-900 placeholder-gray-400"
-                    disabled={diagnosis.loading || diagnosis.analyzing}
-                  />
-                  <button
-                    onClick={diagnosis.handleDiagnose}
-                    disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
-                    className="px-8 bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-full font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 group whitespace-nowrap"
-                  >
-                    {diagnosis.loading ? (
-                      <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        <span>{getContent('loading_text', 'Loading...')}</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>{getContent('hero_button_text', 'Continue')}</span>
-                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
+            <div className="bg-gray-800/40 rounded-3xl p-8 border border-gray-700/50">
+              <label className="block text-sm font-semibold text-white mb-3">
+                股票代码
+              </label>
+              <input
+                type="text"
+                value={diagnosis.stockCode}
+                onChange={(e) => diagnosis.setStockCode(e.target.value)}
+                placeholder="例: 1031"
+                className="w-full px-6 py-4 text-lg border-2 border-gray-600 rounded-2xl focus:border-orange-400 focus:ring-2 focus:ring-orange-400/30 outline-none transition-all bg-white text-gray-900 placeholder-gray-400"
+                disabled={diagnosis.loading || diagnosis.analyzing}
+              />
 
               <button
-                className="w-full bg-transparent hover:bg-gray-800/50 text-orange-400 py-4 px-8 rounded-full font-semibold text-lg border-2 border-orange-500/60 transition-all duration-200 flex items-center justify-center gap-2"
+                onClick={diagnosis.handleDiagnose}
+                disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
+                className="w-full mt-6 bg-orange-500 hover:bg-orange-600 text-white py-4 px-8 rounded-full font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 group"
+              >
+                {diagnosis.loading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>{getContent('loading_text', 'Loading...')}</span>
+                  </>
+                ) : (
+                  <>
+                    <span>{getContent('hero_button_text', 'Continue')}</span>
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+              </button>
+
+              <button
+                className="w-full mt-4 bg-transparent hover:bg-gray-800/50 text-orange-400 py-4 px-8 rounded-full font-semibold text-lg border-2 border-orange-500/60 transition-all duration-200 flex items-center justify-center gap-2"
               >
                 <span>{getContent('none_button_text', 'None of the above')}</span>
                 <span className="text-xl">×</span>
