@@ -1,53 +1,46 @@
 import { TemplateProps } from '../../../types/template';
 import { useStockDiagnosis } from '../../../hooks/useStockDiagnosis';
-import { Rocket, Loader2, ArrowRight, Cpu, Network, Binary, Zap, ArrowLeft } from 'lucide-react';
+import { Sparkles, Loader2, ArrowRight, ArrowLeft, Brain, Target, Zap } from 'lucide-react';
 import Footer from '../shared/Footer';
+import { GradientBackground } from '../shared/GradientBackground';
+import { StockDecorations } from '../shared/StockDecorations';
 
 export function TemplateModern({ template, getContent }: TemplateProps) {
   const diagnosis = useStockDiagnosis();
 
   if (diagnosis.showResult) {
     return (
-      <div className="min-h-screen bg-slate-950 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(6,182,212,0.1),transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(6,182,212,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(6,182,212,0.05)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
-
-        <div className="relative max-w-4xl mx-auto px-4 py-12">
+      <div className="min-h-screen bg-gradient-to-br from-cyan-900 via-blue-900 to-indigo-900">
+        <div className="max-w-4xl mx-auto px-6 py-12">
           <button
             onClick={diagnosis.resetDiagnosis}
-            className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors mb-6 group"
+            className="flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-8 group"
           >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            <span className="font-mono">← RETURN</span>
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            <span className="font-medium">返回</span>
           </button>
 
-          <div className="bg-slate-900/80 backdrop-blur-xl border-2 border-cyan-500/30 rounded-lg p-8 shadow-[0_0_30px_rgba(6,182,212,0.3)] hover:shadow-[0_0_50px_rgba(6,182,212,0.5)] transition-all duration-300">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
-              <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600">
-                {getContent('result_title', 'ANALYSIS COMPLETE')}
-              </h2>
-              <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
-            </div>
-
-            <div className="relative">
-              <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-500 via-blue-500 to-purple-600 rounded-full"></div>
-              <div className="text-cyan-50/90 whitespace-pre-wrap leading-relaxed font-mono text-sm pl-4">
-                {diagnosis.result}
-              </div>
-            </div>
-
-            {diagnosis.redirectUrl && (
-              <button
-                onClick={diagnosis.handleConversion}
-                className="w-full mt-8 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white py-4 px-8 rounded-lg font-bold text-lg transition-all duration-200 shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] flex items-center justify-center gap-2 group relative overflow-hidden"
-              >
-                <span className="relative z-10 font-mono">{getContent('result_button_text', 'EXPLORE MORE →')}</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform relative z-10" />
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </button>
-            )}
+          <div className="mb-8">
+            <h2 className="text-4xl font-bold text-white mb-4">
+              {getContent('result_title', '分析结果')}
+            </h2>
           </div>
+
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 mb-8 shadow-2xl">
+            <div className="text-gray-800 whitespace-pre-wrap leading-loose text-base">
+              {diagnosis.result}
+            </div>
+          </div>
+
+          {diagnosis.redirectUrl && (
+            <button
+              onClick={diagnosis.handleConversion}
+              className="bg-cyan-400 hover:bg-cyan-500 text-gray-900 py-4 px-10 rounded-2xl transition-all duration-200 flex items-center gap-3 group font-semibold shadow-lg hover:shadow-xl"
+            >
+              <span>{getContent('result_button_text', '了解更多')}</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </button>
+          )}
         </div>
       </div>
     );
@@ -55,33 +48,24 @@ export function TemplateModern({ template, getContent }: TemplateProps) {
 
   if (diagnosis.analyzing) {
     return (
-      <div className="min-h-screen bg-slate-950 relative overflow-hidden flex items-center justify-center">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(6,182,212,0.1),transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(6,182,212,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(6,182,212,0.05)_1px,transparent_1px)] bg-[size:40px_40px] animate-pulse"></div>
-
-        <div className="relative max-w-2xl mx-auto px-4">
-          <div className="bg-slate-900/80 backdrop-blur-xl border-2 border-cyan-500/30 rounded-lg p-12 text-center shadow-[0_0_30px_rgba(6,182,212,0.3)]">
+      <div className="min-h-screen bg-gradient-to-br from-cyan-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+        <div className="max-w-2xl mx-auto px-6">
+          <div className="text-center">
             <div className="mb-8">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg mb-6 relative">
-                <Cpu className="w-10 h-10 text-white animate-pulse" />
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg blur-xl opacity-50 animate-pulse"></div>
+              <div className="inline-flex items-center justify-center mb-6">
+                <div className="w-16 h-16 border-4 border-white/20 border-t-cyan-400 rounded-full animate-spin"></div>
               </div>
-              <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 mb-2 font-mono">
-                {getContent('analyzing_title', 'QUANTUM ANALYSIS IN PROGRESS')}
+              <h2 className="text-4xl font-bold text-white mb-3">
+                {getContent('analyzing_title', 'AI分析中')}
               </h2>
-              <p className="text-cyan-300/70 font-mono text-sm">
-                {getContent('analyzing_description', 'Scanning market data...')}
+              <p className="text-white/70 text-lg">
+                {getContent('analyzing_description', '正在处理数据...')}
               </p>
-              <div className="flex items-center justify-center gap-1 mt-4">
-                <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
-                <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-              </div>
             </div>
 
             {diagnosis.result && (
-              <div className="mt-8 pt-8 border-t border-cyan-500/20 text-left">
-                <div className="text-cyan-50/80 whitespace-pre-wrap leading-relaxed font-mono text-sm animate-fadeIn">
+              <div className="mt-8 pt-8 border-t border-white/20 text-left">
+                <div className="text-white/90 whitespace-pre-wrap leading-loose">
                   {diagnosis.result}
                 </div>
               </div>
@@ -93,106 +77,113 @@ export function TemplateModern({ template, getContent }: TemplateProps) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(6,182,212,0.1),transparent_50%)]"></div>
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(6,182,212,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(6,182,212,0.05)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+    <div className="min-h-screen relative overflow-hidden">
+      <GradientBackground variant="modern" />
+      <StockDecorations variant="modern" />
 
-      <div className="relative max-w-6xl mx-auto px-4 py-16">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl mb-8 shadow-[0_0_40px_rgba(6,182,212,0.4)] relative group">
-            <Rocket className="w-12 h-12 text-white group-hover:scale-110 transition-transform" />
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl blur-2xl opacity-50 group-hover:opacity-70 transition-opacity"></div>
-          </div>
-          <h1 className="text-6xl font-bold mb-4">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 font-mono">
-              {getContent('hero_title', 'CYBERSTOCK AI')}
-            </span>
-          </h1>
-          <p className="text-2xl text-cyan-300 mb-3 font-mono">
-            {getContent('hero_subtitle', 'Next-Gen Market Analysis')}
-          </p>
-          <p className="text-lg text-cyan-400/60 font-mono">
-            {getContent('hero_description', 'Powered by quantum algorithms')}
-          </p>
-        </div>
-
-        <div className="max-w-2xl mx-auto mb-16">
-          <div className="bg-slate-900/60 backdrop-blur-xl border-2 border-cyan-500/30 rounded-lg p-8 shadow-[0_0_30px_rgba(6,182,212,0.3)] hover:shadow-[0_0_50px_rgba(6,182,212,0.5)] transition-all duration-300">
-            <label className="block text-sm font-bold text-cyan-400 mb-3 font-mono flex items-center gap-2">
-              <Binary className="w-4 h-4" />
-              STOCK CODE
-            </label>
-            <input
-              type="text"
-              value={diagnosis.stockCode}
-              onChange={(e) => diagnosis.setStockCode(e.target.value)}
-              placeholder="例: 1031"
-              className="w-full px-6 py-4 text-lg bg-slate-800/50 border-2 border-cyan-500/30 rounded-lg text-cyan-100 placeholder-cyan-500/30 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-500/20 outline-none transition-all font-mono backdrop-blur-sm"
-              disabled={diagnosis.loading || diagnosis.analyzing}
-            />
-
-            <button
-              onClick={diagnosis.handleDiagnose}
-              disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
-              className="w-full mt-6 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white py-4 px-8 rounded-lg font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] flex items-center justify-center gap-3 group relative overflow-hidden"
-            >
-              {diagnosis.loading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  <span className="font-mono">LOADING...</span>
-                </>
-              ) : (
-                <>
-                  <Rocket className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  <span className="font-mono">{getContent('hero_button_text', 'LAUNCH ANALYSIS')}</span>
-                </>
-              )}
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <div className="bg-slate-900/60 backdrop-blur-xl border-2 border-cyan-500/20 rounded-lg p-6 hover:border-cyan-500/50 transition-all duration-300 group hover:shadow-[0_0_30px_rgba(6,182,212,0.2)]">
-            <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg mb-4 group-hover:scale-110 transition-transform">
-              <Network className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-lg font-bold text-cyan-300 mb-2 font-mono">
-              {getContent('feature_1_title', 'NEURAL NETWORK')}
-            </h3>
-            <p className="text-cyan-400/60 text-sm font-mono">
-              {getContent('feature_1_description', 'Deep learning algorithms analyze market patterns')}
+      <div className="relative z-10">
+        <div className="max-w-6xl mx-auto px-6 py-16">
+          <div className="text-center mb-16">
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 leading-tight">
+              {getContent('hero_title', 'AI股票诊断')}
+            </h1>
+            <p className="text-xl md:text-2xl text-white/90 font-light">
+              {getContent('hero_subtitle', '智能分析 精准决策')}
             </p>
           </div>
 
-          <div className="bg-slate-900/60 backdrop-blur-xl border-2 border-cyan-500/20 rounded-lg p-6 hover:border-cyan-500/50 transition-all duration-300 group hover:shadow-[0_0_30px_rgba(6,182,212,0.2)]">
-            <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg mb-4 group-hover:scale-110 transition-transform">
-              <Zap className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-lg font-bold text-cyan-300 mb-2 font-mono">
-              {getContent('feature_2_title', 'INSTANT COMPUTE')}
-            </h3>
-            <p className="text-cyan-400/60 text-sm font-mono">
-              {getContent('feature_2_description', 'Millisecond response time for real-time analysis')}
-            </p>
-          </div>
+          <div className="max-w-4xl mx-auto mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+              <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-cyan-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-1">
+                      {getContent('feature_1_title', '实时数据')}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {getContent('feature_1_description', '获取最新市场数据')}
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-          <div className="bg-slate-900/60 backdrop-blur-xl border-2 border-cyan-500/20 rounded-lg p-6 hover:border-cyan-500/50 transition-all duration-300 group hover:shadow-[0_0_30px_rgba(6,182,212,0.2)]">
-            <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg mb-4 group-hover:scale-110 transition-transform">
-              <Cpu className="w-6 h-6 text-white" />
+              <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 hover:shadow-lg transition-all">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Brain className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-1">
+                      {getContent('feature_2_title', 'AI分析')}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {getContent('feature_2_description', '智能算法深度诊断')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 hover:shadow-lg transition-all md:col-span-2 lg:col-span-1">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Target className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-1">
+                      {getContent('feature_3_title', '精准建议')}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {getContent('feature_3_description', '专业投资参考意见')}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <h3 className="text-lg font-bold text-cyan-300 mb-2 font-mono">
-              {getContent('feature_3_title', 'QUANTUM PRECISION')}
-            </h3>
-            <p className="text-cyan-400/60 text-sm font-mono">
-              {getContent('feature_3_description', 'Advanced quantum computing for predictive accuracy')}
+
+            <p className="text-center text-white/60 text-sm mb-10">
+              本工具仅供参考，不构成投资建议。投资有风险，决策需谨慎。
             </p>
+
+            <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20">
+              <label className="block text-sm font-semibold text-white mb-3">
+                股票代码
+              </label>
+              <input
+                type="text"
+                value={diagnosis.stockCode}
+                onChange={(e) => diagnosis.setStockCode(e.target.value)}
+                placeholder="例: 1031"
+                className="w-full px-6 py-4 text-lg border-3 border-cyan-400 rounded-2xl focus:border-cyan-300 focus:ring-4 focus:ring-cyan-400/30 outline-none transition-all bg-white text-gray-900 placeholder-gray-400 font-medium"
+                disabled={diagnosis.loading || diagnosis.analyzing}
+              />
+
+              <button
+                onClick={diagnosis.handleDiagnose}
+                disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
+                className="w-full mt-6 bg-cyan-400 hover:bg-cyan-500 text-gray-900 py-4 px-8 rounded-2xl font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 group"
+              >
+                {diagnosis.loading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>加载中...</span>
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-5 h-5" />
+                    <span>{getContent('hero_button_text', '立即分析')}</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="relative mt-16 border-t border-cyan-500/20">
-        <Footer footerConfig={template.footerConfig} variant="modern" />
+        <div className="bg-white/5 backdrop-blur-sm border-t border-white/10">
+          <Footer footerConfig={template.footerConfig} variant="modern" />
+        </div>
       </div>
     </div>
   );

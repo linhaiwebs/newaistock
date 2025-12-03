@@ -1,37 +1,33 @@
 import { TemplateProps } from '../../../types/template';
 import { useStockDiagnosis } from '../../../hooks/useStockDiagnosis';
-import { Leaf, Loader2, ArrowRight, ArrowLeft, Sun, Trees, Sprout } from 'lucide-react';
+import { Sparkles, Loader2, ArrowRight, ArrowLeft, Brain, Target, Zap } from 'lucide-react';
 import Footer from '../shared/Footer';
+import { GradientBackground } from '../shared/GradientBackground';
+import { StockDecorations } from '../shared/StockDecorations';
 
 export function TemplateMinimal({ template, getContent }: TemplateProps) {
   const diagnosis = useStockDiagnosis();
 
   if (diagnosis.showResult) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-200/30 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-200/30 rounded-full blur-3xl"></div>
+      <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-teal-900 to-emerald-900">
+        <div className="max-w-4xl mx-auto px-6 py-12">
+          <button
+            onClick={diagnosis.resetDiagnosis}
+            className="flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-8 group"
+          >
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            <span className="font-medium">返回</span>
+          </button>
 
-        <div className="relative max-w-3xl mx-auto px-4 py-16">
           <div className="mb-8">
-            <button
-              onClick={diagnosis.resetDiagnosis}
-              className="flex items-center gap-2 text-emerald-700 hover:text-emerald-800 transition-colors mb-6 group"
-            >
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              <span className="font-medium">戻る</span>
-            </button>
-            <div className="flex items-center gap-3 mb-4">
-              <Leaf className="w-8 h-8 text-emerald-600" />
-              <h2 className="text-4xl font-bold text-emerald-900">
-                {getContent('result_title', '分析結果')}
-              </h2>
-            </div>
-            <div className="h-1 w-24 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"></div>
+            <h2 className="text-4xl font-bold text-white mb-4">
+              {getContent('result_title', '分析结果')}
+            </h2>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 mb-8 shadow-xl border border-emerald-100">
-            <div className="text-gray-800 whitespace-pre-wrap leading-relaxed text-lg">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 mb-8 shadow-2xl">
+            <div className="text-gray-800 whitespace-pre-wrap leading-loose text-base">
               {diagnosis.result}
             </div>
           </div>
@@ -39,9 +35,9 @@ export function TemplateMinimal({ template, getContent }: TemplateProps) {
           {diagnosis.redirectUrl && (
             <button
               onClick={diagnosis.handleConversion}
-              className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white py-4 px-8 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl group"
+              className="bg-emerald-400 hover:bg-emerald-500 text-gray-900 py-4 px-10 rounded-2xl transition-all duration-200 flex items-center gap-3 group font-semibold shadow-lg hover:shadow-xl"
             >
-              <span className="font-semibold text-lg">{getContent('result_button_text', 'さらに詳しく')}</span>
+              <span>{getContent('result_button_text', '了解更多')}</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           )}
@@ -52,135 +48,142 @@ export function TemplateMinimal({ template, getContent }: TemplateProps) {
 
   if (diagnosis.analyzing) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 flex items-center justify-center relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-200/30 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-200/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-
-        <div className="relative max-w-xl mx-auto px-4 text-center">
-          <div className="mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full mb-6 shadow-lg animate-pulse">
-              <Sprout className="w-10 h-10 text-white" />
-            </div>
-            <h2 className="text-3xl font-bold text-emerald-900 mb-2">
-              {getContent('analyzing_title', '分析中...')}
-            </h2>
-            <p className="text-emerald-700">
-              {getContent('analyzing_description', 'データを丁寧に分析しています')}
-            </p>
-          </div>
-
-          {diagnosis.result && (
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 text-left shadow-xl border border-emerald-100">
-              <div className="text-gray-800 whitespace-pre-wrap text-base leading-relaxed">
-                {diagnosis.result}
+      <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-teal-900 to-emerald-900 flex items-center justify-center">
+        <div className="max-w-2xl mx-auto px-6">
+          <div className="text-center">
+            <div className="mb-8">
+              <div className="inline-flex items-center justify-center mb-6">
+                <div className="w-16 h-16 border-4 border-white/20 border-t-emerald-400 rounded-full animate-spin"></div>
               </div>
+              <h2 className="text-4xl font-bold text-white mb-3">
+                {getContent('analyzing_title', 'AI分析中')}
+              </h2>
+              <p className="text-white/70 text-lg">
+                {getContent('analyzing_description', '正在处理数据...')}
+              </p>
             </div>
-          )}
+
+            {diagnosis.result && (
+              <div className="mt-8 pt-8 border-t border-white/20 text-left">
+                <div className="text-white/90 whitespace-pre-wrap leading-loose">
+                  {diagnosis.result}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-200/30 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-200/30 rounded-full blur-3xl"></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl"></div>
+    <div className="min-h-screen relative overflow-hidden">
+      <GradientBackground variant="minimal" />
+      <StockDecorations variant="minimal" />
 
-      <div className="relative max-w-6xl mx-auto px-4 py-16">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full mb-8 shadow-2xl animate-float">
-            <Trees className="w-12 h-12 text-white" />
-          </div>
-          <h1 className="text-6xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
-              {getContent('hero_title', '自然派投資分析')}
-            </span>
-          </h1>
-          <p className="text-2xl text-emerald-800 mb-3 font-medium">
-            {getContent('hero_subtitle', '心穏やかに、確かな投資を')}
-          </p>
-          <p className="text-lg text-emerald-600">
-            {getContent('hero_description', '自然のリズムで市場を読み解く')}
-          </p>
-        </div>
-
-        <div className="max-w-2xl mx-auto mb-16">
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-emerald-100">
-            <label className="block text-sm font-semibold text-emerald-800 mb-3 flex items-center gap-2">
-              <Leaf className="w-4 h-4" />
-              銘柄コード
-            </label>
-            <input
-              type="text"
-              value={diagnosis.stockCode}
-              onChange={(e) => diagnosis.setStockCode(e.target.value)}
-              placeholder="例: 1031"
-              className="w-full px-6 py-4 text-lg border-2 border-emerald-200 rounded-2xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all bg-white/70 text-gray-800 placeholder-emerald-400"
-              disabled={diagnosis.loading || diagnosis.analyzing}
-            />
-
-            <button
-              onClick={diagnosis.handleDiagnose}
-              disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
-              className="w-full mt-6 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white py-4 px-8 rounded-2xl font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 group"
-            >
-              {diagnosis.loading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  <span>読み込み中...</span>
-                </>
-              ) : (
-                <>
-                  <Sprout className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                  <span>{getContent('hero_button_text', '分析を始める')}</span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-emerald-100 hover:shadow-xl transition-all duration-300 group">
-            <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl mb-4 group-hover:scale-110 transition-transform shadow-lg">
-              <Sun className="w-7 h-7 text-white" />
-            </div>
-            <h3 className="text-xl font-bold text-emerald-900 mb-2">
-              {getContent('feature_1_title', '明るい未来を見通す')}
-            </h3>
-            <p className="text-emerald-700 leading-relaxed">
-              {getContent('feature_1_description', '太陽のように明るく確かな分析で、投資の未来を照らします')}
+      <div className="relative z-10">
+        <div className="max-w-6xl mx-auto px-6 py-16">
+          <div className="text-center mb-16">
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 leading-tight">
+              {getContent('hero_title', 'AI股票诊断')}
+            </h1>
+            <p className="text-xl md:text-2xl text-white/90 font-light">
+              {getContent('hero_subtitle', '智能分析 精准决策')}
             </p>
           </div>
 
-          <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-emerald-100 hover:shadow-xl transition-all duration-300 group">
-            <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-2xl mb-4 group-hover:scale-110 transition-transform shadow-lg">
-              <Trees className="w-7 h-7 text-white" />
-            </div>
-            <h3 className="text-xl font-bold text-emerald-900 mb-2">
-              {getContent('feature_2_title', '着実な成長をサポート')}
-            </h3>
-            <p className="text-emerald-700 leading-relaxed">
-              {getContent('feature_2_description', '木々のように、じっくりと確実に資産を育てます')}
-            </p>
-          </div>
+          <div className="max-w-4xl mx-auto mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+              <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-1">
+                      {getContent('feature_1_title', '实时数据')}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {getContent('feature_1_description', '获取最新市场数据')}
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-          <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-emerald-100 hover:shadow-xl transition-all duration-300 group">
-            <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-2xl mb-4 group-hover:scale-110 transition-transform shadow-lg">
-              <Leaf className="w-7 h-7 text-white" />
+              <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 hover:shadow-lg transition-all">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Brain className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-1">
+                      {getContent('feature_2_title', 'AI分析')}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {getContent('feature_2_description', '智能算法深度诊断')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 hover:shadow-lg transition-all md:col-span-2 lg:col-span-1">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-teal-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Target className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-1">
+                      {getContent('feature_3_title', '精准建议')}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {getContent('feature_3_description', '专业投资参考意见')}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <h3 className="text-xl font-bold text-emerald-900 mb-2">
-              {getContent('feature_3_title', '自然のリズムで')}
-            </h3>
-            <p className="text-emerald-700 leading-relaxed">
-              {getContent('feature_3_description', '自然の摂理に学び、市場の流れを読み解きます')}
+
+            <p className="text-center text-white/60 text-sm mb-10">
+              本工具仅供参考，不构成投资建议。投资有风险，决策需谨慎。
             </p>
+
+            <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20">
+              <label className="block text-sm font-semibold text-white mb-3">
+                股票代码
+              </label>
+              <input
+                type="text"
+                value={diagnosis.stockCode}
+                onChange={(e) => diagnosis.setStockCode(e.target.value)}
+                placeholder="例: 1031"
+                className="w-full px-6 py-4 text-lg border-3 border-emerald-400 rounded-2xl focus:border-emerald-300 focus:ring-4 focus:ring-emerald-400/30 outline-none transition-all bg-white text-gray-900 placeholder-gray-400 font-medium"
+                disabled={diagnosis.loading || diagnosis.analyzing}
+              />
+
+              <button
+                onClick={diagnosis.handleDiagnose}
+                disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
+                className="w-full mt-6 bg-emerald-400 hover:bg-emerald-500 text-gray-900 py-4 px-8 rounded-2xl font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 group"
+              >
+                {diagnosis.loading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>加载中...</span>
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-5 h-5" />
+                    <span>{getContent('hero_button_text', '立即分析')}</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="relative mt-16 border-t border-emerald-200">
-        <Footer footerConfig={template.footerConfig} variant="minimal" />
+        <div className="bg-white/5 backdrop-blur-sm border-t border-white/10">
+          <Footer footerConfig={template.footerConfig} variant="minimal" />
+        </div>
       </div>
     </div>
   );
