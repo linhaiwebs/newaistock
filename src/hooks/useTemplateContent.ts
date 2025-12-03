@@ -1,7 +1,13 @@
 import { TemplateContent } from '../types/template';
+import { useContent } from './useContent';
 
 export function useTemplateContent(content: TemplateContent | undefined) {
+  const { get: getDatabaseContent } = useContent();
+
   function getContent(key: string, defaultValue: string = ''): string {
+    const dbContent = getDatabaseContent(key);
+    if (dbContent) return dbContent;
+
     return content?.[key]?.value || defaultValue;
   }
 
@@ -10,7 +16,7 @@ export function useTemplateContent(content: TemplateContent | undefined) {
   }
 
   function hasContent(key: string): boolean {
-    return !!content?.[key];
+    return !!getDatabaseContent(key) || !!content?.[key];
   }
 
   return {

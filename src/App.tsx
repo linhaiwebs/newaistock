@@ -12,6 +12,7 @@ import { TemplatesPage } from './components/admin/TemplatesPage';
 import { TemplateEditor } from './components/admin/TemplateEditor';
 import { DomainsPage } from './components/admin/DomainsPage';
 import { DomainForm } from './components/admin/DomainForm';
+import ContentPage from './components/admin/ContentPage';
 import { initializeAnalytics } from './lib/analytics';
 import { trackSession, trackDuration } from './lib/api';
 import { getSessionId, trackSessionDuration } from './lib/session';
@@ -51,6 +52,7 @@ function App() {
           <Route path="domains" element={<DomainsPage />} />
           <Route path="domains/new" element={<DomainForm />} />
           <Route path="domains/:id/edit" element={<DomainForm />} />
+          <Route path="content" element={<ContentPage />} />
           <Route path="redirects" element={<RedirectsPage />} />
           <Route path="templates" element={<TemplatesPage />} />
           <Route path="templates/:id/edit" element={<TemplateEditor />} />

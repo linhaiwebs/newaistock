@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, BarChart3, Link2, Database, LogOut, AlertCircle, Layout, Globe } from 'lucide-react';
+import { LayoutDashboard, Users, BarChart3, Link2, Database, LogOut, AlertCircle, Layout, Globe, FileText } from 'lucide-react';
 import { verifyAuth } from '../../lib/api';
 import { getToken, removeToken, isTokenExpired } from '../../lib/auth';
 
@@ -14,7 +14,7 @@ export function AdminLayout() {
       try {
         const token = getToken();
         if (!token || isTokenExpired()) {
-          setAuthError('会话已过期，请重新登录。');
+          setAuthError('セッションが期限切れです。再度ログインしてください。');
           setTimeout(() => {
             removeToken();
             navigate('/admin/login');
@@ -24,7 +24,7 @@ export function AdminLayout() {
 
         const result = await verifyAuth(token);
         if (!result || !result.valid) {
-          setAuthError('认证失败，请重新登录。');
+          setAuthError('認証に失敗しました。再度ログインしてください。');
           setTimeout(() => {
             removeToken();
             navigate('/admin/login');
@@ -32,7 +32,7 @@ export function AdminLayout() {
         }
       } catch (error) {
         console.error('Auth check failed:', error);
-        setAuthError('认证验证失败。');
+        setAuthError('認証の検証に失敗しました。');
       }
     }
 
@@ -45,13 +45,14 @@ export function AdminLayout() {
   }
 
   const navItems = [
-    { path: '/admin/dashboard', icon: LayoutDashboard, label: '仪表板' },
-    { path: '/admin/users', icon: Users, label: '用户管理' },
-    { path: '/admin/analytics', icon: BarChart3, label: '数据分析' },
-    { path: '/admin/domains', icon: Globe, label: '域名管理' },
-    { path: '/admin/redirects', icon: Link2, label: '跳转链接' },
-    { path: '/admin/templates', icon: Layout, label: '模板管理' },
-    { path: '/admin/cache', icon: Database, label: '缓存管理' },
+    { path: '/admin/dashboard', icon: LayoutDashboard, label: 'ダッシュボード' },
+    { path: '/admin/users', icon: Users, label: 'ユーザー管理' },
+    { path: '/admin/analytics', icon: BarChart3, label: 'データ分析' },
+    { path: '/admin/domains', icon: Globe, label: 'ドメイン管理' },
+    { path: '/admin/content', icon: FileText, label: 'コンテンツ管理' },
+    { path: '/admin/redirects', icon: Link2, label: 'リダイレクト' },
+    { path: '/admin/templates', icon: Layout, label: 'テンプレート管理' },
+    { path: '/admin/cache', icon: Database, label: 'キャッシュ管理' },
   ];
 
   return (
@@ -66,8 +67,8 @@ export function AdminLayout() {
       <div className="flex">
         <aside className="w-64 bg-white border-r border-gray-200 min-h-screen fixed left-0 top-0">
           <div className="p-6 border-b">
-            <h1 className="text-xl font-bold text-gray-900">AI股票诊断</h1>
-            <p className="text-sm text-gray-600">管理后台</p>
+            <h1 className="text-xl font-bold text-gray-900">AI株式診断</h1>
+            <p className="text-sm text-gray-600">管理画面</p>
           </div>
 
           <nav className="p-4">
@@ -98,7 +99,7 @@ export function AdminLayout() {
               className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
             >
               <LogOut className="w-5 h-5" />
-              <span>退出登录</span>
+              <span>ログアウト</span>
             </button>
           </div>
         </aside>

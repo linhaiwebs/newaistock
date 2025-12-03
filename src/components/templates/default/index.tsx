@@ -42,7 +42,7 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
             className="flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-8 group"
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            <span className="font-medium">返回</span>
+            <span className="font-medium">{getContent('back_button', '戻る')}</span>
           </button>
 
           <div className="mb-8">
@@ -133,13 +133,13 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
 
             <div className="bg-gray-800/40 rounded-3xl p-8 border border-gray-700/50">
               <label className="block text-sm font-semibold text-white mb-3">
-                股票代码
+                {getContent('form_label', '株式コード')}
               </label>
               <input
                 type="text"
                 value={diagnosis.stockCode}
                 onChange={(e) => diagnosis.setStockCode(e.target.value)}
-                placeholder="例: 1031"
+                placeholder={getContent('form_placeholder', '例: 1031')}
                 className="w-full px-6 py-4 text-lg border-2 border-gray-600 rounded-2xl focus:border-orange-400 focus:ring-2 focus:ring-orange-400/30 outline-none transition-all bg-white text-gray-900 placeholder-gray-400"
                 disabled={diagnosis.loading || diagnosis.analyzing}
               />

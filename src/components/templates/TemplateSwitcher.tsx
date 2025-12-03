@@ -53,7 +53,7 @@ export function TemplateSwitcher() {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-          <p className="text-gray-600">加载中...</p>
+          <p className="text-gray-600">読み込み中...</p>
         </div>
       </div>
     );
@@ -62,7 +62,7 @@ export function TemplateSwitcher() {
   if (error || !template) {
     const defaultTemplate: TemplateData = {
       id: 'default',
-      name: '默认模板',
+      name: 'デフォルトテンプレート',
       template_key: 'default',
       config: {
         colors: {
@@ -97,7 +97,7 @@ export function TemplateSwitcher() {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-          <p className="text-gray-600">加载模板中...</p>
+          <p className="text-gray-600">テンプレート読み込み中...</p>
         </div>
       </div>
     }>
