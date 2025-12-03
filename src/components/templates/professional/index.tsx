@@ -1,164 +1,161 @@
 import { TemplateProps } from '../../../types/template';
 import { useStockDiagnosis } from '../../../hooks/useStockDiagnosis';
-import { BarChart3, Loader2, ArrowRight, Shield, Database, TrendingUp, Activity, Target, Award, ArrowLeft } from 'lucide-react';
-import { FeatureCard } from '../shared/FeatureCard';
+import { BarChart3, Loader2, ArrowRight, ArrowLeft, Waves, Mountain, Fan } from 'lucide-react';
 
 export function TemplateProfessional({ template, getContent }: TemplateProps) {
   const diagnosis = useStockDiagnosis();
 
   if (diagnosis.showResult) {
     return (
-      <div className="min-h-screen bg-slate-50">
-        <header className="bg-white border-b border-gray-200 py-4 px-6">
-          <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <BarChart3 className="w-6 h-6 text-sky-700" />
-              <span className="text-xl font-bold text-gray-900">AI股票分析平台</span>
-            </div>
-          </div>
-        </header>
-
-        <div className="max-w-6xl mx-auto px-4 py-12">
-          <button
-            onClick={diagnosis.resetDiagnosis}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors mb-6"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>返回首页</span>
-          </button>
-
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              {getContent('result_title', '专业分析报告')}
-            </h2>
-
-            <div className="prose max-w-none mb-8">
-              <div className="text-gray-700 whitespace-pre-wrap leading-relaxed">
-                {diagnosis.result}
-              </div>
-            </div>
-
-            {diagnosis.redirectUrl && (
-              <button
-                onClick={diagnosis.handleConversion}
-                className="w-full bg-sky-700 hover:bg-sky-800 text-white py-4 px-8 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
-              >
-                <span>{getContent('result_button_text', '查看完整报告')}</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            )}
-          </div>
+      <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-indigo-50 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-indigo-900/10 to-transparent"></div>
+        <div className="absolute bottom-0 right-0 w-64 h-64 opacity-10">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <path d="M100,20 Q150,50 100,80 Q50,50 100,20" fill="#e11d48" opacity="0.3"/>
+            <path d="M100,40 Q150,70 100,100 Q50,70 100,40" fill="#e11d48" opacity="0.2"/>
+            <path d="M100,60 Q150,90 100,120 Q50,90 100,60" fill="#e11d48" opacity="0.1"/>
+          </svg>
         </div>
 
-        <footer className="bg-white border-t border-gray-200 py-8 px-6 mt-12">
-          <div className="max-w-6xl mx-auto text-center text-sm text-gray-600">
-            <p className="mb-2">免责声明：本报告仅供参考，不构成投资建议。投资有风险，入市需谨慎。</p>
-            <p>© 2024 专业投资分析平台. 版权所有.</p>
+        <div className="relative max-w-4xl mx-auto px-4 py-12">
+          <button
+            onClick={diagnosis.resetDiagnosis}
+            className="flex items-center gap-2 text-indigo-700 hover:text-indigo-900 transition-colors mb-8 group"
+          >
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            <span className="font-medium">戻る</span>
+          </button>
+
+          <div className="mb-8">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center shadow-lg">
+                <Fan className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h2 className="text-4xl font-bold text-indigo-900">
+                  {getContent('result_title', '診断結果')}
+                </h2>
+                <div className="flex gap-1 mt-2">
+                  <div className="w-8 h-1 bg-rose-400"></div>
+                  <div className="w-4 h-1 bg-pink-400"></div>
+                  <div className="w-2 h-1 bg-indigo-400"></div>
+                </div>
+              </div>
+            </div>
           </div>
-        </footer>
+
+          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-8 mb-8 shadow-xl border-2 border-rose-200/50 relative">
+            <div className="absolute top-0 right-0 w-24 h-24 opacity-5">
+              <Mountain className="w-full h-full text-indigo-900" />
+            </div>
+            <div className="relative text-gray-800 whitespace-pre-wrap leading-relaxed text-lg">
+              {diagnosis.result}
+            </div>
+          </div>
+
+          {diagnosis.redirectUrl && (
+            <button
+              onClick={diagnosis.handleConversion}
+              className="w-full bg-gradient-to-r from-indigo-600 to-indigo-800 hover:from-indigo-700 hover:to-indigo-900 text-white py-4 px-8 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl group relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-rose-400 to-pink-500 opacity-0 group-hover:opacity-20 transition-opacity"></div>
+              <span className="relative font-semibold text-lg">{getContent('result_button_text', 'もっと見る')}</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform relative" />
+            </button>
+          )}
+        </div>
       </div>
     );
   }
 
   if (diagnosis.analyzing) {
     return (
-      <div className="min-h-screen bg-slate-50">
-        <header className="bg-white border-b border-gray-200 py-4 px-6">
-          <div className="max-w-6xl mx-auto flex items-center gap-2">
-            <BarChart3 className="w-6 h-6 text-sky-700" />
-            <span className="text-xl font-bold text-gray-900">AI股票分析平台</span>
-          </div>
-        </header>
+      <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-indigo-50 flex items-center justify-center relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-indigo-900/10 to-transparent"></div>
 
-        <div className="max-w-4xl mx-auto px-4 py-12">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                {getContent('analyzing_title', '专业分析进行中')}
-              </h2>
-              <p className="text-gray-600">
-                {getContent('analyzing_description', '正在运行多维度分析模型...')}
-              </p>
+        <div className="absolute top-20 right-20 w-32 h-32 opacity-10 animate-pulse">
+          <Waves className="w-full h-full text-indigo-600" />
+        </div>
+
+        <div className="relative max-w-xl mx-auto px-4 text-center">
+          <div className="mb-8">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 mb-6 shadow-2xl animate-pulse">
+              <Fan className="w-10 h-10 text-white" />
             </div>
+            <h2 className="text-3xl font-bold text-indigo-900 mb-2">
+              {getContent('analyzing_title', '分析中...')}
+            </h2>
+            <p className="text-indigo-700">
+              {getContent('analyzing_description', 'しばらくお待ちください')}
+            </p>
+            <div className="flex justify-center gap-2 mt-4">
+              <div className="w-2 h-2 rounded-full bg-rose-400 animate-bounce"></div>
+              <div className="w-2 h-2 rounded-full bg-pink-400 animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              <div className="w-2 h-2 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+            </div>
+          </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="text-center p-4 bg-slate-50 rounded-lg">
-                <Database className="w-6 h-6 text-sky-700 mx-auto mb-2" />
-                <div className="text-xs text-gray-600">数据采集</div>
-              </div>
-              <div className="text-center p-4 bg-slate-50 rounded-lg">
-                <Activity className="w-6 h-6 text-sky-700 mx-auto mb-2" />
-                <div className="text-xs text-gray-600">技术分析</div>
-              </div>
-              <div className="text-center p-4 bg-slate-50 rounded-lg">
-                <TrendingUp className="w-6 h-6 text-sky-700 mx-auto mb-2" />
-                <div className="text-xs text-gray-600">趋势评估</div>
-              </div>
-              <div className="text-center p-4 bg-slate-50 rounded-lg">
-                <Target className="w-6 h-6 text-sky-700 mx-auto mb-2" />
-                <div className="text-xs text-gray-600">风险评级</div>
+          {diagnosis.result && (
+            <div className="bg-white/90 backdrop-blur-sm rounded-lg p-6 text-left shadow-xl border-2 border-rose-200/50">
+              <div className="text-gray-800 whitespace-pre-wrap text-base leading-relaxed">
+                {diagnosis.result}
               </div>
             </div>
-
-            {diagnosis.result && (
-              <div className="mt-8 pt-8 border-t">
-                <div className="text-gray-700 whitespace-pre-wrap leading-relaxed">
-                  {diagnosis.result}
-                </div>
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-gray-200 py-4 px-6">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <BarChart3 className="w-6 h-6 text-sky-700" />
-            <span className="text-xl font-bold text-gray-900">AI股票分析平台</span>
-          </div>
-          <div className="flex items-center gap-6 text-sm text-gray-600">
-            <span>专业服务</span>
-            <span>关于我们</span>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-indigo-50 relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-indigo-900/10 to-transparent"></div>
 
-      <div className="max-w-6xl mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
-            {getContent('hero_title', '专业股票投资分析平台')}
+      <div className="absolute top-20 right-20 w-64 h-64 opacity-5">
+        <svg viewBox="0 0 200 200" className="w-full h-full">
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#e11d48" strokeWidth="1"/>
+          <circle cx="100" cy="100" r="60" fill="none" stroke="#ec4899" strokeWidth="1"/>
+          <circle cx="100" cy="100" r="40" fill="none" stroke="#6366f1" strokeWidth="1"/>
+        </svg>
+      </div>
+
+      <div className="absolute bottom-20 left-20 w-48 h-48 opacity-5">
+        <Mountain className="w-full h-full text-indigo-900" />
+      </div>
+
+      <div className="relative max-w-6xl mx-auto px-4 py-16">
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 mb-8 shadow-2xl relative group">
+            <Fan className="w-12 h-12 text-white group-hover:rotate-180 transition-transform duration-700" />
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 blur-xl opacity-50"></div>
+          </div>
+          <h1 className="text-6xl font-bold mb-4">
+            <span className="bg-gradient-to-r from-indigo-900 via-rose-700 to-pink-600 bg-clip-text text-transparent">
+              {getContent('hero_title', '和風投資診断')}
+            </span>
           </h1>
-          <p className="text-xl text-gray-600 mb-2">
-            {getContent('hero_subtitle', '基于人工智能的投资决策支持系统')}
-          </p>
-          <p className="text-gray-500">
-            {getContent('hero_description', '为专业投资者和机构提供深度市场洞察')}
-          </p>
-
-          <div className="flex items-center justify-center gap-4 mt-6">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Shield className="w-4 h-4 text-sky-700" />
-              <span>机构级安全</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Database className="w-4 h-4 text-sky-700" />
-              <span>实时数据</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Award className="w-4 h-4 text-sky-700" />
-              <span>专业认证</span>
-            </div>
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="w-16 h-1 bg-rose-400"></div>
+            <div className="w-8 h-1 bg-pink-400"></div>
+            <div className="w-4 h-1 bg-indigo-400"></div>
           </div>
+          <p className="text-2xl text-indigo-800 mb-3 font-medium">
+            {getContent('hero_subtitle', '伝統と革新が織りなす投資分析')}
+          </p>
+          <p className="text-lg text-indigo-600">
+            {getContent('hero_description', '日本の美意識で市場を読む')}
+          </p>
         </div>
 
-        <div className="max-w-2xl mx-auto mb-12">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-            <label className="block text-sm font-semibold text-gray-700 mb-3">
+        <div className="max-w-2xl mx-auto mb-16">
+          <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-2xl p-8 border-2 border-rose-200/50 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 opacity-5">
+              <Waves className="w-full h-full text-indigo-600" />
+            </div>
+            <label className="block text-sm font-bold text-indigo-900 mb-3 flex items-center gap-2 relative">
+              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center">
+                <BarChart3 className="w-3 h-3 text-white" />
+              </div>
               銘柄コード
             </label>
             <input
@@ -166,14 +163,14 @@ export function TemplateProfessional({ template, getContent }: TemplateProps) {
               value={diagnosis.stockCode}
               onChange={(e) => diagnosis.setStockCode(e.target.value)}
               placeholder="例: 1031"
-              className="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-lg focus:border-sky-700 focus:ring-4 focus:ring-sky-100 outline-none transition-all"
+              className="w-full px-6 py-4 text-lg border-2 border-rose-200 rounded-lg focus:border-rose-400 focus:ring-4 focus:ring-rose-100 outline-none transition-all bg-white/70 text-gray-900 relative"
               disabled={diagnosis.loading || diagnosis.analyzing}
             />
 
             <button
               onClick={diagnosis.handleDiagnose}
               disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
-              className="w-full mt-6 bg-sky-700 hover:bg-sky-800 text-white py-4 px-8 rounded-lg font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-3"
+              className="w-full mt-6 bg-gradient-to-r from-indigo-600 to-indigo-800 hover:from-indigo-700 hover:to-indigo-900 text-white py-4 px-8 rounded-lg font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 group relative overflow-hidden"
             >
               {diagnosis.loading ? (
                 <>
@@ -182,42 +179,73 @@ export function TemplateProfessional({ template, getContent }: TemplateProps) {
                 </>
               ) : (
                 <>
-                  <BarChart3 className="w-5 h-5" />
-                  <span>{getContent('hero_button_text', '开始专业分析')}</span>
+                  <Fan className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
+                  <span>{getContent('hero_button_text', '診断を始める')}</span>
                 </>
               )}
+              <div className="absolute inset-0 bg-gradient-to-r from-rose-400 to-pink-500 opacity-0 group-hover:opacity-20 transition-opacity"></div>
             </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <FeatureCard
-            icon={<Database className="w-6 h-6" />}
-            title={getContent('feature_1_title', '机构级数据')}
-            description={getContent('feature_1_description', '接入全球主要市场的实时数据源')}
-            variant="professional"
-          />
-          <FeatureCard
-            icon={<Activity className="w-6 h-6" />}
-            title={getContent('feature_2_title', '量化分析')}
-            description={getContent('feature_2_description', '多维度量化指标和技术分析模型')}
-            variant="professional"
-          />
-          <FeatureCard
-            icon={<Target className="w-6 h-6" />}
-            title={getContent('feature_3_title', '风险评估')}
-            description={getContent('feature_3_description', '全面的风险评估和投资组合优化建议')}
-            variant="professional"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-lg border-2 border-rose-200/30 hover:border-rose-300/50 transition-all duration-300 group relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 opacity-5">
+              <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" fill="#e11d48"/>
+              </svg>
+            </div>
+            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 mb-4 group-hover:scale-110 transition-transform shadow-lg relative">
+              <Mountain className="w-7 h-7 text-white" />
+            </div>
+            <h3 className="text-xl font-bold text-indigo-900 mb-2 relative">
+              {getContent('feature_1_title', '富士の如く')}
+            </h3>
+            <p className="text-indigo-700 leading-relaxed relative">
+              {getContent('feature_1_description', '不動の分析で、確かな投資判断をサポートします')}
+            </p>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-lg border-2 border-pink-200/30 hover:border-pink-300/50 transition-all duration-300 group relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 opacity-5">
+              <Waves className="w-full h-full text-pink-600" />
+            </div>
+            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 mb-4 group-hover:scale-110 transition-transform shadow-lg relative">
+              <Waves className="w-7 h-7 text-white" />
+            </div>
+            <h3 className="text-xl font-bold text-indigo-900 mb-2 relative">
+              {getContent('feature_2_title', '波の如く')}
+            </h3>
+            <p className="text-indigo-700 leading-relaxed relative">
+              {getContent('feature_2_description', '市場の流れを読み、柔軟に対応します')}
+            </p>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-lg border-2 border-indigo-200/30 hover:border-indigo-300/50 transition-all duration-300 group relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 opacity-5">
+              <Fan className="w-full h-full text-indigo-600" />
+            </div>
+            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 mb-4 group-hover:scale-110 transition-transform shadow-lg relative">
+              <Fan className="w-7 h-7 text-white" />
+            </div>
+            <h3 className="text-xl font-bold text-indigo-900 mb-2 relative">
+              {getContent('feature_3_title', '扇の如く')}
+            </h3>
+            <p className="text-indigo-700 leading-relaxed relative">
+              {getContent('feature_3_description', '広い視野で、多角的に分析します')}
+            </p>
+          </div>
         </div>
       </div>
 
-      <footer className="bg-white border-t border-gray-200 py-8 px-6 mt-16">
-        <div className="max-w-6xl mx-auto text-center text-sm text-gray-600">
-          <p className="mb-2">免责声明：本服务仅供参考，不构成投资建议。投资有风险，入市需谨慎。</p>
-          <p>{getContent('footer_text', '© 2024 专业投资分析平台')}</p>
+      <div className="relative mt-16 text-center pb-8">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <div className="w-8 h-1 bg-rose-400"></div>
+          <div className="w-4 h-1 bg-pink-400"></div>
+          <div className="w-2 h-1 bg-indigo-400"></div>
         </div>
-      </footer>
+        <p className="text-sm text-indigo-600">{getContent('footer_text', '和の心で紡ぐ投資の未来')}</p>
+      </div>
     </div>
   );
 }
