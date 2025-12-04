@@ -139,7 +139,7 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
             {getContent('hero_title', '今日はどのようにお手伝いしましょうか？')}
           </h1>
 
-          <div className="mb-6">
+          <div className="mb-5">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
@@ -151,8 +151,64 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 mb-6">
-            {features.map((feature) => {
+          <div className="grid grid-cols-2 gap-2 mb-4">
+            {features.slice(0, 2).map((feature) => {
+              const Icon = feature.icon;
+              return (
+                <button
+                  key={feature.id}
+                  onClick={() => toggleFeature(feature.id)}
+                  className={`${feature.bgColor} rounded-3xl p-5 text-left relative transition-all hover:shadow-md`}
+                >
+                  <div className={`${feature.iconBgColor} w-10 h-10 rounded-full flex items-center justify-center mb-3`}>
+                    <Icon className={`w-5 h-5 ${feature.iconColor}`} />
+                  </div>
+                  <h3 className="text-base font-semibold text-gray-900 mb-1">{feature.title}</h3>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-gray-600">{feature.description}</p>
+                    {feature.hasArrow && (
+                      <ArrowRight className="w-4 h-4 text-gray-600" />
+                    )}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="bg-gray-900 rounded-3xl px-6 py-8 mb-4">
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-12 h-12 bg-cyan-400 rounded-full flex items-center justify-center">
+                <div className="w-6 h-6 border-2 border-gray-900 rounded-full"></div>
+              </div>
+            </div>
+            <h2 className="text-white text-xl font-semibold text-center mb-6">
+              新しいチャットを開始
+            </h2>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={diagnosis.stockCode}
+                onChange={(e) => diagnosis.setStockCode(e.target.value)}
+                placeholder="株式コードを入力"
+                className="flex-1 px-5 py-4 rounded-full text-base focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-white text-gray-900 placeholder-gray-400"
+                disabled={diagnosis.loading || diagnosis.analyzing}
+              />
+              <button
+                onClick={diagnosis.handleDiagnose}
+                disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
+                className="bg-cyan-400 hover:bg-cyan-500 text-gray-900 py-4 px-8 rounded-full font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                {diagnosis.loading ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <span>開始</span>
+                )}
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            {features.slice(2, 4).map((feature) => {
               const Icon = feature.icon;
               return (
                 <button
@@ -177,42 +233,7 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
         </div>
       </div>
 
-      <div className="bg-gray-900 rounded-t-3xl px-6 py-8">
-        <div className="max-w-md mx-auto">
-          <div className="flex items-center justify-center mb-4">
-            <div className="w-12 h-12 bg-cyan-400 rounded-full flex items-center justify-center">
-              <div className="w-6 h-6 border-2 border-gray-900 rounded-full"></div>
-            </div>
-          </div>
-          <h2 className="text-white text-xl font-semibold text-center mb-6">
-            新しいチャットを開始
-          </h2>
-          <div className="space-y-3">
-            <input
-              type="text"
-              value={diagnosis.stockCode}
-              onChange={(e) => diagnosis.setStockCode(e.target.value)}
-              placeholder="株式コードを入力"
-              className="w-full px-5 py-4 rounded-full text-base focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-white text-gray-900 placeholder-gray-400"
-              disabled={diagnosis.loading || diagnosis.analyzing}
-            />
-            <button
-              onClick={diagnosis.handleDiagnose}
-              disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
-              className="w-full bg-cyan-400 hover:bg-cyan-500 text-gray-900 py-4 px-6 rounded-full font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
-            >
-              {diagnosis.loading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  <span>読み込み中...</span>
-                </>
-              ) : (
-                <span>新しいチャットを開始</span>
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
+      <Footer footerConfig={template.footerConfig} variant="default" />
     </div>
   );
 }
