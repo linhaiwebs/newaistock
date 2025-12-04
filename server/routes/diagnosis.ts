@@ -31,7 +31,13 @@ router.post('/analyze', async (req, res) => {
 
     const cached = await getCachedDiagnosis(stockCode);
 
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
     if (cached) {
+      console.log(`[Diagnosis] Using cached result for ${stockCode}`);
+
       await supabaseAdmin.from('stock_diagnoses').insert({
         session_id: sessionId,
         stock_code: stockCode,
@@ -40,12 +46,23 @@ router.post('/analyze', async (req, res) => {
         converted: false,
       });
 
-      return res.json({ cached: true, result: cached });
+      const chunkSize = 50;
+      const chunks = [];
+      for (let i = 0; i < cached.length; i += chunkSize) {
+        chunks.push(cached.slice(i, i + chunkSize));
+      }
+
+      for (const chunk of chunks) {
+        res.write(`data: ${JSON.stringify({ chunk })}\n\n`);
+        await new Promise(resolve => setTimeout(resolve, 20));
+      }
+
+      res.write('data: [DONE]\n\n');
+      res.end();
+      return;
     }
 
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
+    console.log(`[Diagnosis] Generating fresh analysis for ${stockCode}`);
 
     const generator = await analyzeStockWithAI({
       stockCode,

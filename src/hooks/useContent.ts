@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { requireValidToken } from '../lib/auth';
 
 interface ContentMap {
   [key: string]: string;
@@ -56,7 +57,7 @@ export function useContent() {
 
   const updateContent = async (key: string, newContent: string, category?: string, description?: string) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = requireValidToken();
       const response = await fetch(`/api/content/${key}`, {
         method: 'PUT',
         headers: {
@@ -67,7 +68,8 @@ export function useContent() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update content');
+        const errorData = await response.json().catch(() => ({ error: 'Failed to update content' }));
+        throw new Error(errorData.error || 'Failed to update content');
       }
 
       await fetchContent();
@@ -78,7 +80,7 @@ export function useContent() {
 
   const createContent = async (key: string, contentText: string, category: string, description: string) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = requireValidToken();
       const response = await fetch('/api/content', {
         method: 'POST',
         headers: {
@@ -89,7 +91,8 @@ export function useContent() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create content');
+        const errorData = await response.json().catch(() => ({ error: 'Failed to create content' }));
+        throw new Error(errorData.error || 'Failed to create content');
       }
 
       await fetchContent();
@@ -100,7 +103,7 @@ export function useContent() {
 
   const deleteContent = async (key: string) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = requireValidToken();
       const response = await fetch(`/api/content/${key}`, {
         method: 'DELETE',
         headers: {
@@ -109,7 +112,8 @@ export function useContent() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete content');
+        const errorData = await response.json().catch(() => ({ error: 'Failed to delete content' }));
+        throw new Error(errorData.error || 'Failed to delete content');
       }
 
       await fetchContent();

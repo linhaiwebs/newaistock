@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useContent } from '../../hooks/useContent';
 import { Edit2, Trash2, Plus, Save, X, Search } from 'lucide-react';
 
 export default function ContentPage() {
+  const navigate = useNavigate();
   const { details, loading, error, updateContent, createContent, deleteContent } = useContent();
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({ content: '', category: '', description: '' });
@@ -35,6 +37,11 @@ export default function ContentPage() {
       await updateContent(key, editForm.content, editForm.category, editForm.description);
       setEditingKey(null);
     } catch (err) {
+      if (err instanceof Error && (err.message === 'NO_TOKEN' || err.message === 'TOKEN_EXPIRED')) {
+        alert('認証が期限切れです。再度ログインしてください。');
+        navigate('/admin/login');
+        return;
+      }
       alert('更新失敗: ' + (err instanceof Error ? err.message : '不明なエラー'));
     }
   };
@@ -45,6 +52,11 @@ export default function ContentPage() {
     try {
       await deleteContent(key);
     } catch (err) {
+      if (err instanceof Error && (err.message === 'NO_TOKEN' || err.message === 'TOKEN_EXPIRED')) {
+        alert('認証が期限切れです。再度ログインしてください。');
+        navigate('/admin/login');
+        return;
+      }
       alert('削除失敗: ' + (err instanceof Error ? err.message : '不明なエラー'));
     }
   };
@@ -60,6 +72,11 @@ export default function ContentPage() {
       setIsCreating(false);
       setCreateForm({ key: '', content: '', category: '', description: '' });
     } catch (err) {
+      if (err instanceof Error && (err.message === 'NO_TOKEN' || err.message === 'TOKEN_EXPIRED')) {
+        alert('認証が期限切れです。再度ログインしてください。');
+        navigate('/admin/login');
+        return;
+      }
       alert('作成失敗: ' + (err instanceof Error ? err.message : '不明なエラー'));
     }
   };
