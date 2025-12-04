@@ -50,6 +50,20 @@ export function TemplatesPage() {
       setError('');
       const token = requireValidToken();
       await activateTemplate(token, id);
+
+      localStorage.removeItem('activeTemplate');
+
+      try {
+        const channel = new BroadcastChannel('template-updates');
+        channel.postMessage('template-updated');
+        channel.close();
+      } catch (e) {
+        console.warn('BroadcastChannel not supported');
+      }
+
+      setSuccess('模板已激活！前端页面将自动刷新。');
+      setTimeout(() => setSuccess(''), 3000);
+
       loadTemplates();
     } catch (error) {
       console.error('Failed to activate template:', error);

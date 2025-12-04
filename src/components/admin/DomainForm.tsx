@@ -198,6 +198,9 @@ export function DomainForm() {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="ca-pub-xxxxxxxxxxxxxxxx"
             />
+            <p className="mt-2 text-xs text-gray-500">
+              配置后将自动生成 ads.txt 文件。未配置时访问 /ads.txt 将显示"未配置"提示。
+            </p>
           </div>
 
           <div>

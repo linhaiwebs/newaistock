@@ -1,14 +1,17 @@
 import { TemplateProps } from '../../../types/template';
 import { useStockDiagnosis } from '../../../hooks/useStockDiagnosis';
-import { TrendingUp, BarChart3, Activity, LineChart, ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
+import { TrendingUp, BarChart3, Activity, LineChart, ArrowRight, Loader2 } from 'lucide-react';
 import Footer from '../shared/Footer';
 import { AILogo } from '../../ui/AILogo';
 import { DiagnosisLoadingScreen } from '../shared/DiagnosisLoadingScreen';
+import { DiagnosisResult } from '../shared/DiagnosisResult';
+import { getTemplateTheme } from '../../../types/theme';
 import { useState } from 'react';
 
 export function TemplateModern({ template, getContent }: TemplateProps) {
   const diagnosis = useStockDiagnosis();
   const [selectedFeatures, setSelectedFeatures] = useState<Set<string>>(new Set());
+  const theme = getTemplateTheme('modern');
 
   const features = [
     {
@@ -67,39 +70,15 @@ export function TemplateModern({ template, getContent }: TemplateProps) {
 
   if (diagnosis.showResult) {
     return (
-      <div className="min-h-screen bg-white">
-        <div className="max-w-4xl mx-auto px-6 py-12">
-          <button
-            onClick={diagnosis.resetDiagnosis}
-            className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors mb-8 group"
-          >
-            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            <span className="font-normal">戻る</span>
-          </button>
-
-          <div className="mb-8 animate-fade-in">
-            <h2 className="text-4xl font-light text-gray-900 mb-4 text-left">
-              {diagnosis.stockName ? `${diagnosis.stockName} - AI診断結果` : 'AI診断結果'}
-            </h2>
-          </div>
-
-          <div className="bg-white border border-gray-200 rounded-2xl p-8 mb-8 shadow-sm animate-slide-up">
-            <div className="text-gray-900 whitespace-pre-wrap leading-loose text-base">
-              {diagnosis.result}
-            </div>
-          </div>
-
-          {diagnosis.redirectUrl && (
-            <button
-              onClick={diagnosis.handleConversion}
-              className="bg-blue-500 hover:bg-blue-600 text-white py-4 px-10 rounded-full transition-all duration-200 flex items-center gap-3 group font-normal shadow-md hover:shadow-lg text-base animate-fade-in"
-            >
-              <span>詳細を見る</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-          )}
-        </div>
-      </div>
+      <DiagnosisResult
+        stockName={diagnosis.stockName}
+        stockCode={diagnosis.stockCode}
+        result={diagnosis.result}
+        redirectUrl={diagnosis.redirectUrl}
+        onBack={diagnosis.resetDiagnosis}
+        onConversion={diagnosis.handleConversion}
+        themeColor={theme.colors.primary}
+      />
     );
   }
 

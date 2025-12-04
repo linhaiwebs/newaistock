@@ -169,6 +169,12 @@ export function DomainsPage() {
                       </span>
                     </div>
                     <div>
+                      <span className="text-gray-500">ads.txt:</span>{' '}
+                      <span className={`font-medium ${domain.google_ads_publisher_id ? 'text-green-600' : 'text-gray-400'}`}>
+                        {domain.google_ads_publisher_id ? '已配置' : '未配置'}
+                      </span>
+                    </div>
+                    <div>
                       <span className="text-gray-500">Google Analytics:</span>{' '}
                       <span className="font-medium text-gray-900">
                         {domain.google_analytics_id || '未配置'}
