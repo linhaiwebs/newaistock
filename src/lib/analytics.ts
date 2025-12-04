@@ -5,6 +5,7 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 let isGtagLoaded = false;
+let conversionActionId: string | null = null;
 
 export async function initializeAnalytics() {
   try {
@@ -15,6 +16,7 @@ export async function initializeAnalytics() {
       .maybeSingle();
 
     if (data && data.ga4_measurement_id) {
+      conversionActionId = data.conversion_action_id || null;
       loadGtag(data.ga4_measurement_id, data.google_ads_conversion_id);
     }
   } catch (error) {
@@ -51,6 +53,14 @@ export function trackDiagnosisClick() {
 
 export function trackConversionClick() {
   if (typeof window !== 'undefined' && (window as any).gtag) {
-    (window as any).gtag('event', 'Add');
+    const gtag = (window as any).gtag;
+
+    gtag('event', 'Add');
+
+    if (conversionActionId) {
+      gtag('event', 'conversion', {
+        'send_to': conversionActionId
+      });
+    }
   }
 }
