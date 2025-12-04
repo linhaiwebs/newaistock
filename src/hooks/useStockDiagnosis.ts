@@ -167,12 +167,19 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
 
   async function handleConversion() {
     trackConversionClick();
-    await trackConversion(sessionId, stockCode);
-    await trackEvent(sessionId, 'conversion_click', stockCode);
 
+    // 立即打开新窗口（不等待 API）
     if (redirectUrl) {
       window.open(redirectUrl, '_blank');
     }
+
+    // 后台异步记录，不阻塞用户
+    Promise.allSettled([
+      trackConversion(sessionId, stockCode),
+      trackEvent(sessionId, 'conversion_click', stockCode)
+    ]).catch(error => {
+      console.error('Tracking error:', error);
+    });
   }
 
   function resetDiagnosis() {
