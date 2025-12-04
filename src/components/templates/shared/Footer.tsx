@@ -21,7 +21,11 @@ const defaultFooterConfig: FooterConfig = {
 };
 
 export default function Footer({ footerConfig, variant = 'default', className = '' }: FooterProps) {
-  const config = footerConfig || defaultFooterConfig;
+  const isValidConfig = footerConfig &&
+    Object.keys(footerConfig).length > 0 &&
+    footerConfig.disclaimer_title;
+
+  const config = isValidConfig ? footerConfig : defaultFooterConfig;
 
   return (
     <footer className={`w-full py-12 ${className}`}>
