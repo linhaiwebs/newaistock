@@ -1,39 +1,41 @@
+import { LucideIcon } from 'lucide-react';
+
 interface FeatureCardProps {
-  icon: React.ReactNode;
+  icon: LucideIcon;
   title: string;
-  description: string;
-  variant?: 'default' | 'minimal' | 'professional' | 'modern';
-  className?: string;
+  description?: string;
+  selected?: boolean;
+  onClick?: () => void;
+  gradientClass: string;
+  iconColor: string;
 }
 
 export function FeatureCard({
-  icon,
+  icon: Icon,
   title,
   description,
-  variant = 'default',
-  className = ''
+  selected = false,
+  onClick,
+  gradientClass,
+  iconColor
 }: FeatureCardProps) {
-  const variantClasses = {
-    default: 'bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow',
-    minimal: 'bg-slate-800 rounded-lg p-4 border border-slate-700',
-    professional: 'bg-white rounded-lg p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all',
-    modern: 'bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300',
-  };
-
-  const iconClasses = {
-    default: 'text-blue-600',
-    minimal: 'text-slate-400',
-    professional: 'text-sky-700',
-    modern: 'text-violet-600',
-  };
-
   return (
-    <div className={`${variantClasses[variant]} ${className}`}>
-      <div className={`mb-4 ${iconClasses[variant]}`}>
-        {icon}
+    <button
+      onClick={onClick}
+      className={`
+        ${gradientClass}
+        rounded-2xl p-5 shadow-lg feature-card-hover cursor-pointer
+        border border-white/40 relative overflow-hidden
+        ${selected ? 'ring-2 ring-blue-500 ring-offset-2' : ''}
+      `}
+    >
+      <div className={`flex items-start justify-start mb-3 ${iconColor}`}>
+        <Icon className="w-8 h-8" />
       </div>
-      <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
-      <p className="text-gray-600">{description}</p>
-    </div>
+      <h3 className="text-left text-base font-bold text-gray-900 mb-1 leading-tight">{title}</h3>
+      {description && (
+        <p className="text-left text-xs text-gray-700 leading-relaxed">{description}</p>
+      )}
+    </button>
   );
 }
