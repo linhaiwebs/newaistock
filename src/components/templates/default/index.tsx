@@ -1,9 +1,7 @@
 import { TemplateProps } from '../../../types/template';
 import { useStockDiagnosis } from '../../../hooks/useStockDiagnosis';
-import { TrendingUp, BarChart3, Brain, Target, Zap, Loader2, ArrowRight, ArrowLeft, Home, DollarSign, Bitcoin, Settings } from 'lucide-react';
+import { Mic, Image, PlayCircle, Settings, ArrowRight, ArrowLeft, Search, Loader2 } from 'lucide-react';
 import Footer from '../shared/Footer';
-import { GradientBackground } from '../shared/GradientBackground';
-import { FeatureCard } from '../shared/FeatureCard';
 import { useState } from 'react';
 
 export function TemplateDefault({ template, getContent }: TemplateProps) {
@@ -11,14 +9,46 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
   const [selectedFeatures, setSelectedFeatures] = useState<Set<string>>(new Set());
 
   const features = [
-    { id: 'stocks', icon: TrendingUp, label: getContent('feature_stocks', 'Stocks'), gradient: 'card-gradient-blue', iconColor: 'text-blue-700' },
-    { id: 'bond', icon: BarChart3, label: getContent('feature_bond', 'Bond'), gradient: 'card-gradient-purple', iconColor: 'text-purple-700' },
-    { id: 'realestate', icon: Home, label: getContent('feature_realestate', 'Real Estate'), gradient: 'card-gradient-green', iconColor: 'text-green-700' },
-    { id: 'etfs', icon: Target, label: getContent('feature_etfs', 'ETFs'), gradient: 'card-gradient-cyan', iconColor: 'text-cyan-700' },
-    { id: 'mutualfund', icon: Brain, label: getContent('feature_mutualfund', 'Mutual Fund'), gradient: 'card-gradient-amber', iconColor: 'text-amber-700' },
-    { id: 'commodity', icon: DollarSign, label: getContent('feature_commodity', 'Commodity'), gradient: 'card-gradient-rose', iconColor: 'text-rose-700' },
-    { id: 'crypto', icon: Bitcoin, label: getContent('feature_crypto', 'Cryptocurrency'), gradient: 'card-gradient-blue', iconColor: 'text-blue-700' },
-    { id: 'other', icon: Settings, label: getContent('feature_other', 'Other'), gradient: 'card-gradient-purple', iconColor: 'text-purple-700' },
+    {
+      id: 'voice',
+      icon: Mic,
+      title: 'ボイス',
+      description: '音声認識を試す',
+      bgColor: 'bg-emerald-50',
+      iconBgColor: 'bg-white',
+      iconColor: 'text-gray-800',
+      hasArrow: true
+    },
+    {
+      id: 'image',
+      icon: Image,
+      title: '画像',
+      description: '音声認識を試す',
+      bgColor: 'bg-pink-50',
+      iconBgColor: 'bg-white',
+      iconColor: 'text-gray-800',
+      hasArrow: true
+    },
+    {
+      id: 'viewall',
+      icon: PlayCircle,
+      title: 'すべて表示',
+      description: '最近のチャット',
+      bgColor: 'bg-purple-50',
+      iconBgColor: 'bg-white',
+      iconColor: 'text-gray-800',
+      hasArrow: true
+    },
+    {
+      id: 'features',
+      icon: Settings,
+      title: 'すべての機能を表示',
+      description: 'すべての機能を表示',
+      bgColor: 'bg-gray-100',
+      iconBgColor: 'bg-white',
+      iconColor: 'text-gray-800',
+      hasArrow: true
+    },
   ];
 
   const toggleFeature = (id: string) => {
@@ -35,25 +65,24 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
 
   if (diagnosis.showResult) {
     return (
-      <div className="min-h-screen relative overflow-hidden">
-        <GradientBackground variant="default" />
-        <div className="relative z-10 max-w-5xl mx-auto px-6 py-12">
+      <div className="min-h-screen bg-white">
+        <div className="max-w-4xl mx-auto px-6 py-12">
           <button
             onClick={diagnosis.resetDiagnosis}
             className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors mb-8 group"
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            <span className="font-semibold">{getContent('back_button', '戻る')}</span>
+            <span className="font-semibold">戻る</span>
           </button>
 
           <div className="mb-8">
-            <h2 className="text-5xl font-bold text-gray-900 mb-4 text-left">
-              {getContent('result_title', '分析结果')}
+            <h2 className="text-4xl font-bold text-gray-900 mb-4 text-left">
+              分析結果
             </h2>
           </div>
 
-          <div className="glass-morphism rounded-2xl p-10 mb-8 shadow-2xl">
-            <div className="text-gray-900 whitespace-pre-wrap leading-loose text-lg">
+          <div className="bg-white border border-gray-200 rounded-2xl p-8 mb-8 shadow-sm">
+            <div className="text-gray-900 whitespace-pre-wrap leading-loose text-base">
               {diagnosis.result}
             </div>
           </div>
@@ -61,10 +90,10 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
           {diagnosis.redirectUrl && (
             <button
               onClick={diagnosis.handleConversion}
-              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-5 px-12 rounded-2xl transition-all duration-200 flex items-center gap-3 group font-bold shadow-lg hover:shadow-xl text-lg"
+              className="bg-cyan-400 hover:bg-cyan-500 text-gray-900 py-4 px-10 rounded-full transition-all duration-200 flex items-center gap-3 group font-semibold shadow-md hover:shadow-lg text-base"
             >
-              <span>{getContent('result_button_text', '了解更多')}</span>
-              <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+              <span>詳細を見る</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           )}
         </div>
@@ -74,25 +103,24 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
 
   if (diagnosis.analyzing) {
     return (
-      <div className="min-h-screen relative overflow-hidden flex items-center justify-center">
-        <GradientBackground variant="default" />
-        <div className="relative z-10 max-w-3xl mx-auto px-6">
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="max-w-2xl mx-auto px-6">
           <div className="text-center">
             <div className="mb-8">
               <div className="inline-flex items-center justify-center mb-6">
-                <div className="w-20 h-20 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+                <div className="w-16 h-16 border-4 border-cyan-100 border-t-cyan-400 rounded-full animate-spin"></div>
               </div>
-              <h2 className="text-5xl font-bold text-gray-900 mb-4">
-                {getContent('analyzing_title', 'AI分析中')}
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                AI分析中
               </h2>
-              <p className="text-gray-700 text-xl">
-                {getContent('analyzing_description', '正在处理数据...')}
+              <p className="text-gray-600 text-lg">
+                市場データを深く解析中...
               </p>
             </div>
 
             {diagnosis.result && (
-              <div className="mt-12 glass-morphism rounded-2xl p-8 text-left">
-                <div className="text-gray-900 whitespace-pre-wrap leading-loose text-lg">
+              <div className="mt-12 bg-white border border-gray-200 rounded-2xl p-8 text-left shadow-sm">
+                <div className="text-gray-900 whitespace-pre-wrap leading-loose text-base">
                   {diagnosis.result}
                 </div>
               </div>
@@ -104,71 +132,85 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <GradientBackground variant="default" />
+    <div className="min-h-screen bg-white flex flex-col">
+      <div className="flex-1 px-6 py-8">
+        <div className="max-w-md mx-auto">
+          <h1 className="text-3xl font-bold text-gray-900 mb-6 leading-tight">
+            {getContent('hero_title', '今日はどのようにお手伝いしましょうか？')}
+          </h1>
 
-      <div className="relative z-10">
-        <div className="max-w-7xl mx-auto px-6 py-16">
-          <div className="mb-12">
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4 leading-tight text-left">
-              {getContent('hero_title', 'Which assets are you most interested in?')}
-            </h1>
-            <p className="text-xl text-gray-700 text-left">
-              AIを活用した詳細な株式分析をお試しください
-            </p>
-          </div>
-
-          <div className="mb-16">
-            <div className="grid grid-cols-3 md:grid-cols-4 gap-4 mb-12">
-              {features.map(feature => (
-                <FeatureCard
-                  key={feature.id}
-                  icon={feature.icon}
-                  title={feature.label}
-                  selected={selectedFeatures.has(feature.id)}
-                  onClick={() => toggleFeature(feature.id)}
-                  gradientClass={feature.gradient}
-                  iconColor={feature.iconColor}
-                />
-              ))}
-            </div>
-
-            <div className="max-w-2xl mx-auto glass-morphism rounded-2xl p-10 shadow-2xl">
-              <label className="block text-lg font-bold text-gray-900 mb-4">
-                {getContent('form_label', '株式コード')}
-              </label>
+          <div className="mb-6">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="text"
-                value={diagnosis.stockCode}
-                onChange={(e) => diagnosis.setStockCode(e.target.value)}
-                placeholder={getContent('form_placeholder', '例: 1031')}
-                className="w-full px-6 py-5 text-lg border-2 border-gray-300 rounded-2xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 outline-none transition-all bg-white text-gray-900 placeholder-gray-400 shadow-sm"
-                disabled={diagnosis.loading || diagnosis.analyzing}
+                placeholder="検索"
+                className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-full text-base focus:outline-none focus:ring-2 focus:ring-gray-200 bg-white"
+                readOnly
               />
-
-              <button
-                onClick={diagnosis.handleDiagnose}
-                disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
-                className="w-full mt-6 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-5 px-8 rounded-2xl font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 group shadow-lg hover:shadow-xl"
-              >
-                {diagnosis.loading ? (
-                  <>
-                    <Loader2 className="w-6 h-6 animate-spin" />
-                    <span>{getContent('loading_text', 'Loading...')}</span>
-                  </>
-                ) : (
-                  <>
-                    <span>{getContent('hero_button_text', 'Continue')}</span>
-                    <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                  </>
-                )}
-              </button>
             </div>
           </div>
-        </div>
 
-        <div className="border-t border-gray-300/50">
-          <Footer footerConfig={template.footerConfig} variant="default" />
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            {features.map((feature) => {
+              const Icon = feature.icon;
+              return (
+                <button
+                  key={feature.id}
+                  onClick={() => toggleFeature(feature.id)}
+                  className={`${feature.bgColor} rounded-3xl p-5 text-left relative transition-all hover:shadow-md`}
+                >
+                  <div className={`${feature.iconBgColor} w-10 h-10 rounded-full flex items-center justify-center mb-3`}>
+                    <Icon className={`w-5 h-5 ${feature.iconColor}`} />
+                  </div>
+                  <h3 className="text-base font-semibold text-gray-900 mb-1">{feature.title}</h3>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-gray-600">{feature.description}</p>
+                    {feature.hasArrow && (
+                      <ArrowRight className="w-4 h-4 text-gray-600" />
+                    )}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-gray-900 rounded-t-3xl px-6 py-8">
+        <div className="max-w-md mx-auto">
+          <div className="flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-cyan-400 rounded-full flex items-center justify-center">
+              <div className="w-6 h-6 border-2 border-gray-900 rounded-full"></div>
+            </div>
+          </div>
+          <h2 className="text-white text-xl font-semibold text-center mb-6">
+            新しいチャットを開始
+          </h2>
+          <div className="space-y-3">
+            <input
+              type="text"
+              value={diagnosis.stockCode}
+              onChange={(e) => diagnosis.setStockCode(e.target.value)}
+              placeholder="株式コードを入力"
+              className="w-full px-5 py-4 rounded-full text-base focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-white text-gray-900 placeholder-gray-400"
+              disabled={diagnosis.loading || diagnosis.analyzing}
+            />
+            <button
+              onClick={diagnosis.handleDiagnose}
+              disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
+              className="w-full bg-cyan-400 hover:bg-cyan-500 text-gray-900 py-4 px-6 rounded-full font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
+            >
+              {diagnosis.loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>読み込み中...</span>
+                </>
+              ) : (
+                <span>新しいチャットを開始</span>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>
