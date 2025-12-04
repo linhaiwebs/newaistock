@@ -26,12 +26,15 @@ export function useTemplate() {
 
       const cached = getCachedTemplate();
       if (cached) {
+        console.log('[useTemplate] Using cached template:', cached.template_key);
         setTemplate(cached);
         setLoading(false);
         return;
       }
 
+      console.log('[useTemplate] Fetching active template from API...');
       const response = await getActiveTemplate();
+      console.log('[useTemplate] Received template:', response.template?.template_key);
 
       const templateData: TemplateData = {
         id: response.template.id,
@@ -44,11 +47,13 @@ export function useTemplate() {
 
       setTemplate(templateData);
       cacheTemplate(templateData);
+      console.log('[useTemplate] Template loaded successfully');
     } catch (err) {
-      console.error('Failed to load template:', err);
+      console.error('[useTemplate] Failed to load template:', err);
       setError('Failed to load template');
     } finally {
       setLoading(false);
+      console.log('[useTemplate] Loading complete');
     }
   }
 
@@ -64,9 +69,12 @@ export function useTemplate() {
         return data;
       }
 
+      console.log('[useTemplate] Cache expired, removing...');
       localStorage.removeItem(CACHE_KEY);
       return null;
-    } catch {
+    } catch (error) {
+      console.error('[useTemplate] Failed to parse cached template, clearing...', error);
+      localStorage.removeItem(CACHE_KEY);
       return null;
     }
   }

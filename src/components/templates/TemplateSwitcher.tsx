@@ -48,7 +48,10 @@ export function TemplateSwitcher() {
   const { template, loading, error } = useTemplate();
   const { getContent } = useTemplateContent(template?.content);
 
+  console.log('[TemplateSwitcher] State:', { loading, error, hasTemplate: !!template, templateKey: template?.template_key });
+
   if (loading) {
+    console.log('[TemplateSwitcher] Showing loading screen');
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">

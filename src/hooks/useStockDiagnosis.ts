@@ -20,8 +20,11 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
     const code = params.get('code');
 
     if (code) {
+      console.log('[useStockDiagnosis] Auto-loading stock code from URL:', code);
       setStockCode(code);
       loadStockData(code);
+    } else {
+      console.log('[useStockDiagnosis] No stock code in URL, ready for user input');
     }
   }, []);
 

@@ -23,18 +23,26 @@ export function useContent() {
   const fetchContent = async () => {
     try {
       setLoading(true);
+      console.log('[useContent] Fetching content from API...');
       const response = await fetch('/api/content');
+      console.log('[useContent] Response status:', response.status);
+
       if (!response.ok) {
-        throw new Error('Failed to fetch content');
+        throw new Error(`Failed to fetch content: ${response.status}`);
       }
       const data = await response.json();
+      console.log('[useContent] Received content items:', Object.keys(data.content || {}).length);
       setContent(data.content || {});
       setDetails(data.details || []);
       setError(null);
     } catch (err) {
+      console.error('[useContent] Error:', err);
       setError(err instanceof Error ? err : new Error('Unknown error'));
+      setContent({});
+      setDetails([]);
     } finally {
       setLoading(false);
+      console.log('[useContent] Loading complete');
     }
   };
 

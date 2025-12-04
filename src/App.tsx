@@ -16,6 +16,7 @@ import ContentPage from './components/admin/ContentPage';
 import { initializeAnalytics } from './lib/analytics';
 import { trackSession, trackDuration } from './lib/api';
 import { getSessionId, trackSessionDuration } from './lib/session';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 function App() {
   useEffect(() => {
@@ -40,26 +41,28 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<TemplateSwitcher />} />
-        <Route path="/admin/login" element={<LoginPage />} />
-        <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
-          <Route index element={<Navigate to="/admin/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="users" element={<UsersPage />} />
-          <Route path="analytics" element={<AnalyticsPage />} />
-          <Route path="domains" element={<DomainsPage />} />
-          <Route path="domains/new" element={<DomainForm />} />
-          <Route path="domains/:id/edit" element={<DomainForm />} />
-          <Route path="content" element={<ContentPage />} />
-          <Route path="redirects" element={<RedirectsPage />} />
-          <Route path="templates" element={<TemplatesPage />} />
-          <Route path="templates/:id/edit" element={<TemplateEditor />} />
-          <Route path="cache" element={<CachePage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<TemplateSwitcher />} />
+          <Route path="/admin/login" element={<LoginPage />} />
+          <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+            <Route index element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="users" element={<UsersPage />} />
+            <Route path="analytics" element={<AnalyticsPage />} />
+            <Route path="domains" element={<DomainsPage />} />
+            <Route path="domains/new" element={<DomainForm />} />
+            <Route path="domains/:id/edit" element={<DomainForm />} />
+            <Route path="content" element={<ContentPage />} />
+            <Route path="redirects" element={<RedirectsPage />} />
+            <Route path="templates" element={<TemplatesPage />} />
+            <Route path="templates/:id/edit" element={<TemplateEditor />} />
+            <Route path="cache" element={<CachePage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 

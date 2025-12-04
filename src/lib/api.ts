@@ -1,11 +1,39 @@
 import { requireValidToken, removeToken } from './auth';
 
 const API_BASE_URL = import.meta.env.DEV ? 'http://localhost:3001/api' : '/api';
+const DEFAULT_TIMEOUT = 30000;
 
 export class AuthError extends Error {
   constructor(message: string, public code: string) {
     super(message);
     this.name = 'AuthError';
+  }
+}
+
+export class TimeoutError extends Error {
+  constructor(message: string = 'Request timeout') {
+    super(message);
+    this.name = 'TimeoutError';
+  }
+}
+
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeout: number = DEFAULT_TIMEOUT): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error: any) {
+    clearTimeout(timeoutId);
+    if (error.name === 'AbortError') {
+      throw new TimeoutError(`Request timeout after ${timeout}ms`);
+    }
+    throw error;
   }
 }
 
@@ -18,7 +46,7 @@ async function handleAuthError(response: Response): Promise<void> {
 }
 
 export async function fetchStockData(code: string) {
-  const response = await fetch(`${API_BASE_URL}/stock/fetch`, {
+  const response = await fetchWithTimeout(`${API_BASE_URL}/stock/fetch`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ code }),
@@ -361,10 +389,14 @@ export async function updateTemplateContent(token: string, id: string, content: 
 }
 
 export async function getActiveTemplate() {
-  const response = await fetch(`${API_BASE_URL}/templates/active`);
+  console.log('[API] Fetching active template...');
+  const response = await fetchWithTimeout(`${API_BASE_URL}/templates/active`, {}, 10000);
 
+  console.log('[API] Active template response status:', response.status);
   if (!response.ok) throw new Error('Failed to fetch active template');
-  return response.json();
+  const data = await response.json();
+  console.log('[API] Active template data received');
+  return data;
 }
 
 export async function scanTemplates(token: string) {
