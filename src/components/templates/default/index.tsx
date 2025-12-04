@@ -133,7 +133,7 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50/30 via-white to-white flex flex-col">
       <div className="flex-1 px-6 py-8">
         <div className="max-w-md mx-auto">
           <h1 className="text-3xl font-light text-gray-900 mb-6 leading-tight">
@@ -147,7 +147,7 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
                 <button
                   key={feature.id}
                   onClick={() => toggleFeature(feature.id)}
-                  className={`${feature.bgColor} rounded-3xl p-4 text-left relative transition-all hover:shadow-md border-2 border-gray-700`}
+                  className={`${feature.bgColor} rounded-3xl p-4 text-left relative transition-all hover:shadow-md border border-gray-300`}
                 >
                   <div className={`${feature.iconBgColor} w-8 h-8 rounded-full flex items-center justify-center mb-3`}>
                     <Icon className={`w-4 h-4 ${feature.iconColor}`} />
@@ -201,7 +201,7 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
                 <button
                   key={feature.id}
                   onClick={() => toggleFeature(feature.id)}
-                  className={`${feature.bgColor} rounded-3xl p-4 text-left relative transition-all hover:shadow-md border-2 border-gray-700`}
+                  className={`${feature.bgColor} rounded-3xl p-4 text-left relative transition-all hover:shadow-md border border-gray-300`}
                 >
                   <div className={`${feature.iconBgColor} w-8 h-8 rounded-full flex items-center justify-center mb-3`}>
                     <Icon className={`w-4 h-4 ${feature.iconColor}`} />
