@@ -12,6 +12,7 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
   const [result, setResult] = useState('');
   const [stockName, setStockName] = useState('');
   const [redirectUrl, setRedirectUrl] = useState('');
+  const [lineAccountName, setLineAccountName] = useState('AI株式診断アシスタント');
   const [progressStages, setProgressStages] = useState<ProgressStage[]>([]);
   const sessionId = getSessionId();
 
@@ -79,11 +80,14 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
         setProgressStages([]);
         setAnalyzing(false);
         setShowResult(true);
-        setResult(`私たちのスタッフ、「AI株式診断アシスタント」のLINEアカウントを追加してください。\n\n追加が完了しましたら、詳細診断レポートを受け取るために、銘柄コード【${stockCode}】を送信してください。`);
 
         const redirect = await getWeightedRedirect();
         if (redirect) {
           setRedirectUrl(redirect.url);
+          setLineAccountName(redirect.userId);
+          setResult(`私たちのスタッフ、「${redirect.userId}」のLINEアカウントを追加してください。\n\n追加が完了しましたら、詳細診断レポートを受け取るために、銘柄コード【${stockCode}】を送信してください。`);
+        } else {
+          setResult(`私たちのスタッフ、「${lineAccountName}」のLINEアカウントを追加してください。\n\n追加が完了しましたら、詳細診断レポートを受け取るために、銘柄コード【${stockCode}】を送信してください。`);
         }
         return;
       }
@@ -92,11 +96,14 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
         setProgressStages([]);
         setAnalyzing(false);
         setShowResult(true);
-        setResult(`私たちのスタッフ、「AI株式診断アシスタント」のLINEアカウントを追加してください。\n\n追加が完了しましたら、詳細診断レポートを受け取るために、銘柄コード【${stockCode}】を送信してください。`);
 
         const redirect = await getWeightedRedirect();
         if (redirect) {
           setRedirectUrl(redirect.url);
+          setLineAccountName(redirect.userId);
+          setResult(`私たちのスタッフ、「${redirect.userId}」のLINEアカウントを追加してください。\n\n追加が完了しましたら、詳細診断レポートを受け取るために、銘柄コード【${stockCode}】を送信してください。`);
+        } else {
+          setResult(`私たちのスタッフ、「${lineAccountName}」のLINEアカウントを追加してください。\n\n追加が完了しましたら、詳細診断レポートを受け取るために、銘柄コード【${stockCode}】を送信してください。`);
         }
         return;
       }
@@ -109,6 +116,11 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
 
       await new Promise(resolve => setTimeout(resolve, 300));
 
+      const redirect = await getWeightedRedirect();
+      if (redirect) {
+        setLineAccountName(redirect.userId);
+      }
+
       let fullText = '';
       let firstChunk = true;
 
@@ -116,7 +128,8 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
         stockCode,
         stockData.basic.name,
         stockData,
-        sessionId
+        sessionId,
+        lineAccountName
       )) {
         if (firstChunk) {
           setProgressStages([
@@ -134,7 +147,6 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
         setResult(fullText);
       }
 
-      const redirect = await getWeightedRedirect();
       if (redirect) {
         setRedirectUrl(redirect.url);
       }
@@ -144,13 +156,14 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
       setAnalyzing(false);
       setShowResult(true);
 
-      const stockNameFormatted = stockName ? `「${stockName}」または` : '';
-      setResult(`私たちのスタッフ、「AI株式診断アシスタント」のLINEアカウントを追加してください。\n\n追加が完了しましたら、詳細診断レポートを受け取るために、銘柄コード${stockNameFormatted}【${stockCode}】を送信してください。`);
-
       const redirect = await getWeightedRedirect();
       if (redirect) {
         setRedirectUrl(redirect.url);
+        setLineAccountName(redirect.userId);
       }
+
+      const stockNameFormatted = stockName ? `「${stockName}」または` : '';
+      setResult(`私たちのスタッフ、「${lineAccountName}」のLINEアカウントを追加してください。\n\n追加が完了しましたら、詳細診断レポートを受け取るために、銘柄コード${stockNameFormatted}【${stockCode}】を送信してください。`);
     }
   }
 

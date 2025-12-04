@@ -18,6 +18,7 @@ interface StockAnalysisParams {
     close: number;
     volume: number;
   }>;
+  lineAccountName?: string;
 }
 
 export async function analyzeStockWithAI(params: StockAnalysisParams): Promise<AsyncGenerator<string>> {
@@ -43,30 +44,39 @@ export async function analyzeStockWithAI(params: StockAnalysisParams): Promise<A
     neutral: '中立'
   }[indicators.rsiStatus];
 
-  const prompt = `以下の形式で株式診断レポートを作成してください。必ず指定された形式を厳守し、株価データと指標を正確に記載してください。
+  const lineAccount = params.lineAccountName || 'AI株式診断アシスタント';
 
-【出力フォーマット例】
-【AI診断】ご入力いただいた${params.stockName}について、モメンタム分析・リアルタイムデータ・AIロジックをもとに診断を行いました。
+  let trendPrediction = '横ばい圏内での推移';
+  if (indicators.rsi >= 70) {
+    trendPrediction = '過熱感があり、調整局面に入る可能性';
+  } else if (indicators.rsi <= 30) {
+    trendPrediction = '売られすぎの状態で、反発の兆し';
+  } else if (indicators.rsi >= 55) {
+    trendPrediction = '上昇トレンドの継続';
+  } else if (indicators.rsi <= 45) {
+    trendPrediction = '下落圧力が見られる';
+  }
 
-現在の株価は${formattedPrice}円、前日比${formattedChange}円（${formattedChangePercent}%）。
+  const prompt = `【${params.stockName}（${params.stockCode}）の診断レポート】
 
-現在、短期ボラティリティ指標が過去30日の平均と比較して${volatilityLevelJP}水準に達しています。AIの分析によると、テクニカルは${rsiStatusJP}（RSI[${indicators.rsi}%]）が優勢となっており、[適切なトレンド予測]へのつながる傾向が見られます。
+株価情報：
+- 現在値：${formattedPrice}円
+- 前日比：${formattedChange}円（${formattedChangePercent}%）
 
-私たちのスタッフ、「AI株式診断アシスタント」のLINEアカウントを追加してください。
+テクニカル分析：
+- RSI：${indicators.rsi.toFixed(1)}（${rsiStatusJP}）
+- ボラティリティ：${volatilityLevelJP}水準
 
-追加が完了しましたら、詳細診断レポートを受け取るために、銘柄コード「${params.stockName}」または【${params.stockCode}】を送信してください。
+AIは、この銘柄について「${trendPrediction}」と判断しています。
 
-【重要な出力規則】
-1. 各段落の間には空行を1つだけ入れてください（2行以上の連続した空行は禁止）
-2. ${params.stockName}、株価${formattedPrice}円、前日比${formattedChange}円（${formattedChangePercent}%）は必ず表示
-3. RSI[${indicators.rsi}%]は必ず表示
-4. ボラティリティ水準は「${volatilityLevelJP}」と表示
-5. テクニカルステータスは「${rsiStatusJP}」と表示
-6. [適切なトレンド予測]は、RSI値に基づいて「上昇」「下落」「調整」「横ばい」のいずれかに置き換える
-7. LINE追加の案内は必ず含める
-8. 上記フォーマットから逸脱しない（追加の説明や補足は不要）`;
+より詳細な分析をご希望の場合は、私たちのスタッフ「${lineAccount}」をLINEで追加し、銘柄コード【${params.stockCode}】を送信してください。専門アナリストによる詳しいレポートをお届けします。
+
+上記の内容を自然な日本語の文章として、150〜250文字程度でまとめてください。専門的でありながら読みやすく、段落分けは適度に行ってください。`;
 
   async function* generateResponse() {
+    let totalOutput = '';
+    let chunkCount = 0;
+
     try {
       const response = await axios.post(
         API_URL,
@@ -75,7 +85,7 @@ export async function analyzeStockWithAI(params: StockAnalysisParams): Promise<A
           messages: [
             {
               role: 'system',
-              content: 'あなたは日本株式のAI診断アシスタントです。指定されたフォーマットを厳密に守り、提供されたデータを正確に表示してください。創造的な内容よりも、フォーマットの遵守とデータの正確性を優先してください。段落間の空行は1つのみ使用し、余分な空行や装飾は追加しないでください。',
+              content: 'あなたは日本の株式市場に精通したプロのアナリストです。ユーザーに対して、データに基づいた客観的な分析を、自然で読みやすい日本語で提供してください。専門用語は適度に使用し、一般投資家にも理解しやすい表現を心がけてください。',
             },
             {
               role: 'user',
@@ -84,7 +94,9 @@ export async function analyzeStockWithAI(params: StockAnalysisParams): Promise<A
           ],
           stream: true,
           max_tokens: 1000,
-          temperature: 0.2,
+          temperature: 0.6,
+          top_p: 0.9,
+          frequency_penalty: 0.3,
         },
         {
           headers: {
@@ -108,17 +120,30 @@ export async function analyzeStockWithAI(params: StockAnalysisParams): Promise<A
               const parsed = JSON.parse(data);
               const content = parsed.choices?.[0]?.delta?.content || '';
               if (content) {
+                totalOutput += content;
+                chunkCount++;
                 yield content;
               }
             } catch (e) {
+              console.error('Failed to parse chunk:', e);
               continue;
             }
           }
         }
       }
+
+      if (totalOutput.length < 50) {
+        console.error('AI output too short:', totalOutput.length, 'characters');
+        const fallbackMessage = `【AI診断】${params.stockName}（${params.stockCode}）について診断を行いました。\n\n現在の株価は${formattedPrice}円、前日比${formattedChange}円（${formattedChangePercent}%）です。テクニカル指標ではRSI ${indicators.rsi.toFixed(1)}（${rsiStatusJP}）、ボラティリティは${volatilityLevelJP}水準となっています。\n\nより詳細な分析は、LINEで「${lineAccount}」を追加し、銘柄コード【${params.stockCode}】を送信してください。`;
+        yield fallbackMessage;
+      }
+
+      console.log(`AI generated ${totalOutput.length} characters in ${chunkCount} chunks`);
+
     } catch (error) {
       console.error('AI service error:', error);
-      yield 'AI分析中にエラーが発生しました。しばらく時間をおいて再度お試しください。';
+      const fallbackMessage = `【AI診断】${params.stockName}（${params.stockCode}）について診断を行いました。\n\n現在の株価は${formattedPrice}円、前日比${formattedChange}円（${formattedChangePercent}%）です。テクニカル指標ではRSI ${indicators.rsi.toFixed(1)}（${rsiStatusJP}）、ボラティリティは${volatilityLevelJP}水準となっています。\n\nより詳細な分析は、LINEで「${lineAccount}」を追加し、銘柄コード【${params.stockCode}】を送信してください。`;
+      yield fallbackMessage;
     }
   }
 

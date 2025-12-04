@@ -56,6 +56,7 @@ router.get('/weighted/select', async (req, res) => {
         return res.json({
           id: link.id,
           url: link.target_url,
+          userId: link.user_id,
         });
       }
     }
@@ -64,6 +65,7 @@ router.get('/weighted/select', async (req, res) => {
     res.json({
       id: fallbackLink.id,
       url: fallbackLink.target_url,
+      userId: fallbackLink.user_id,
     });
   } catch (error) {
     console.error('Weighted selection error:', error);

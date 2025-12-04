@@ -23,7 +23,7 @@ router.get('/cache/:stockCode', async (req, res) => {
 
 router.post('/analyze', async (req, res) => {
   try {
-    const { stockCode, stockName, stockData, sessionId } = req.body;
+    const { stockCode, stockName, stockData, sessionId, lineAccountName } = req.body;
 
     if (!stockCode || !stockName || !stockData) {
       return res.status(400).json({ error: 'Missing required parameters' });
@@ -54,6 +54,7 @@ router.post('/analyze', async (req, res) => {
       priceChange: stockData.current.change,
       priceChangePercent: stockData.current.changePercent,
       historicalData: stockData.historical || [],
+      lineAccountName: lineAccountName || 'AI株式診断アシスタント',
     });
 
     let fullResult = '';

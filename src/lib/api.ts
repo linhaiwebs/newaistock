@@ -66,7 +66,8 @@ export async function* streamDiagnosis(
   stockCode: string,
   stockName: string,
   stockData: any,
-  sessionId: string
+  sessionId: string,
+  lineAccountName?: string
 ) {
   const response = await fetch(`${API_BASE_URL}/diagnosis/analyze`, {
     method: 'POST',
@@ -76,6 +77,7 @@ export async function* streamDiagnosis(
       stockName,
       stockData,
       sessionId,
+      lineAccountName,
     }),
   });
 
@@ -152,7 +154,7 @@ export async function trackDuration(sessionId: string, duration: number) {
   });
 }
 
-export async function getWeightedRedirect() {
+export async function getWeightedRedirect(): Promise<{ id: string; url: string; userId: string } | null> {
   const response = await fetch(`${API_BASE_URL}/redirect/weighted/select`);
   if (!response.ok) return null;
   return response.json();
