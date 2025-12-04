@@ -160,6 +160,21 @@ router.put('/analytics/config', async (req: AuthRequest, res) => {
       enabled,
     } = req.body;
 
+    let validUserId = null;
+    if (req.userId) {
+      const { data: adminUser } = await supabase
+        .from('admin_users')
+        .select('id')
+        .eq('id', req.userId)
+        .maybeSingle();
+
+      if (adminUser) {
+        validUserId = req.userId;
+      } else {
+        console.warn(`Admin user ${req.userId} not found in database, saving without updated_by`);
+      }
+    }
+
     const { data: existing } = await supabase
       .from('analytics_config')
       .select('id')
@@ -170,12 +185,12 @@ router.put('/analytics/config', async (req: AuthRequest, res) => {
       result = await supabase
         .from('analytics_config')
         .update({
-          ga4_measurement_id,
-          google_ads_conversion_id,
-          conversion_action_id,
-          enabled,
+          ga4_measurement_id: ga4_measurement_id || null,
+          google_ads_conversion_id: google_ads_conversion_id || null,
+          conversion_action_id: conversion_action_id || null,
+          enabled: enabled !== undefined ? enabled : false,
           updated_at: new Date().toISOString(),
-          updated_by: req.userId,
+          updated_by: validUserId,
         })
         .eq('id', existing.id)
         .select()
@@ -184,22 +199,27 @@ router.put('/analytics/config', async (req: AuthRequest, res) => {
       result = await supabase
         .from('analytics_config')
         .insert({
-          ga4_measurement_id,
-          google_ads_conversion_id,
-          conversion_action_id,
-          enabled,
-          updated_by: req.userId,
+          ga4_measurement_id: ga4_measurement_id || null,
+          google_ads_conversion_id: google_ads_conversion_id || null,
+          conversion_action_id: conversion_action_id || null,
+          enabled: enabled !== undefined ? enabled : false,
+          updated_by: validUserId,
         })
         .select()
         .single();
     }
 
-    if (result.error) throw result.error;
+    if (result.error) {
+      console.error('Database error updating analytics config:', result.error);
+      throw result.error;
+    }
 
-    res.json({ success: true, data: result.data });
+    console.log('Analytics config saved successfully:', result.data);
+    res.json(result.data);
   } catch (error) {
     console.error('Analytics config update error:', error);
-    res.status(500).json({ error: 'Failed to update analytics config' });
+    const errorMessage = error instanceof Error ? error.message : 'Failed to update analytics config';
+    res.status(500).json({ error: errorMessage });
   }
 });
 

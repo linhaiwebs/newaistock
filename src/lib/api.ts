@@ -235,7 +235,12 @@ export async function updateAnalyticsConfig(token: string, config: any) {
   });
 
   await handleAuthError(response);
-  if (!response.ok) throw new Error('Failed to update config');
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({ error: 'Failed to update config' }));
+    throw new Error(errorData.error || 'Failed to update config');
+  }
+
   return response.json();
 }
 

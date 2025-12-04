@@ -44,12 +44,22 @@ export function AnalyticsPage() {
       setMessage(null);
 
       const token = localStorage.getItem('adminToken');
-      if (!token) return;
+      if (!token) {
+        setMessage({ type: 'error', text: '未找到认证令牌，请重新登录' });
+        return;
+      }
 
-      await updateAnalyticsConfig(token, config);
+      console.log('Saving analytics config:', config);
+      const savedData = await updateAnalyticsConfig(token, config);
+      console.log('Analytics config saved successfully:', savedData);
+
       setMessage({ type: 'success', text: '设置已保存' });
+
+      await loadConfig();
     } catch (error) {
-      setMessage({ type: 'error', text: '保存失败' });
+      console.error('Failed to save analytics config:', error);
+      const errorMessage = error instanceof Error ? error.message : '保存失败，请重试';
+      setMessage({ type: 'error', text: errorMessage });
     } finally {
       setSaving(false);
     }
