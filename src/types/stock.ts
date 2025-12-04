@@ -1,3 +1,9 @@
+export interface ProgressStage {
+  label: string;
+  progress: number;
+  completed?: boolean;
+}
+
 export interface StockDiagnosisState {
   stockCode: string;
   stockName: string;
@@ -6,6 +12,7 @@ export interface StockDiagnosisState {
   showResult: boolean;
   result: string;
   redirectUrl: string;
+  progressStages: ProgressStage[];
 }
 
 export interface StockDiagnosisActions {

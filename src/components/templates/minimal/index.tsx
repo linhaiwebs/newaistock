@@ -3,6 +3,7 @@ import { useStockDiagnosis } from '../../../hooks/useStockDiagnosis';
 import { TrendingUp, BarChart3, Activity, LineChart, ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
 import Footer from '../shared/Footer';
 import { AILogo } from '../../ui/AILogo';
+import { DiagnosisLoadingScreen } from '../shared/DiagnosisLoadingScreen';
 import { useState } from 'react';
 
 export function TemplateMinimal({ template, getContent }: TemplateProps) {
@@ -76,13 +77,13 @@ export function TemplateMinimal({ template, getContent }: TemplateProps) {
             <span className="font-normal">戻る</span>
           </button>
 
-          <div className="mb-8">
+          <div className="mb-8 animate-fade-in">
             <h2 className="text-4xl font-light text-gray-900 mb-4 text-left">
-              分析結果
+              {diagnosis.stockName ? `${diagnosis.stockName} - AI診断結果` : 'AI診断結果'}
             </h2>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-2xl p-8 mb-8 shadow-sm">
+          <div className="bg-white border border-gray-200 rounded-2xl p-8 mb-8 shadow-sm animate-slide-up">
             <div className="text-gray-900 whitespace-pre-wrap leading-loose text-base">
               {diagnosis.result}
             </div>
@@ -91,7 +92,7 @@ export function TemplateMinimal({ template, getContent }: TemplateProps) {
           {diagnosis.redirectUrl && (
             <button
               onClick={diagnosis.handleConversion}
-              className="bg-emerald-500 hover:bg-emerald-600 text-white py-4 px-10 rounded-full transition-all duration-200 flex items-center gap-3 group font-normal shadow-md hover:shadow-lg text-base"
+              className="bg-emerald-500 hover:bg-emerald-600 text-white py-4 px-10 rounded-full transition-all duration-200 flex items-center gap-3 group font-normal shadow-md hover:shadow-lg text-base animate-fade-in"
             >
               <span>詳細を見る</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -104,31 +105,10 @@ export function TemplateMinimal({ template, getContent }: TemplateProps) {
 
   if (diagnosis.analyzing) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="max-w-2xl mx-auto px-6">
-          <div className="text-center">
-            <div className="mb-8">
-              <div className="inline-flex items-center justify-center mb-6">
-                <div className="w-16 h-16 border-4 border-emerald-100 border-t-emerald-500 rounded-full animate-spin"></div>
-              </div>
-              <h2 className="text-4xl font-light text-gray-900 mb-4">
-                AI分析中
-              </h2>
-              <p className="text-gray-600 text-lg">
-                市場データを深く解析中...
-              </p>
-            </div>
-
-            {diagnosis.result && (
-              <div className="mt-12 bg-white border border-gray-200 rounded-2xl p-8 text-left shadow-sm">
-                <div className="text-gray-900 whitespace-pre-wrap leading-loose text-base">
-                  {diagnosis.result}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+      <DiagnosisLoadingScreen
+        color="#10b981"
+        stages={diagnosis.progressStages}
+      />
     );
   }
 
