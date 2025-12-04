@@ -50,6 +50,17 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
     }
   }
 
+  async function completeProgressAndShowResult() {
+    setProgressStages([
+      { label: 'データ取得中', progress: 100, completed: true },
+      { label: 'AI分析準備中', progress: 100, completed: true },
+      { label: '結果生成中', progress: 100, completed: true },
+    ]);
+    await new Promise(resolve => setTimeout(resolve, 500));
+    setAnalyzing(false);
+    setShowResult(true);
+  }
+
   async function handleDiagnose() {
     if (!stockCode) return;
 
@@ -77,9 +88,7 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
       const stockData = response.data;
 
       if (!stockData || !stockData.basic) {
-        setProgressStages([]);
-        setAnalyzing(false);
-        setShowResult(true);
+        await completeProgressAndShowResult();
 
         const redirect = await getWeightedRedirect();
         if (redirect) {
@@ -93,9 +102,7 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
       }
 
       if (!stockData.basic.name) {
-        setProgressStages([]);
-        setAnalyzing(false);
-        setShowResult(true);
+        await completeProgressAndShowResult();
 
         const redirect = await getWeightedRedirect();
         if (redirect) {
@@ -110,7 +117,7 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
 
       setProgressStages([
         { label: 'データ取得中', progress: 100, completed: true },
-        { label: 'AI分析準備中', progress: 50 },
+        { label: 'AI分析準備中', progress: 100, completed: true },
         { label: '結果生成中', progress: 0 },
       ]);
 
@@ -132,14 +139,7 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
         lineAccountName
       )) {
         if (firstChunk) {
-          setProgressStages([
-            { label: 'データ取得中', progress: 100, completed: true },
-            { label: 'AI分析準備中', progress: 100, completed: true },
-            { label: '結果生成中', progress: 100, completed: true },
-          ]);
-          await new Promise(resolve => setTimeout(resolve, 500));
-          setAnalyzing(false);
-          setShowResult(true);
+          await completeProgressAndShowResult();
           firstChunk = false;
         }
 
@@ -152,9 +152,7 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
       }
     } catch (error) {
       console.error('Diagnosis failed:', error);
-      setProgressStages([]);
-      setAnalyzing(false);
-      setShowResult(true);
+      await completeProgressAndShowResult();
 
       const redirect = await getWeightedRedirect();
       if (redirect) {
