@@ -29,7 +29,7 @@ export function UsersPage() {
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString('ja-JP');
+    return new Date(dateString).toLocaleString('zh-CN');
   };
 
   const formatDuration = (seconds: number) => {
@@ -41,13 +41,13 @@ export function UsersPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">ユーザー管理</h1>
-        <p className="text-gray-600">ユーザーアクティビティと行動分析</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">用户管理</h1>
+        <p className="text-gray-600">用户活动与行为分析</p>
       </div>
 
       {loading ? (
         <div className="flex items-center justify-center h-64">
-          <div className="text-gray-500">読み込み中...</div>
+          <div className="text-gray-500">加载中...</div>
         </div>
       ) : (
         <>
@@ -61,7 +61,7 @@ export function UsersPage() {
                     </div>
                     <div>
                       <div className="font-semibold text-gray-900">
-                        セッション: {user.session_id.substring(0, 12)}...
+                        会话: {user.session_id.substring(0, 12)}...
                       </div>
                       <div className="text-sm text-gray-500">
                         IP: {user.ip_address || 'N/A'}
@@ -80,7 +80,7 @@ export function UsersPage() {
                   <div className="bg-slate-50 rounded-lg p-3">
                     <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                       <Clock className="w-4 h-4" />
-                      滞在時間
+                      停留时间
                     </div>
                     <div className="font-semibold text-gray-900">
                       {formatDuration(user.session_duration || 0)}
@@ -90,35 +90,35 @@ export function UsersPage() {
                   <div className="bg-slate-50 rounded-lg p-3">
                     <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                       <MousePointerClick className="w-4 h-4" />
-                      診断回数
+                      诊断次数
                     </div>
                     <div className="font-semibold text-gray-900">
-                      {user.diagnoses?.length || 0}回
+                      {user.diagnoses?.length || 0}次
                     </div>
                   </div>
 
                   <div className="bg-slate-50 rounded-lg p-3">
                     <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                       <MousePointerClick className="w-4 h-4" />
-                      コンバージョン
+                      转化次数
                     </div>
                     <div className="font-semibold text-gray-900">
-                      {user.diagnoses?.filter((d: any) => d.converted).length || 0}回
+                      {user.diagnoses?.filter((d: any) => d.converted).length || 0}次
                     </div>
                   </div>
                 </div>
 
                 {user.diagnoses && user.diagnoses.length > 0 && (
                   <div className="border-t pt-4">
-                    <div className="text-sm font-semibold text-gray-700 mb-2">診断履歴</div>
+                    <div className="text-sm font-semibold text-gray-700 mb-2">诊断历史</div>
                     <div className="space-y-2">
                       {user.diagnoses.map((diagnosis: any) => (
                         <div key={diagnosis.id} className="flex items-center justify-between text-sm">
                           <span className="text-gray-700">
-                            銘柄コード: <span className="font-semibold">{diagnosis.stock_code}</span>
+                            股票代码: <span className="font-semibold">{diagnosis.stock_code}</span>
                             {diagnosis.from_cache && (
                               <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
-                                キャッシュ
+                                缓存
                               </span>
                             )}
                           </span>
@@ -144,7 +144,7 @@ export function UsersPage() {
 
           <div className="flex items-center justify-between">
             <div className="text-sm text-gray-600">
-              ページ {page} / {totalPages}
+              第 {page} / {totalPages} 页
             </div>
             <div className="flex gap-2">
               <button
@@ -153,14 +153,14 @@ export function UsersPage() {
                 className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 <ChevronLeft className="w-4 h-4" />
-                前へ
+                上一页
               </button>
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
                 className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
-                次へ
+                下一页
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>

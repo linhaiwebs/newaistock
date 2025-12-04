@@ -96,6 +96,8 @@ export function DomainForm() {
         await createDomain(token, formData);
       }
 
+      localStorage.removeItem('activeTemplate');
+
       navigate('/admin/domains');
     } catch (error) {
       console.error('Failed to save domain:', error);

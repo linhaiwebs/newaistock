@@ -22,7 +22,7 @@ export function LoginPage() {
       setUser(response.user);
       navigate('/admin/dashboard');
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'ログインに失敗しました。';
+      const errorMessage = err instanceof Error ? err.message : '登录失败。';
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -36,8 +36,8 @@ export function LoginPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4">
             <Lock className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">管理者ログイン</h1>
-          <p className="text-slate-400">AI株式診断システム</p>
+          <h1 className="text-3xl font-bold text-white mb-2">管理员登录</h1>
+          <p className="text-slate-400">AI股票诊断系统</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl p-8">
@@ -51,7 +51,7 @@ export function LoginPage() {
 
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                ユーザー名
+                用户名
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -67,7 +67,7 @@ export function LoginPage() {
 
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                パスワード
+                密码
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -86,7 +86,7 @@ export function LoginPage() {
               disabled={loading}
               className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {loading ? 'ログイン中...' : 'ログイン'}
+              {loading ? '登录中...' : '登录'}
             </button>
           </form>
         </div>

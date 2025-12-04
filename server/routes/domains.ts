@@ -58,6 +58,7 @@ router.post('/', async (req: AuthRequest, res) => {
       robots_config,
       ads_txt_content,
       seo_config,
+      footer_config,
       is_active,
       is_default,
     } = req.body;
@@ -106,6 +107,7 @@ router.post('/', async (req: AuthRequest, res) => {
         robots_config: robots_config || defaultRobotsConfig,
         ads_txt_content: ads_txt_content || null,
         seo_config: seo_config || defaultSeoConfig,
+        footer_config: footer_config || null,
         is_active: is_active !== undefined ? is_active : true,
         is_default: is_default || false,
       })
@@ -141,6 +143,7 @@ router.put('/:id', async (req: AuthRequest, res) => {
       robots_config,
       ads_txt_content,
       seo_config,
+      footer_config,
       is_active,
       is_default,
     } = req.body;
@@ -165,6 +168,7 @@ router.put('/:id', async (req: AuthRequest, res) => {
         robots_config,
         ads_txt_content,
         seo_config,
+        footer_config,
         is_active,
         is_default,
         updated_at: new Date().toISOString(),

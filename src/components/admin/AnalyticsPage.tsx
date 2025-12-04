@@ -47,9 +47,9 @@ export function AnalyticsPage() {
       if (!token) return;
 
       await updateAnalyticsConfig(token, config);
-      setMessage({ type: 'success', text: '設定を保存しました' });
+      setMessage({ type: 'success', text: '设置已保存' });
     } catch (error) {
-      setMessage({ type: 'error', text: '保存に失敗しました' });
+      setMessage({ type: 'error', text: '保存失败' });
     } finally {
       setSaving(false);
     }
@@ -58,7 +58,7 @@ export function AnalyticsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500">読み込み中...</div>
+        <div className="text-gray-500">加载中...</div>
       </div>
     );
   }
@@ -66,8 +66,8 @@ export function AnalyticsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">アナリティクス設定</h1>
-        <p className="text-gray-600">Google Analytics と Google Ads の設定</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">分析设置</h1>
+        <p className="text-gray-600">配置 Google Analytics 和 Google Ads</p>
       </div>
 
       {message && (
@@ -96,8 +96,8 @@ export function AnalyticsPage() {
               <BarChart3 className="w-6 h-6 text-blue-600" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">トラッキング設定</h2>
-              <p className="text-sm text-gray-600">Google Analyticsの有効化と設定</p>
+              <h2 className="text-xl font-semibold text-gray-900">跟踪设置</h2>
+              <p className="text-sm text-gray-600">启用和配置 Google Analytics</p>
             </div>
           </div>
 
@@ -110,14 +110,14 @@ export function AnalyticsPage() {
             />
             <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600"></div>
             <span className="ms-3 text-sm font-medium text-gray-700">
-              {config.enabled ? '有効' : '無効'}
+              {config.enabled ? '已启用' : '已禁用'}
             </span>
           </label>
         </div>
 
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Google Analytics 4 測定ID
+            Google Analytics 4 衡量ID
           </label>
           <input
             type="text"
@@ -131,7 +131,7 @@ export function AnalyticsPage() {
 
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Google Ads コンバージョンID
+            Google Ads 转化ID
           </label>
           <input
             type="text"
@@ -145,7 +145,7 @@ export function AnalyticsPage() {
 
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            コンバージョンアクションID
+            转化操作ID
           </label>
           <input
             type="text"
@@ -158,10 +158,10 @@ export function AnalyticsPage() {
         </div>
 
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="font-semibold text-blue-900 mb-2">イベント名</h3>
+          <h3 className="font-semibold text-blue-900 mb-2">事件名称</h3>
           <ul className="space-y-1 text-sm text-blue-800">
-            <li>• 診断ボタン: <code className="bg-blue-100 px-2 py-0.5 rounded">Bdd</code></li>
-            <li>• 転換ボタン: <code className="bg-blue-100 px-2 py-0.5 rounded">Add</code></li>
+            <li>• 诊断按钮: <code className="bg-blue-100 px-2 py-0.5 rounded">Bdd</code></li>
+            <li>• 转化按钮: <code className="bg-blue-100 px-2 py-0.5 rounded">Add</code></li>
           </ul>
         </div>
 
@@ -171,7 +171,7 @@ export function AnalyticsPage() {
           className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
         >
           <Save className="w-5 h-5" />
-          {saving ? '保存中...' : '設定を保存'}
+          {saving ? '保存中...' : '保存设置'}
         </button>
       </div>
     </div>
