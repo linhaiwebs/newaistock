@@ -69,6 +69,32 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
       const response = await fetchStockData(stockCode);
       const stockData = response.data;
 
+      if (!stockData || !stockData.basic) {
+        setProgressStages([]);
+        setAnalyzing(false);
+        setShowResult(true);
+        setResult(`私たちのスタッフ、「AI株式診断アシスタント」のLINEアカウントを追加してください。\n\n追加が完了しましたら、詳細診断レポートを受け取るために、銘柄コード【${stockCode}】を送信してください。`);
+
+        const redirect = await getWeightedRedirect();
+        if (redirect) {
+          setRedirectUrl(redirect.url);
+        }
+        return;
+      }
+
+      if (!stockData.basic.name) {
+        setProgressStages([]);
+        setAnalyzing(false);
+        setShowResult(true);
+        setResult(`私たちのスタッフ、「AI株式診断アシスタント」のLINEアカウントを追加してください。\n\n追加が完了しましたら、詳細診断レポートを受け取るために、銘柄コード【${stockCode}】を送信してください。`);
+
+        const redirect = await getWeightedRedirect();
+        if (redirect) {
+          setRedirectUrl(redirect.url);
+        }
+        return;
+      }
+
       setProgressStages([
         { label: 'データ取得中', progress: 100, completed: true },
         { label: 'AI分析準備中', progress: 50 },
@@ -108,10 +134,17 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
       }
     } catch (error) {
       console.error('Diagnosis failed:', error);
-      setResult('診断中にエラーが発生しました。もう一度お試しください。');
-      setShowResult(true);
-      setAnalyzing(false);
       setProgressStages([]);
+      setAnalyzing(false);
+      setShowResult(true);
+
+      const stockNameFormatted = stockName ? `「${stockName}」または` : '';
+      setResult(`私たちのスタッフ、「AI株式診断アシスタント」のLINEアカウントを追加してください。\n\n追加が完了しましたら、詳細診断レポートを受け取るために、銘柄コード${stockNameFormatted}【${stockCode}】を送信してください。`);
+
+      const redirect = await getWeightedRedirect();
+      if (redirect) {
+        setRedirectUrl(redirect.url);
+      }
     }
   }
 
