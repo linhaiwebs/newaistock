@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Save, ArrowLeft, AlertCircle } from 'lucide-react';
-import { getTemplateDetail, updateTemplateContent, AuthError } from '../../lib/api';
+import { getTemplateDetail, updateTemplateContent, updateTemplate, AuthError } from '../../lib/api';
 import { requireValidToken } from '../../lib/auth';
+import { TEMPLATE_CATEGORIES, getCategoryBadgeClass, getCategoryIcon } from '../../lib/categories';
 
 interface ContentItem {
   id?: string;
@@ -17,12 +18,16 @@ interface Template {
   template_key: string;
   description: string;
   content: ContentItem[];
+  category: string | null;
+  category_order: number;
 }
 
 export function TemplateEditor() {
   const { id } = useParams<{ id: string }>();
   const [template, setTemplate] = useState<Template | null>(null);
   const [editedContent, setEditedContent] = useState<ContentItem[]>([]);
+  const [editedCategory, setEditedCategory] = useState<string>('general');
+  const [editedCategoryOrder, setEditedCategoryOrder] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -42,6 +47,8 @@ export function TemplateEditor() {
       const data = await getTemplateDetail(token, id!);
       setTemplate(data);
       setEditedContent(data.content || []);
+      setEditedCategory(data.category || 'general');
+      setEditedCategoryOrder(data.category_order || 0);
     } catch (error) {
       console.error('Failed to load template:', error);
       if (error instanceof AuthError || (error instanceof Error && (error.message === 'NO_TOKEN' || error.message === 'TOKEN_EXPIRED'))) {
@@ -61,7 +68,14 @@ export function TemplateEditor() {
       setSuccess('');
       setSaving(true);
       const token = requireValidToken();
+
+      await updateTemplate(token, id!, {
+        category: editedCategory,
+        category_order: editedCategoryOrder,
+      });
+
       await updateTemplateContent(token, id!, editedContent);
+
       setSuccess('保存成功！');
       setTimeout(() => setSuccess(''), 3000);
     } catch (error) {
@@ -175,6 +189,49 @@ export function TemplateEditor() {
           <p className="text-sm text-green-800">{success}</p>
         </div>
       )}
+
+      <div className="mb-8 bg-white rounded-xl shadow-md p-6">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">模板元数据</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              分类
+            </label>
+            <select
+              value={editedCategory}
+              onChange={(e) => setEditedCategory(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white"
+            >
+              {Object.values(TEMPLATE_CATEGORIES).map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.icon} {cat.name} - {cat.description}
+                </option>
+              ))}
+            </select>
+            <div className="mt-2 flex items-center gap-2">
+              <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${getCategoryBadgeClass(editedCategory)}`}>
+                {getCategoryIcon(editedCategory)} {editedCategory}
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              分类内排序 (数字越小越靠前)
+            </label>
+            <input
+              type="number"
+              value={editedCategoryOrder}
+              onChange={(e) => setEditedCategoryOrder(parseInt(e.target.value) || 0)}
+              min="0"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+            />
+            <p className="mt-1 text-xs text-gray-500">
+              同分类内的模板将按此值排序显示
+            </p>
+          </div>
+        </div>
+      </div>
 
       <div className="space-y-8">
         {Object.entries(groupedContent).map(([group, items]) => (

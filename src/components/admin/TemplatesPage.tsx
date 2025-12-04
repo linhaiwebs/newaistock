@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Layout, Check, Edit2, Trash2, AlertCircle, Eye, RefreshCw, CheckCircle } from 'lucide-react';
+import { Layout, Check, Edit2, Trash2, AlertCircle, Eye, RefreshCw, CheckCircle, Filter } from 'lucide-react';
 import { getAllTemplates, activateTemplate, deleteTemplate, scanTemplates, syncTemplates, AuthError } from '../../lib/api';
 import { requireValidToken } from '../../lib/auth';
+import { CATEGORY_OPTIONS, getCategoryBadgeClass, getCategoryIcon } from '../../lib/categories';
 
 interface Template {
   id: string;
@@ -12,6 +13,8 @@ interface Template {
   is_active: boolean;
   preview_image: string | null;
   created_at: string;
+  category: string | null;
+  category_order: number;
 }
 
 export function TemplatesPage() {
@@ -20,17 +23,18 @@ export function TemplatesPage() {
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const navigate = useNavigate();
 
   useEffect(() => {
     loadTemplates();
-  }, []);
+  }, [selectedCategory]);
 
   async function loadTemplates() {
     try {
       setError('');
       const token = requireValidToken();
-      const data = await getAllTemplates(token);
+      const data = await getAllTemplates(token, selectedCategory !== 'all' ? selectedCategory : undefined);
       setTemplates(data);
     } catch (error) {
       console.error('Failed to load templates:', error);
@@ -162,19 +166,40 @@ export function TemplatesPage() {
         </div>
       )}
 
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">模板管理</h1>
-          <p className="text-gray-600">管理和切换落地页模板</p>
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">模板管理</h1>
+            <p className="text-gray-600">管理和切换落地页模板</p>
+          </div>
+          <button
+            onClick={handleSyncTemplates}
+            disabled={syncing}
+            className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed font-semibold"
+          >
+            <RefreshCw className={`w-5 h-5 ${syncing ? 'animate-spin' : ''}`} />
+            {syncing ? '同步中...' : '扫描并同步模板'}
+          </button>
         </div>
-        <button
-          onClick={handleSyncTemplates}
-          disabled={syncing}
-          className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed font-semibold"
-        >
-          <RefreshCw className={`w-5 h-5 ${syncing ? 'animate-spin' : ''}`} />
-          {syncing ? '同步中...' : '扫描并同步模板'}
-        </button>
+
+        <div className="flex items-center gap-3">
+          <Filter className="w-5 h-5 text-gray-600" />
+          <label className="text-sm font-medium text-gray-700">分类筛选:</label>
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+          >
+            {CATEGORY_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <span className="text-sm text-gray-500">
+            显示 {templates.length} 个模板
+          </span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -204,7 +229,12 @@ export function TemplatesPage() {
             </div>
 
             <div className="p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{template.name}</h3>
+              <div className="flex items-center gap-2 mb-3">
+                <h3 className="text-xl font-bold text-gray-900 flex-1">{template.name}</h3>
+                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${getCategoryBadgeClass(template.category)}`}>
+                  {getCategoryIcon(template.category)} {template.category || 'general'}
+                </span>
+              </div>
               <p className="text-sm text-gray-600 mb-4">{template.description}</p>
 
               <div className="flex items-center gap-2">

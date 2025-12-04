@@ -336,8 +336,9 @@ export async function clearAICache(token: string, stockCode?: string) {
 }
 
 // 模板管理 API
-export async function getAllTemplates(token: string) {
-  const response = await fetch(`${API_BASE_URL}/templates`, {
+export async function getAllTemplates(token: string, category?: string) {
+  const url = category ? `${API_BASE_URL}/templates?category=${category}` : `${API_BASE_URL}/templates`;
+  const response = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
   });
 

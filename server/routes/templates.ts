@@ -66,11 +66,22 @@ router.use(authenticateToken);
 // 获取所有模板列表
 router.get('/', async (req: AuthRequest, res) => {
   try {
-    const { data, error } = await supabaseAdmin
+    const { category } = req.query;
+
+    let query = supabaseAdmin
       .from('landing_templates')
-      .select('*')
+      .select('*');
+
+    if (category && category !== 'all') {
+      query = query.eq('category', category);
+    }
+
+    query = query
       .order('is_active', { ascending: false })
+      .order('category_order', { ascending: true })
       .order('created_at', { ascending: false });
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
@@ -119,21 +130,26 @@ router.get('/:id', async (req: AuthRequest, res) => {
 // 创建新模板
 router.post('/', async (req: AuthRequest, res) => {
   try {
-    const { name, template_key, description, config } = req.body;
+    const { name, template_key, description, config, category, category_order } = req.body;
 
     if (!name || !template_key) {
       return res.status(400).json({ error: 'Name and template_key are required' });
     }
 
+    const insertData: any = {
+      name,
+      template_key,
+      description,
+      config: config || {},
+      is_active: false,
+    };
+
+    if (category !== undefined) insertData.category = category;
+    if (category_order !== undefined) insertData.category_order = category_order;
+
     const { data, error } = await supabaseAdmin
       .from('landing_templates')
-      .insert({
-        name,
-        template_key,
-        description,
-        config: config || {},
-        is_active: false,
-      })
+      .insert(insertData)
       .select()
       .single();
 
@@ -155,13 +171,15 @@ router.post('/', async (req: AuthRequest, res) => {
 router.put('/:id', async (req: AuthRequest, res) => {
   try {
     const { id } = req.params;
-    const { name, description, config, preview_image } = req.body;
+    const { name, description, config, preview_image, category, category_order } = req.body;
 
     const updates: any = { updated_at: new Date().toISOString() };
     if (name !== undefined) updates.name = name;
     if (description !== undefined) updates.description = description;
     if (config !== undefined) updates.config = config;
     if (preview_image !== undefined) updates.preview_image = preview_image;
+    if (category !== undefined) updates.category = category;
+    if (category_order !== undefined) updates.category_order = category_order;
 
     const { data, error } = await supabaseAdmin
       .from('landing_templates')
