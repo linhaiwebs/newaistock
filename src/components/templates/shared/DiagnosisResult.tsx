@@ -27,13 +27,13 @@ export function DiagnosisResult({
       <div className="max-w-4xl mx-auto px-6 py-12 relative z-10">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors mb-8 group animate-fade-in"
+          className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors mb-4 group animate-fade-in"
         >
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           <span className="font-normal">戻る</span>
         </button>
 
-        <div className="mb-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+        <div className="mb-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center gap-3 mb-4">
             <div
               className="p-3 rounded-xl shadow-lg"
@@ -65,7 +65,7 @@ export function DiagnosisResult({
         </div>
 
         <div
-          className="bg-white/80 backdrop-blur-sm border rounded-2xl p-8 mb-8 shadow-xl animate-slide-up relative overflow-hidden"
+          className="bg-white/80 backdrop-blur-sm border rounded-2xl p-8 mb-4 shadow-xl animate-slide-up relative overflow-hidden"
           style={{
             animationDelay: '0.2s',
             borderColor: `${themeColor}30`,
@@ -93,7 +93,7 @@ export function DiagnosisResult({
         {redirectUrl && (
           <button
             onClick={onConversion}
-            className="group relative overflow-hidden py-4 px-10 rounded-full transition-all duration-300 flex items-center gap-3 font-normal shadow-lg hover:shadow-2xl text-base animate-fade-in transform hover:scale-105"
+            className="w-full group relative overflow-hidden py-4 px-10 rounded-full transition-all duration-300 flex items-center justify-center gap-3 font-normal shadow-lg hover:shadow-2xl text-base animate-fade-in transform hover:scale-105"
             style={{
               animationDelay: '0.3s',
               backgroundColor: themeColor,
