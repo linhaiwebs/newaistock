@@ -1,7 +1,8 @@
 import { TemplateProps } from '../../../types/template';
 import { useStockDiagnosis } from '../../../hooks/useStockDiagnosis';
-import { Mic, Image, PlayCircle, Settings, ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
+import { TrendingUp, BarChart3, Activity, LineChart, ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
 import Footer from '../shared/Footer';
+import { AILogo } from '../../ui/AILogo';
 import { useState } from 'react';
 
 export function TemplateDefault({ template, getContent }: TemplateProps) {
@@ -10,40 +11,40 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
 
   const features = [
     {
-      id: 'voice',
-      icon: Mic,
-      title: 'ボイス',
-      description: '音声認識を試す',
-      bgColor: 'bg-emerald-50',
+      id: 'technical',
+      icon: TrendingUp,
+      title: '技術分析',
+      description: 'チャート分析',
+      bgColor: 'bg-blue-50',
       iconBgColor: 'bg-white',
       iconColor: 'text-gray-800',
       hasArrow: true
     },
     {
-      id: 'image',
-      icon: Image,
-      title: '画像',
-      description: '音声認識を試す',
-      bgColor: 'bg-pink-50',
+      id: 'market',
+      icon: BarChart3,
+      title: '市場データ',
+      description: 'リアルタイム情報',
+      bgColor: 'bg-green-50',
       iconBgColor: 'bg-white',
       iconColor: 'text-gray-800',
       hasArrow: true
     },
     {
-      id: 'viewall',
-      icon: PlayCircle,
-      title: 'すべて表示',
-      description: '最近のチャット',
-      bgColor: 'bg-purple-50',
+      id: 'risk',
+      icon: Activity,
+      title: 'リスク評価',
+      description: '投資リスク分析',
+      bgColor: 'bg-orange-50',
       iconBgColor: 'bg-white',
       iconColor: 'text-gray-800',
       hasArrow: true
     },
     {
-      id: 'features',
-      icon: Settings,
-      title: 'すべての機能を表示',
-      description: 'すべての機能を表示',
+      id: 'trend',
+      icon: LineChart,
+      title: 'トレンド分析',
+      description: '過去データ比較',
       bgColor: 'bg-gray-100',
       iconBgColor: 'bg-white',
       iconColor: 'text-gray-800',
@@ -72,11 +73,11 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
             className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors mb-8 group"
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            <span className="font-semibold">戻る</span>
+            <span className="font-normal">戻る</span>
           </button>
 
           <div className="mb-8">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4 text-left">
+            <h2 className="text-4xl font-light text-gray-900 mb-4 text-left">
               分析結果
             </h2>
           </div>
@@ -90,7 +91,7 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
           {diagnosis.redirectUrl && (
             <button
               onClick={diagnosis.handleConversion}
-              className="bg-cyan-400 hover:bg-cyan-500 text-gray-900 py-4 px-10 rounded-full transition-all duration-200 flex items-center gap-3 group font-semibold shadow-md hover:shadow-lg text-base"
+              className="bg-cyan-400 hover:bg-cyan-500 text-gray-900 py-4 px-10 rounded-full transition-all duration-200 flex items-center gap-3 group font-normal shadow-md hover:shadow-lg text-base"
             >
               <span>詳細を見る</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -110,7 +111,7 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
               <div className="inline-flex items-center justify-center mb-6">
                 <div className="w-16 h-16 border-4 border-cyan-100 border-t-cyan-400 rounded-full animate-spin"></div>
               </div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-4xl font-light text-gray-900 mb-4">
                 AI分析中
               </h2>
               <p className="text-gray-600 text-lg">
@@ -135,7 +136,7 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
     <div className="min-h-screen bg-white flex flex-col">
       <div className="flex-1 px-6 py-8">
         <div className="max-w-md mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6 leading-tight">
+          <h1 className="text-3xl font-light text-gray-900 mb-6 leading-tight">
             {getContent('hero_title', '今日はどのようにお手伝いしましょうか？')}
           </h1>
 
@@ -146,12 +147,12 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
                 <button
                   key={feature.id}
                   onClick={() => toggleFeature(feature.id)}
-                  className={`${feature.bgColor} rounded-3xl p-5 text-left relative transition-all hover:shadow-md`}
+                  className={`${feature.bgColor} rounded-3xl p-4 text-left relative transition-all hover:shadow-md border-2 border-gray-700`}
                 >
-                  <div className={`${feature.iconBgColor} w-10 h-10 rounded-full flex items-center justify-center mb-3`}>
-                    <Icon className={`w-5 h-5 ${feature.iconColor}`} />
+                  <div className={`${feature.iconBgColor} w-8 h-8 rounded-full flex items-center justify-center mb-3`}>
+                    <Icon className={`w-4 h-4 ${feature.iconColor}`} />
                   </div>
-                  <h3 className="text-base font-semibold text-gray-900 mb-1">{feature.title}</h3>
+                  <h3 className="text-base font-light text-gray-900 mb-1">{feature.title}</h3>
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-gray-600">{feature.description}</p>
                     {feature.hasArrow && (
@@ -165,11 +166,9 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
 
           <div className="bg-gray-900 rounded-3xl px-6 py-8 mb-4">
             <div className="flex items-center justify-center mb-4">
-              <div className="w-12 h-12 bg-cyan-400 rounded-full flex items-center justify-center">
-                <div className="w-6 h-6 border-2 border-gray-900 rounded-full"></div>
-              </div>
+              <AILogo className="w-12 h-12" />
             </div>
-            <h2 className="text-white text-xl font-semibold text-center mb-6">
+            <h2 className="text-white text-xl font-light text-center mb-6">
               新しいチャットを開始
             </h2>
             <div className="flex flex-col gap-3">
@@ -184,7 +183,7 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
               <button
                 onClick={diagnosis.handleDiagnose}
                 disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
-                className="w-full bg-cyan-400 hover:bg-cyan-500 text-gray-900 py-3 px-6 rounded-full font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
+                className="w-full bg-cyan-400 hover:bg-cyan-500 text-gray-900 py-3 px-6 rounded-full font-normal text-base disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
               >
                 {diagnosis.loading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -202,12 +201,12 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
                 <button
                   key={feature.id}
                   onClick={() => toggleFeature(feature.id)}
-                  className={`${feature.bgColor} rounded-3xl p-5 text-left relative transition-all hover:shadow-md`}
+                  className={`${feature.bgColor} rounded-3xl p-4 text-left relative transition-all hover:shadow-md border-2 border-gray-700`}
                 >
-                  <div className={`${feature.iconBgColor} w-10 h-10 rounded-full flex items-center justify-center mb-3`}>
-                    <Icon className={`w-5 h-5 ${feature.iconColor}`} />
+                  <div className={`${feature.iconBgColor} w-8 h-8 rounded-full flex items-center justify-center mb-3`}>
+                    <Icon className={`w-4 h-4 ${feature.iconColor}`} />
                   </div>
-                  <h3 className="text-base font-semibold text-gray-900 mb-1">{feature.title}</h3>
+                  <h3 className="text-base font-light text-gray-900 mb-1">{feature.title}</h3>
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-gray-600">{feature.description}</p>
                     {feature.hasArrow && (
