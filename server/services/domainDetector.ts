@@ -15,6 +15,8 @@ interface DomainConfig {
   footer_config?: any;
   is_active: boolean;
   is_default: boolean;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export class DomainDetector {

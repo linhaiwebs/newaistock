@@ -98,6 +98,14 @@ export function DomainForm() {
 
       localStorage.removeItem('activeTemplate');
 
+      try {
+        const channel = new BroadcastChannel('template-updates');
+        channel.postMessage('template-updated');
+        channel.close();
+      } catch (e) {
+        console.warn('BroadcastChannel not supported');
+      }
+
       navigate('/admin/domains');
     } catch (error) {
       console.error('Failed to save domain:', error);

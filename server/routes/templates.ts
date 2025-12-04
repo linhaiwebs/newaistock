@@ -41,6 +41,7 @@ router.get('/active', async (req, res) => {
     // 获取当前域名的配置（包含footer_config）
     const domainConfig = await domainDetector.getConfigForRequest(req);
     const footerConfig = domainConfig?.footer_config || null;
+    const configUpdatedAt = domainConfig?.updated_at || domainConfig?.created_at || null;
 
     res.json({
       template: {
@@ -51,6 +52,7 @@ router.get('/active', async (req, res) => {
       },
       content: contentMap,
       footerConfig,
+      configUpdatedAt,
     });
   } catch (error) {
     console.error('Get active template error:', error);

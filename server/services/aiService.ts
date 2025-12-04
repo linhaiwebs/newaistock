@@ -45,7 +45,7 @@ export async function analyzeStockWithAI(params: StockAnalysisParams): Promise<A
 
   const prompt = `以下の形式で株式診断レポートを作成してください。必ず指定された形式を厳守し、株価データと指標を正確に記載してください。
 
-【必須フォーマット】
+【出力フォーマット例】
 【AI診断】ご入力いただいた${params.stockName}について、モメンタム分析・リアルタイムデータ・AIロジックをもとに診断を行いました。
 
 現在の株価は${formattedPrice}円、前日比${formattedChange}円（${formattedChangePercent}%）。
@@ -56,14 +56,15 @@ export async function analyzeStockWithAI(params: StockAnalysisParams): Promise<A
 
 追加が完了しましたら、詳細診断レポートを受け取るために、銘柄コード「${params.stockName}」または【${params.stockCode}】を送信してください。
 
-【重要な指示】
-- 上記のフォーマットを厳密に守ってください
-- ${params.stockName}、株価${formattedPrice}円、前日比${formattedChange}円（${formattedChangePercent}%）は必ず表示してください
-- RSI[${indicators.rsi}%]は必ず表示してください
-- ボラティリティ水準は「${volatilityLevelJP}」と表示してください
-- テクニカルステータスは「${rsiStatusJP}」と表示してください
-- [適切なトレンド予測]の部分は、RSIが${indicators.rsi}%の場合に適切な市場予測（「上昇」「下落」「調整」など）に置き換えてください
-- LINE追加の案内は必ず含めてください`;
+【重要な出力規則】
+1. 各段落の間には空行を1つだけ入れてください（2行以上の連続した空行は禁止）
+2. ${params.stockName}、株価${formattedPrice}円、前日比${formattedChange}円（${formattedChangePercent}%）は必ず表示
+3. RSI[${indicators.rsi}%]は必ず表示
+4. ボラティリティ水準は「${volatilityLevelJP}」と表示
+5. テクニカルステータスは「${rsiStatusJP}」と表示
+6. [適切なトレンド予測]は、RSI値に基づいて「上昇」「下落」「調整」「横ばい」のいずれかに置き換える
+7. LINE追加の案内は必ず含める
+8. 上記フォーマットから逸脱しない（追加の説明や補足は不要）`;
 
   async function* generateResponse() {
     try {
@@ -74,7 +75,7 @@ export async function analyzeStockWithAI(params: StockAnalysisParams): Promise<A
           messages: [
             {
               role: 'system',
-              content: 'あなたは日本株式のAI診断アシスタントです。指定されたフォーマットを厳密に守り、提供されたデータを正確に表示してください。創造的な内容よりも、フォーマットの遵守とデータの正確性を優先してください。',
+              content: 'あなたは日本株式のAI診断アシスタントです。指定されたフォーマットを厳密に守り、提供されたデータを正確に表示してください。創造的な内容よりも、フォーマットの遵守とデータの正確性を優先してください。段落間の空行は1つのみ使用し、余分な空行や装飾は追加しないでください。',
             },
             {
               role: 'user',
@@ -83,7 +84,7 @@ export async function analyzeStockWithAI(params: StockAnalysisParams): Promise<A
           ],
           stream: true,
           max_tokens: 1000,
-          temperature: 0.3,
+          temperature: 0.2,
         },
         {
           headers: {

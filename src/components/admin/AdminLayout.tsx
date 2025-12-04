@@ -14,7 +14,7 @@ export function AdminLayout() {
       try {
         const token = getToken();
         if (!token || isTokenExpired()) {
-          setAuthError('セッションが期限切れです。再度ログインしてください。');
+          setAuthError('会话已过期，请重新登录');
           setTimeout(() => {
             removeToken();
             navigate('/admin/login');
@@ -24,7 +24,7 @@ export function AdminLayout() {
 
         const result = await verifyAuth(token);
         if (!result || !result.valid) {
-          setAuthError('認証に失敗しました。再度ログインしてください。');
+          setAuthError('认证失败，请重新登录');
           setTimeout(() => {
             removeToken();
             navigate('/admin/login');
@@ -32,7 +32,7 @@ export function AdminLayout() {
         }
       } catch (error) {
         console.error('Auth check failed:', error);
-        setAuthError('認証の検証に失敗しました。');
+        setAuthError('认证验证失败');
       }
     }
 
@@ -45,14 +45,14 @@ export function AdminLayout() {
   }
 
   const navItems = [
-    { path: '/admin/dashboard', icon: LayoutDashboard, label: 'ダッシュボード' },
-    { path: '/admin/users', icon: Users, label: 'ユーザー管理' },
-    { path: '/admin/analytics', icon: BarChart3, label: 'データ分析' },
-    { path: '/admin/domains', icon: Globe, label: 'ドメイン管理' },
-    { path: '/admin/content', icon: FileText, label: 'コンテンツ管理' },
-    { path: '/admin/redirects', icon: Link2, label: 'リダイレクト' },
-    { path: '/admin/templates', icon: Layout, label: 'テンプレート管理' },
-    { path: '/admin/cache', icon: Database, label: 'キャッシュ管理' },
+    { path: '/admin/dashboard', icon: LayoutDashboard, label: '仪表板' },
+    { path: '/admin/users', icon: Users, label: '用户管理' },
+    { path: '/admin/analytics', icon: BarChart3, label: '数据分析' },
+    { path: '/admin/domains', icon: Globe, label: '域名管理' },
+    { path: '/admin/content', icon: FileText, label: '内容管理' },
+    { path: '/admin/redirects', icon: Link2, label: '重定向管理' },
+    { path: '/admin/templates', icon: Layout, label: '模板管理' },
+    { path: '/admin/cache', icon: Database, label: '缓存管理' },
   ];
 
   return (
@@ -99,7 +99,7 @@ export function AdminLayout() {
               className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
             >
               <LogOut className="w-5 h-5" />
-              <span>ログアウト</span>
+              <span>退出登录</span>
             </button>
           </div>
         </aside>

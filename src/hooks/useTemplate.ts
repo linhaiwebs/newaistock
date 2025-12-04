@@ -4,10 +4,12 @@ import { TemplateData } from '../types/template';
 
 const CACHE_KEY = 'activeTemplate';
 const CACHE_DURATION = 5 * 60 * 1000;
+const BROADCAST_CHANNEL_NAME = 'template-updates';
 
 interface CachedTemplate {
   data: TemplateData;
   timestamp: number;
+  configUpdatedAt: string | null;
 }
 
 export function useTemplate() {
@@ -17,6 +19,26 @@ export function useTemplate() {
 
   useEffect(() => {
     loadTemplate();
+
+    let broadcastChannel: BroadcastChannel | null = null;
+    try {
+      broadcastChannel = new BroadcastChannel(BROADCAST_CHANNEL_NAME);
+      broadcastChannel.onmessage = (event) => {
+        if (event.data === 'template-updated') {
+          console.log('[useTemplate] Received update notification, refetching...');
+          localStorage.removeItem(CACHE_KEY);
+          loadTemplate();
+        }
+      };
+    } catch (e) {
+      console.warn('[useTemplate] BroadcastChannel not supported');
+    }
+
+    return () => {
+      if (broadcastChannel) {
+        broadcastChannel.close();
+      }
+    };
   }, []);
 
   async function loadTemplate() {
@@ -24,17 +46,23 @@ export function useTemplate() {
       setLoading(true);
       setError(null);
 
+      console.log('[useTemplate] Fetching active template from API...');
+      const response = await getActiveTemplate();
+      console.log('[useTemplate] Received template:', response.template?.template_key);
+
+      const configUpdatedAt = response.configUpdatedAt || null;
+
       const cached = getCachedTemplate();
-      if (cached) {
-        console.log('[useTemplate] Using cached template:', cached.template_key);
+      if (cached && cached.configUpdatedAt === configUpdatedAt) {
+        console.log('[useTemplate] Using cached template (config unchanged):', cached.template_key);
         setTemplate(cached);
         setLoading(false);
         return;
       }
 
-      console.log('[useTemplate] Fetching active template from API...');
-      const response = await getActiveTemplate();
-      console.log('[useTemplate] Received template:', response.template?.template_key);
+      if (cached && cached.configUpdatedAt !== configUpdatedAt) {
+        console.log('[useTemplate] Config updated, invalidating cache');
+      }
 
       const templateData: TemplateData = {
         id: response.template.id,
@@ -46,7 +74,7 @@ export function useTemplate() {
       };
 
       setTemplate(templateData);
-      cacheTemplate(templateData);
+      cacheTemplate(templateData, configUpdatedAt);
       console.log('[useTemplate] Template loaded successfully');
     } catch (err) {
       console.error('[useTemplate] Failed to load template:', err);
@@ -62,7 +90,7 @@ export function useTemplate() {
       const cached = localStorage.getItem(CACHE_KEY);
       if (!cached) return null;
 
-      const { data, timestamp }: CachedTemplate = JSON.parse(cached);
+      const { data, timestamp, configUpdatedAt }: CachedTemplate = JSON.parse(cached);
       const now = Date.now();
 
       if (now - timestamp < CACHE_DURATION) {
@@ -79,11 +107,12 @@ export function useTemplate() {
     }
   }
 
-  function cacheTemplate(data: TemplateData) {
+  function cacheTemplate(data: TemplateData, configUpdatedAt: string | null) {
     try {
       const cached: CachedTemplate = {
         data,
         timestamp: Date.now(),
+        configUpdatedAt,
       };
       localStorage.setItem(CACHE_KEY, JSON.stringify(cached));
     } catch {

@@ -32,12 +32,18 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
     try {
       setLoading(true);
       const response = await fetchStockData(code);
-      setStockCode(code);
-      setStockName(response.data.basic.name);
 
-      await trackEvent(sessionId, 'page_view', code);
+      if (response?.data?.basic?.name) {
+        setStockCode(code);
+        setStockName(response.data.basic.name);
+        await trackEvent(sessionId, 'page_view', code);
+      } else {
+        setStockCode(code);
+        console.warn('[useStockDiagnosis] Stock data loaded but name is missing');
+      }
     } catch (error) {
-      console.error('Failed to load stock data:', error);
+      console.error('[useStockDiagnosis] Failed to load stock data:', error);
+      setStockCode(code);
     } finally {
       setLoading(false);
     }

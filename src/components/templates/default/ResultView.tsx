@@ -17,6 +17,12 @@ export function ResultView({
   onBack,
   getContent
 }: ResultViewProps) {
+  const formatResult = (text: string): string => {
+    return text
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="max-w-4xl mx-auto px-4 py-12">
@@ -43,8 +49,8 @@ export function ResultView({
           )}
 
           <div className="prose max-w-none mb-8">
-            <div className="text-gray-700 whitespace-pre-wrap leading-relaxed">
-              {result}
+            <div className="text-gray-700 whitespace-pre-wrap leading-relaxed text-base">
+              {formatResult(result)}
             </div>
           </div>
 
