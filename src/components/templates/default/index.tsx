@@ -184,19 +184,19 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
             <h2 className="text-white text-xl font-semibold text-center mb-6">
               新しいチャットを開始
             </h2>
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
               <input
                 type="text"
                 value={diagnosis.stockCode}
                 onChange={(e) => diagnosis.setStockCode(e.target.value)}
                 placeholder="株式コードを入力"
-                className="flex-1 px-5 py-4 rounded-full text-base focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-white text-gray-900 placeholder-gray-400"
+                className="flex-1 px-5 py-3 rounded-full text-base focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-white text-gray-900 placeholder-gray-400 shrink-0"
                 disabled={diagnosis.loading || diagnosis.analyzing}
               />
               <button
                 onClick={diagnosis.handleDiagnose}
                 disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
-                className="bg-cyan-400 hover:bg-cyan-500 text-gray-900 py-4 px-8 rounded-full font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
+                className="bg-cyan-400 hover:bg-cyan-500 text-gray-900 py-3 px-6 rounded-full font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 whitespace-nowrap shrink-0"
               >
                 {diagnosis.loading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
