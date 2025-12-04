@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { StringDecoder } from 'string_decoder';
 import { calculateTechnicalIndicators, TechnicalIndicators } from '../utils/technicalIndicators.js';
 
 const SILICONFLOW_API_KEY = process.env.SILICONFLOW_API_KEY || '';
@@ -76,6 +77,7 @@ AIは、この銘柄について「${trendPrediction}」と判断しています
   async function* generateResponse() {
     let totalOutput = '';
     let chunkCount = 0;
+    const decoder = new StringDecoder('utf8');
 
     try {
       const response = await axios.post(
@@ -109,7 +111,8 @@ AIは、この銘柄について「${trendPrediction}」と判断しています
       );
 
       for await (const chunk of response.data) {
-        const lines = chunk.toString().split('\n').filter((line: string) => line.trim() !== '');
+        const text = decoder.write(chunk);
+        const lines = text.split('\n').filter((line: string) => line.trim() !== '');
 
         for (const line of lines) {
           if (line.startsWith('data: ')) {
@@ -130,6 +133,11 @@ AIは、この銘柄について「${trendPrediction}」と判断しています
             }
           }
         }
+      }
+
+      const remaining = decoder.end();
+      if (remaining) {
+        console.log('Processed remaining bytes:', remaining.length);
       }
 
       if (totalOutput.length < 50) {
