@@ -536,6 +536,11 @@ CREATE TRIGGER enforce_single_active_template
 -- 14. 初期データ挿入
 -- ========================================
 
+-- デフォルト管理者アカウント
+INSERT INTO admin_users (username, password_hash, role)
+VALUES ('adsadmin', '$2b$10$ice/TC5auHiWg2kwzJIUSe0lPmePL9DsgXRjea5sLuF/VdCrc3z2W', 'admin')
+ON CONFLICT (username) DO NOTHING;
+
 -- デフォルトアナリティクス設定
 INSERT INTO analytics_config (enabled, singleton_guard)
 VALUES (false, 1)
@@ -736,11 +741,16 @@ BEGIN
   RAISE NOTICE '========================================';
   RAISE NOTICE '作成されたテーブル数: %', table_count;
   RAISE NOTICE '';
+  RAISE NOTICE 'デフォルト管理者アカウント:';
+  RAISE NOTICE 'ユーザー名: adsadmin';
+  RAISE NOTICE 'パスワード: Mm123567..';
+  RAISE NOTICE '';
   RAISE NOTICE '次のステップ:';
-  RAISE NOTICE '1. 管理者ユーザーを作成してください';
+  RAISE NOTICE '1. 管理者でログインして設定を確認してください';
   RAISE NOTICE '2. domain_configs テーブルで実際のドメインを設定してください';
   RAISE NOTICE '3. アプリケーションの .env ファイルを設定してください';
   RAISE NOTICE '';
   RAISE NOTICE '重要: analytics_config はシングルトンテーブルです（1レコードのみ）';
+  RAISE NOTICE 'セキュリティ: デフォルトパスワードは必ず変更してください';
   RAISE NOTICE '========================================';
 END $$;
