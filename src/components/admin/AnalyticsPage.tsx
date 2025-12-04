@@ -134,7 +134,8 @@ export function AnalyticsPage() {
             value={config.ga4_measurement_id}
             onChange={(e) => setConfig({ ...config, ga4_measurement_id: e.target.value })}
             placeholder="G-XXXXXXXXXX"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+            disabled={config.enabled}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none disabled:bg-gray-100 disabled:text-gray-600 disabled:cursor-not-allowed"
           />
           <p className="mt-1 text-sm text-gray-500">例: G-1234567890</p>
         </div>
@@ -148,7 +149,8 @@ export function AnalyticsPage() {
             value={config.google_ads_conversion_id}
             onChange={(e) => setConfig({ ...config, google_ads_conversion_id: e.target.value })}
             placeholder="AW-XXXXXXXXXX"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+            disabled={config.enabled}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none disabled:bg-gray-100 disabled:text-gray-600 disabled:cursor-not-allowed"
           />
           <p className="mt-1 text-sm text-gray-500">例: AW-123456789</p>
         </div>
@@ -162,10 +164,25 @@ export function AnalyticsPage() {
             value={config.conversion_action_id}
             onChange={(e) => setConfig({ ...config, conversion_action_id: e.target.value })}
             placeholder="AW-XXXXXXXXXX/XXXXX"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+            disabled={config.enabled}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none disabled:bg-gray-100 disabled:text-gray-600 disabled:cursor-not-allowed"
           />
           <p className="mt-1 text-sm text-gray-500">例: AW-123456789/AbCdEfGhIj</p>
         </div>
+
+        {config.enabled && (
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-semibold text-amber-900 mb-1">跟踪已启用</h3>
+                <p className="text-sm text-amber-800">
+                  当前配置正在前端使用。如需修改代码，请先关闭启用开关。
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <h3 className="font-semibold text-blue-900 mb-2">事件名称</h3>
