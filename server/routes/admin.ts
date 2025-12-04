@@ -140,14 +140,28 @@ router.get('/analytics/config', async (req: AuthRequest, res) => {
     const { data, error } = await supabase
       .from('analytics_config')
       .select('*')
+      .limit(1)
       .maybeSingle();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Analytics config database error:', error);
+      throw error;
+    }
 
-    res.json(data || {});
+    if (!data) {
+      return res.json({
+        ga4_measurement_id: '',
+        google_ads_conversion_id: '',
+        conversion_action_id: '',
+        enabled: false,
+      });
+    }
+
+    res.json(data);
   } catch (error) {
     console.error('Analytics config fetch error:', error);
-    res.status(500).json({ error: 'Failed to fetch analytics config' });
+    const errorMessage = error instanceof Error ? error.message : 'Failed to fetch analytics config';
+    res.status(500).json({ error: errorMessage, details: String(error) });
   }
 });
 
