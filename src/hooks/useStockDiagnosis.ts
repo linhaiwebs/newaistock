@@ -68,9 +68,6 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
 
       const response = await fetchStockData(stockCode);
       const stockData = response.data;
-      const historicalData = stockData.historical
-        .map((p: any) => `${p.date}: 終値 ${p.close}`)
-        .join('\n');
 
       setProgressStages([
         { label: 'データ取得中', progress: 100, completed: true },
@@ -86,8 +83,7 @@ export function useStockDiagnosis(): StockDiagnosisState & StockDiagnosisActions
       for await (const chunk of streamDiagnosis(
         stockCode,
         stockData.basic.name,
-        stockData.current.price.toString(),
-        historicalData,
+        stockData,
         sessionId
       )) {
         if (firstChunk) {

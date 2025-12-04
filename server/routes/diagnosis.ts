@@ -23,9 +23,9 @@ router.get('/cache/:stockCode', async (req, res) => {
 
 router.post('/analyze', async (req, res) => {
   try {
-    const { stockCode, stockName, currentPrice, historicalData, sessionId } = req.body;
+    const { stockCode, stockName, stockData, sessionId } = req.body;
 
-    if (!stockCode || !stockName) {
+    if (!stockCode || !stockName || !stockData) {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
 
@@ -50,8 +50,10 @@ router.post('/analyze', async (req, res) => {
     const generator = await analyzeStockWithAI({
       stockCode,
       stockName,
-      currentPrice,
-      historicalData,
+      currentPrice: stockData.current.price,
+      priceChange: stockData.current.change,
+      priceChangePercent: stockData.current.changePercent,
+      historicalData: stockData.historical || [],
     });
 
     let fullResult = '';

@@ -65,8 +65,7 @@ export async function checkCache(stockCode: string) {
 export async function* streamDiagnosis(
   stockCode: string,
   stockName: string,
-  currentPrice: string,
-  historicalData: string,
+  stockData: any,
   sessionId: string
 ) {
   const response = await fetch(`${API_BASE_URL}/diagnosis/analyze`, {
@@ -75,8 +74,7 @@ export async function* streamDiagnosis(
     body: JSON.stringify({
       stockCode,
       stockName,
-      currentPrice,
-      historicalData,
+      stockData,
       sessionId,
     }),
   });
