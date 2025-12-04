@@ -38,10 +38,16 @@ router.get('/active', async (req, res) => {
       };
     });
 
-    // 获取当前域名的配置（包含footer_config）
-    const domainConfig = await domainDetector.getConfigForRequest(req);
-    const footerConfig = domainConfig?.footer_config || null;
-    const configUpdatedAt = domainConfig?.updated_at || domainConfig?.created_at || null;
+    // 优先使用模板的 footer_config，如果没有则使用域名的 footer_config
+    let footerConfig = template.footer_config || null;
+
+    // 如果模板没有配置或配置为空对象，回退到域名配置
+    if (!footerConfig || Object.keys(footerConfig).length === 0) {
+      const domainConfig = await domainDetector.getConfigForRequest(req);
+      footerConfig = domainConfig?.footer_config || null;
+    }
+
+    const configUpdatedAt = template.updated_at || template.created_at || null;
 
     res.json({
       template: {
@@ -171,7 +177,7 @@ router.post('/', async (req: AuthRequest, res) => {
 router.put('/:id', async (req: AuthRequest, res) => {
   try {
     const { id } = req.params;
-    const { name, description, config, preview_image, category, category_order } = req.body;
+    const { name, description, config, preview_image, category, category_order, footer_config } = req.body;
 
     const updates: any = { updated_at: new Date().toISOString() };
     if (name !== undefined) updates.name = name;
@@ -180,6 +186,7 @@ router.put('/:id', async (req: AuthRequest, res) => {
     if (preview_image !== undefined) updates.preview_image = preview_image;
     if (category !== undefined) updates.category = category;
     if (category_order !== undefined) updates.category_order = category_order;
+    if (footer_config !== undefined) updates.footer_config = footer_config;
 
     const { data, error } = await supabaseAdmin
       .from('landing_templates')
@@ -368,6 +375,88 @@ router.delete('/:templateId/content/:contentId', async (req: AuthRequest, res) =
   } catch (error) {
     console.error('Template content deletion error:', error);
     res.status(500).json({ error: 'Failed to delete template content' });
+  }
+});
+
+// 获取模板的页脚配置
+router.get('/:id/footer-config', async (req: AuthRequest, res) => {
+  try {
+    const { id } = req.params;
+
+    const { data: template, error } = await supabaseAdmin
+      .from('landing_templates')
+      .select('footer_config, category')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!template) {
+      return res.status(404).json({ error: 'Template not found' });
+    }
+
+    const footerConfig = template.footer_config || {};
+    const hasCustomConfig = footerConfig && Object.keys(footerConfig).length > 0;
+
+    res.json({
+      footer_config: footerConfig,
+      has_custom_config: hasCustomConfig,
+      category: template.category,
+    });
+  } catch (error) {
+    console.error('Template footer config fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch template footer config' });
+  }
+});
+
+// 从其他模板复制页脚配置
+router.post('/:id/copy-footer', async (req: AuthRequest, res) => {
+  try {
+    const { id } = req.params;
+    const { source_template_id } = req.body;
+
+    if (!source_template_id) {
+      return res.status(400).json({ error: 'source_template_id is required' });
+    }
+
+    // 获取源模板的页脚配置
+    const { data: sourceTemplate, error: sourceError } = await supabaseAdmin
+      .from('landing_templates')
+      .select('footer_config')
+      .eq('id', source_template_id)
+      .maybeSingle();
+
+    if (sourceError) throw sourceError;
+
+    if (!sourceTemplate) {
+      return res.status(404).json({ error: 'Source template not found' });
+    }
+
+    if (!sourceTemplate.footer_config || Object.keys(sourceTemplate.footer_config).length === 0) {
+      return res.status(400).json({ error: 'Source template has no footer configuration' });
+    }
+
+    // 复制配置到目标模板
+    const { data, error } = await supabaseAdmin
+      .from('landing_templates')
+      .update({
+        footer_config: sourceTemplate.footer_config,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    res.json({
+      success: true,
+      footer_config: sourceTemplate.footer_config,
+      data,
+    });
+  } catch (error) {
+    console.error('Template footer config copy error:', error);
+    res.status(500).json({ error: 'Failed to copy footer config' });
   }
 });
 

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Save, ArrowLeft, AlertCircle } from 'lucide-react';
+import { Save, ArrowLeft, AlertCircle, Copy, ChevronDown, ChevronRight } from 'lucide-react';
 import { getTemplateDetail, updateTemplateContent, updateTemplate, AuthError } from '../../lib/api';
 import { requireValidToken } from '../../lib/auth';
 import { TEMPLATE_CATEGORIES, getCategoryBadgeClass, getCategoryIcon } from '../../lib/categories';
+import { FooterConfigCopyModal } from './FooterConfigCopyModal';
+import type { FooterConfig } from '../../types/template';
 
 interface ContentItem {
   id?: string;
@@ -20,6 +22,7 @@ interface Template {
   content: ContentItem[];
   category: string | null;
   category_order: number;
+  footer_config?: FooterConfig;
 }
 
 export function TemplateEditor() {
@@ -28,6 +31,21 @@ export function TemplateEditor() {
   const [editedContent, setEditedContent] = useState<ContentItem[]>([]);
   const [editedCategory, setEditedCategory] = useState<string>('general');
   const [editedCategoryOrder, setEditedCategoryOrder] = useState<number>(0);
+  const [editedFooterConfig, setEditedFooterConfig] = useState<FooterConfig>({
+    disclaimer_title: '',
+    tool_nature: '',
+    investment_disclaimer: '',
+    user_responsibility: '',
+    license_statement: '',
+    compliance_statement: '',
+    google_ads_compliance: '',
+    risk_warning: '',
+    data_accuracy: '',
+    updated_date: '',
+    contact_info: '',
+  });
+  const [footerConfigExpanded, setFooterConfigExpanded] = useState(false);
+  const [showCopyModal, setShowCopyModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -49,6 +67,9 @@ export function TemplateEditor() {
       setEditedContent(data.content || []);
       setEditedCategory(data.category || 'general');
       setEditedCategoryOrder(data.category_order || 0);
+      if (data.footer_config && Object.keys(data.footer_config).length > 0) {
+        setEditedFooterConfig(data.footer_config);
+      }
     } catch (error) {
       console.error('Failed to load template:', error);
       if (error instanceof AuthError || (error instanceof Error && (error.message === 'NO_TOKEN' || error.message === 'TOKEN_EXPIRED'))) {
@@ -72,6 +93,7 @@ export function TemplateEditor() {
       await updateTemplate(token, id!, {
         category: editedCategory,
         category_order: editedCategoryOrder,
+        footer_config: editedFooterConfig,
       });
 
       await updateTemplateContent(token, id!, editedContent);
@@ -97,6 +119,19 @@ export function TemplateEditor() {
         item.content_key === key ? { ...item, content_value: value } : item
       )
     );
+  }
+
+  function updateFooterConfig(key: keyof FooterConfig, value: string) {
+    setEditedFooterConfig(prev => ({
+      ...prev,
+      [key]: value,
+    }));
+  }
+
+  function handleCopySuccess(config: FooterConfig) {
+    setEditedFooterConfig(config);
+    setSuccess('页脚配置已成功复制！请检查并根据需要调整内容。');
+    setTimeout(() => setSuccess(''), 5000);
   }
 
   function getContentLabel(key: string): string {
@@ -266,7 +301,84 @@ export function TemplateEditor() {
             </div>
           </div>
         ))}
+
+        <div className="bg-white rounded-xl shadow-md overflow-hidden">
+          <button
+            onClick={() => setFooterConfigExpanded(!footerConfigExpanded)}
+            className="w-full px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 transition-colors flex items-center justify-between"
+          >
+            <div className="flex items-center gap-3">
+              {footerConfigExpanded ? (
+                <ChevronDown className="w-6 h-6 text-blue-600" />
+              ) : (
+                <ChevronRight className="w-6 h-6 text-blue-600" />
+              )}
+              <h2 className="text-xl font-bold text-gray-900">页脚配置</h2>
+              <span className="text-sm text-gray-600">（免责声明、合规说明等）</span>
+            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowCopyModal(true);
+              }}
+              className="px-4 py-2 bg-white border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors flex items-center gap-2"
+            >
+              <Copy className="w-4 h-4" />
+              从其他模板复制
+            </button>
+          </button>
+
+          {footerConfigExpanded && (
+            <div className="p-6 space-y-6">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+                页脚配置用于显示免责声明、合规说明等法律和风险提示信息。所有字段都支持编辑和保存。
+              </div>
+
+              <div className="grid grid-cols-1 gap-6">
+                {[
+                  { key: 'disclaimer_title', label: '免责声明标题', rows: 1, recommended: '50字以内' },
+                  { key: 'tool_nature', label: '工具性质说明', rows: 3, recommended: '200-300字' },
+                  { key: 'investment_disclaimer', label: '投资免责声明', rows: 3, recommended: '200-300字' },
+                  { key: 'user_responsibility', label: '用户责任说明', rows: 3, recommended: '150-250字' },
+                  { key: 'license_statement', label: '许可证声明', rows: 2, recommended: '100-150字' },
+                  { key: 'compliance_statement', label: '合规声明', rows: 3, recommended: '150-250字' },
+                  { key: 'google_ads_compliance', label: 'Google广告合规', rows: 2, recommended: '100-150字' },
+                  { key: 'risk_warning', label: '风险警告', rows: 3, recommended: '200-300字' },
+                  { key: 'data_accuracy', label: '数据准确性声明', rows: 3, recommended: '150-250字' },
+                  { key: 'updated_date', label: '更新日期', rows: 1, recommended: '例如：2024年12月' },
+                  { key: 'contact_info', label: '联系信息（可选）', rows: 2, recommended: '100字以内' },
+                ].map(({ key, label, rows, recommended }) => {
+                  const value = editedFooterConfig[key as keyof FooterConfig] || '';
+                  return (
+                    <div key={key}>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        {label}
+                        <span className="ml-2 text-xs font-normal text-gray-500">
+                          建议：{recommended} | 当前：{value.length}字
+                        </span>
+                      </label>
+                      <textarea
+                        value={value}
+                        onChange={(e) => updateFooterConfig(key as keyof FooterConfig, e.target.value)}
+                        rows={rows}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
+                        placeholder={`请输入${label}`}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
+
+      <FooterConfigCopyModal
+        isOpen={showCopyModal}
+        onClose={() => setShowCopyModal(false)}
+        currentTemplateId={id!}
+        onCopySuccess={handleCopySuccess}
+      />
 
       <div className="mt-8 flex justify-end gap-4">
         <button

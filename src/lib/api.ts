@@ -426,6 +426,31 @@ export async function syncTemplates(token: string) {
   return response.json();
 }
 
+export async function getTemplateFooterConfig(token: string, id: string) {
+  const response = await fetch(`${API_BASE_URL}/templates/${id}/footer-config`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  await handleAuthError(response);
+  if (!response.ok) throw new Error('Failed to fetch footer config');
+  return response.json();
+}
+
+export async function copyTemplateFooterConfig(token: string, id: string, sourceTemplateId: string) {
+  const response = await fetch(`${API_BASE_URL}/templates/${id}/copy-footer`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ source_template_id: sourceTemplateId }),
+  });
+
+  await handleAuthError(response);
+  if (!response.ok) throw new Error('Failed to copy footer config');
+  return response.json();
+}
+
 export async function getDomains(token: string) {
   const response = await fetch(`${API_BASE_URL}/domains`, {
     headers: { Authorization: `Bearer ${token}` },
