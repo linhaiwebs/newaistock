@@ -21,13 +21,13 @@ export function DiagnosisForm({
     <div className="max-w-2xl mx-auto">
       <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
         <label className="block text-sm font-semibold text-gray-700 mb-3">
-          銘柄コード
+          {getContent('input_label', '股票代码')}
         </label>
         <input
           type="text"
           value={stockCode}
           onChange={(e) => setStockCode(e.target.value)}
-          placeholder="例: 1031"
+          placeholder={getContent('input_placeholder', '例如: 1031')}
           className="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all"
           disabled={loading || analyzing}
         />
@@ -40,12 +40,12 @@ export function DiagnosisForm({
           {loading ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
-              <span>読み込み中...</span>
+              <span>{getContent('loading_text', '加载中...')}</span>
             </>
           ) : (
             <>
               <BarChart3 className="w-5 h-5" />
-              <span>{getContent('hero_button_text', '今すぐ診断')}</span>
+              <span>{getContent('hero_button_text', '开始诊断')}</span>
             </>
           )}
         </button>
