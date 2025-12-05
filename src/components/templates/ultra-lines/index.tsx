@@ -15,25 +15,25 @@ export function TemplateUltraLines({ template, getContent }: TemplateProps) {
       id: 'precision',
       icon: Activity,
       titleKey: 'feature1_title',
-      titleDefault: 'Precision',
+      titleDefault: '精度',
       descKey: 'feature1_description',
-      descDefault: 'Accurate data analysis',
+      descDefault: '正確なデータ分析',
     },
     {
       id: 'clarity',
       icon: TrendingUp,
       titleKey: 'feature2_title',
-      titleDefault: 'Clarity',
+      titleDefault: '明快さ',
       descKey: 'feature2_description',
-      descDefault: 'Clear visualization',
+      descDefault: '明確な可視化',
     },
     {
       id: 'efficiency',
       icon: BarChart3,
       titleKey: 'feature3_title',
-      titleDefault: 'Efficiency',
+      titleDefault: '効率性',
       descKey: 'feature3_description',
-      descDefault: 'Fast processing',
+      descDefault: '高速処理',
     },
   ];
 
@@ -62,94 +62,120 @@ export function TemplateUltraLines({ template, getContent }: TemplateProps) {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <div className="border-b border-zinc-200">
-        <div className="max-w-md mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 border border-zinc-900 rounded-sm"></div>
-              <span className="text-sm font-medium text-zinc-900">STOCK TOOL</span>
-            </div>
-            <div className="text-xs text-zinc-500">v1.0</div>
+      {/* Top geometric header */}
+      <div className="border-b-2 border-zinc-900">
+        <div className="max-w-3xl mx-auto px-8 py-6 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-8 h-8 border-2 border-zinc-900"></div>
+            <div className="w-8 h-8 border-2 border-zinc-900 rounded-full"></div>
+            <div className="w-8 h-8 border-2 border-zinc-900 transform rotate-45"></div>
           </div>
+          <div className="text-xs text-zinc-500 font-mono uppercase tracking-widest">株式解析</div>
         </div>
       </div>
 
-      <div className="flex-1 px-6 py-16">
-        <div className="max-w-md mx-auto">
-          <div className="mb-16">
-            <h1 className="text-5xl font-extralight text-zinc-900 mb-4 tracking-tight">
-              {getContent('hero_title', 'Stock Analysis')}
+      <div className="flex-1 px-8 py-20">
+        <div className="max-w-3xl mx-auto">
+          {/* Oversized title */}
+          <div className="mb-24 relative overflow-hidden">
+            <h1 className="text-[12rem] md:text-[16rem] font-extralight text-zinc-900 leading-none tracking-tighter -ml-2">
+              {getContent('hero_title', '株式')}
             </h1>
-            <div className="w-12 h-px bg-zinc-900 mb-4"></div>
-            <p className="text-zinc-600 text-sm font-light">
-              {getContent('hero_subtitle', 'Minimalist data visualization tool')}
+            <div className="absolute bottom-0 left-0 right-0 h-px bg-zinc-900"></div>
+            <p className="mt-6 text-zinc-600 text-sm font-light uppercase tracking-widest">
+              {getContent('hero_subtitle', 'ミニマリストデータ可視化ツール')}
             </p>
           </div>
 
-          <div className="mb-16 border border-zinc-200 p-8">
-            <div className="space-y-6">
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="text-xs font-medium text-zinc-900 uppercase tracking-wider">
-                    Input
-                  </label>
-                  <span className="text-xs text-zinc-400">Required</span>
-                </div>
-                <input
-                  type="text"
-                  value={diagnosis.stockCode}
-                  onChange={(e) => diagnosis.setStockCode(e.target.value)}
-                  placeholder={getContent('input_placeholder', 'Stock code')}
-                  className="w-full px-0 py-3 border-b border-zinc-300 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-zinc-900 transition-colors bg-transparent font-light"
-                  disabled={diagnosis.loading || diagnosis.analyzing}
-                />
-              </div>
+          {/* Table-style input */}
+          <div className="mb-24">
+            <table className="w-full border-2 border-zinc-900">
+              <thead>
+                <tr className="border-b-2 border-zinc-900">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-zinc-900 uppercase tracking-widest">
+                    フィールド
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-zinc-900 uppercase tracking-widest">
+                    入力
+                  </th>
+                  <th className="px-6 py-4 text-right text-xs font-medium text-zinc-900 uppercase tracking-widest">
+                    状態
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-zinc-900">
+                  <td className="px-6 py-6 text-sm font-light text-zinc-900">
+                    株式コード
+                  </td>
+                  <td className="px-6 py-6">
+                    <input
+                      type="text"
+                      value={diagnosis.stockCode}
+                      onChange={(e) => diagnosis.setStockCode(e.target.value)}
+                      placeholder={getContent('input_placeholder', '株式コード')}
+                      className="w-full px-0 py-2 border-b border-zinc-300 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-zinc-900 transition-colors bg-transparent font-light text-lg"
+                      disabled={diagnosis.loading || diagnosis.analyzing}
+                    />
+                  </td>
+                  <td className="px-6 py-6 text-right">
+                    <span className="text-xs text-zinc-400 font-mono uppercase">必須</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan={3} className="px-6 py-6">
+                    <button
+                      onClick={diagnosis.handleDiagnose}
+                      disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
+                      className="w-full py-4 border-2 border-zinc-900 text-zinc-900 hover:bg-zinc-900 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all font-light uppercase text-sm tracking-[0.3em]"
+                    >
+                      {diagnosis.loading || diagnosis.analyzing ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span>{getContent('analyzing_text', '処理中')}</span>
+                        </span>
+                      ) : (
+                        <span>{getContent('submit_button', '実行')}</span>
+                      )}
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
 
-              <button
-                onClick={diagnosis.handleDiagnose}
-                disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
-                className="w-full py-4 border border-zinc-900 text-zinc-900 hover:bg-zinc-900 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all font-light uppercase text-sm tracking-widest"
-              >
-                {diagnosis.loading || diagnosis.analyzing ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>{getContent('analyzing_text', 'Processing')}</span>
-                  </span>
-                ) : (
-                  <span>{getContent('submit_button', 'Execute')}</span>
-                )}
-              </button>
-            </div>
-
-            <div className="mt-6 pt-6 border-t border-zinc-100">
-              <p className="text-xs text-zinc-500 font-light leading-relaxed">
-                {getContent('disclaimer_text', 'This tool provides information only. Not investment advice.')}
-              </p>
-            </div>
+            <p className="mt-6 text-xs text-zinc-500 font-light leading-relaxed">
+              {getContent('disclaimer_text', '本ツールは情報提供のみを目的としています')}
+            </p>
           </div>
 
-          <div className="space-y-8">
+          {/* Features with geometric dividers */}
+          <div className="space-y-12">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <div
-                  key={feature.id}
-                  className="border-l-2 border-zinc-900 pl-6 py-2"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 mt-1">
-                      <Icon className="w-5 h-5 text-zinc-900" strokeWidth={1} />
+                <div key={feature.id}>
+                  <div className="grid grid-cols-[auto_1fr_auto] gap-8 items-start">
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="w-12 h-12 border-2 border-zinc-900 flex items-center justify-center">
+                        <Icon className="w-6 h-6 text-zinc-900" strokeWidth={1} />
+                      </div>
+                      <div className="w-px h-12 bg-zinc-300"></div>
                     </div>
-                    <div className="flex-1">
-                      <h3 className="text-zinc-900 font-light text-lg mb-1">
+
+                    <div className="pt-2">
+                      <h3 className="text-zinc-900 font-light text-2xl mb-3 tracking-tight">
                         {getContent(feature.titleKey, feature.titleDefault)}
                       </h3>
-                      <p className="text-zinc-600 text-sm font-light">
+                      <p className="text-zinc-600 text-sm font-light leading-loose">
                         {getContent(feature.descKey, feature.descDefault)}
                       </p>
                     </div>
-                    <div className="flex-shrink-0 text-xs text-zinc-400 font-mono">
-                      0{index + 1}
+
+                    <div className="flex flex-col items-end gap-2 pt-2">
+                      <div className="text-6xl font-extralight text-zinc-200">
+                        0{index + 1}
+                      </div>
+                      <div className="w-16 h-px bg-zinc-900"></div>
                     </div>
                   </div>
                 </div>

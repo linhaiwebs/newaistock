@@ -15,25 +15,25 @@ export function TemplateZenMinimal({ template, getContent }: TemplateProps) {
       id: 'clarity',
       icon: Activity,
       titleKey: 'feature1_title',
-      titleDefault: 'Clear Vision',
+      titleDefault: '明晰な視界',
       descKey: 'feature1_description',
-      descDefault: 'Simple data presentation',
+      descDefault: 'シンプルなデータ表示',
     },
     {
       id: 'focus',
       icon: TrendingUp,
       titleKey: 'feature2_title',
-      titleDefault: 'Pure Focus',
+      titleDefault: '純粋な集中',
       descKey: 'feature2_description',
-      descDefault: 'Essential information only',
+      descDefault: '本質的な情報のみ',
     },
     {
       id: 'balance',
       icon: BarChart3,
       titleKey: 'feature3_title',
-      titleDefault: 'Perfect Balance',
+      titleDefault: '完璧なバランス',
       descKey: 'feature3_description',
-      descDefault: 'Harmonious analysis',
+      descDefault: '調和のとれた分析',
     },
   ];
 
@@ -61,82 +61,111 @@ export function TemplateZenMinimal({ template, getContent }: TemplateProps) {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <div className="flex-1 px-8 py-16">
-        <div className="max-w-lg mx-auto">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl font-light text-black mb-4 tracking-wide">
-              {getContent('hero_title', 'Stock Analysis')}
-            </h1>
-            <div className="w-16 h-px bg-black mx-auto mb-6"></div>
-            <p className="text-gray-600 text-sm font-light">
-              {getContent('hero_subtitle', 'Simplicity in data visualization')}
-            </p>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-stone-50 to-zinc-50 flex flex-col relative overflow-hidden">
+      {/* Subtle ink wash background */}
+      <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-radial from-stone-200/30 to-transparent rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-radial from-zinc-200/30 to-transparent rounded-full blur-3xl"></div>
 
-          <div className="mb-16">
-            <div className="border border-gray-200 rounded-none p-8">
-              <div className="space-y-6">
-                <div>
-                  <input
-                    type="text"
-                    value={diagnosis.stockCode}
-                    onChange={(e) => diagnosis.setStockCode(e.target.value)}
-                    placeholder={getContent('input_placeholder', 'Stock code')}
-                    className="w-full px-0 py-3 border-b border-gray-300 text-black placeholder-gray-400 focus:outline-none focus:border-black transition-colors bg-transparent"
-                    disabled={diagnosis.loading || diagnosis.analyzing}
-                  />
-                </div>
+      {/* Vertical title on right (Japanese style) */}
+      <div className="hidden md:block absolute right-12 top-1/4 writing-mode-vertical-rl">
+        <h1 className="text-4xl font-light text-stone-800 tracking-widest opacity-20">
+          株式禅
+        </h1>
+      </div>
 
-                <button
-                  onClick={diagnosis.handleDiagnose}
-                  disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
-                  className="w-full py-4 border-2 border-black text-black hover:bg-black hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all font-light tracking-wide"
-                >
-                  {diagnosis.loading || diagnosis.analyzing ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      <span>{getContent('analyzing_text', 'Processing...')}</span>
-                    </span>
-                  ) : (
-                    <span>{getContent('submit_button', 'Begin Analysis')}</span>
-                  )}
-                </button>
-              </div>
+      <div className="flex-1 flex items-center justify-start px-8 md:px-16 py-16">
+        <div className="w-full max-w-2xl">
+          {/* Title section - asymmetric placement */}
+          <div className="mb-24 ml-0 md:ml-24">
+            <div className="space-y-6">
+              <div className="w-20 h-px bg-stone-800"></div>
 
-              <p className="mt-6 text-xs text-gray-500 text-center font-light">
-                {getContent('disclaimer_text', 'Educational tool only')}
+              <h1 className="text-5xl md:text-6xl font-extralight text-stone-900 leading-tight tracking-tight">
+                {getContent('hero_title', '株式禅')}
+              </h1>
+
+              <p className="text-stone-600 text-sm font-light ml-1 max-w-xs leading-loose">
+                {getContent('hero_subtitle', '心を込めたデータ可視化')}
               </p>
             </div>
           </div>
 
-          <div className="space-y-12">
-            {features.map((feature) => {
-              const Icon = feature.icon;
-              return (
-                <div key={feature.id} className="flex items-start gap-6">
-                  <div className="flex-shrink-0">
-                    <div className="w-14 h-14 rounded-full border border-gray-300 flex items-center justify-center">
-                      <Icon className="w-6 h-6 text-black" strokeWidth={1} />
-                    </div>
-                  </div>
-                  <div className="flex-1 pt-2">
-                    <h3 className="text-black font-light text-lg mb-2">
-                      {getContent(feature.titleKey, feature.titleDefault)}
-                    </h3>
-                    <p className="text-gray-600 text-sm font-light leading-relaxed">
-                      {getContent(feature.descKey, feature.descDefault)}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
+          {/* Input section - offset to center-left */}
+          <div className="mb-20 ml-0 md:ml-12">
+            <div className="max-w-md space-y-8">
+              <div className="space-y-4">
+                <label className="block text-stone-700 text-xs font-light tracking-widest uppercase opacity-60">
+                  Code
+                </label>
+                <input
+                  type="text"
+                  value={diagnosis.stockCode}
+                  onChange={(e) => diagnosis.setStockCode(e.target.value)}
+                  placeholder={getContent('input_placeholder', '株式コード')}
+                  className="w-full px-0 py-4 border-b-2 border-stone-300 text-stone-900 text-lg placeholder-stone-400 focus:outline-none focus:border-stone-800 transition-colors bg-transparent font-light"
+                  disabled={diagnosis.loading || diagnosis.analyzing}
+                />
+              </div>
+
+              <button
+                onClick={diagnosis.handleDiagnose}
+                disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
+                className="px-12 py-4 border border-stone-800 text-stone-800 hover:bg-stone-800 hover:text-stone-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 font-light tracking-widest text-sm"
+              >
+                {diagnosis.loading || diagnosis.analyzing ? (
+                  <span className="flex items-center justify-center gap-3">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>{getContent('analyzing_text', '分析中')}</span>
+                  </span>
+                ) : (
+                  <span>{getContent('submit_button', '診断開始')}</span>
+                )}
+              </button>
+
+              <p className="text-xs text-stone-500 font-light leading-loose">
+                {getContent('disclaimer_text', '本ツールは情報提供のみを目的としています')}
+              </p>
+            </div>
           </div>
 
-          <div className="mt-16 flex justify-center gap-2">
-            <div className="w-12 h-px bg-black"></div>
-            <div className="w-2 h-px bg-gray-300"></div>
-            <div className="w-2 h-px bg-gray-300"></div>
+          {/* Features - horizontal scroll on mobile, flowing on desktop */}
+          <div className="ml-0 md:ml-32">
+            <div className="flex md:flex-col gap-12 md:gap-16 overflow-x-auto md:overflow-visible pb-4 md:pb-0">
+              {features.map((feature, index) => {
+                const Icon = feature.icon;
+                return (
+                  <div
+                    key={feature.id}
+                    className="flex-shrink-0 w-64 md:w-auto flex items-start gap-5"
+                    style={{
+                      marginLeft: index * 20,
+                    }}
+                  >
+                    <div className="flex-shrink-0 mt-1">
+                      <div className="w-10 h-10 rounded-full border border-stone-300 flex items-center justify-center">
+                        <Icon className="w-5 h-5 text-stone-700" strokeWidth={1} />
+                      </div>
+                    </div>
+
+                    <div className="flex-1 space-y-2">
+                      <h3 className="text-stone-900 font-light text-base">
+                        {getContent(feature.titleKey, feature.titleDefault)}
+                      </h3>
+                      <p className="text-stone-600 text-sm font-light leading-relaxed">
+                        {getContent(feature.descKey, feature.descDefault)}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Decorative elements */}
+          <div className="mt-24 ml-0 md:ml-48 flex items-center gap-4">
+            <div className="w-16 h-px bg-stone-300"></div>
+            <div className="w-2 h-2 rounded-full bg-stone-400"></div>
+            <div className="w-8 h-px bg-stone-300"></div>
           </div>
         </div>
       </div>

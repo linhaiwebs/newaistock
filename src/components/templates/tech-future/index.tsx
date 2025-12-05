@@ -15,25 +15,25 @@ export function TemplateTechFuture({ template, getContent }: TemplateProps) {
       id: 'neural',
       icon: Activity,
       titleKey: 'feature1_title',
-      titleDefault: 'Neural Analysis',
+      titleDefault: 'ニューラル分析',
       descKey: 'feature1_description',
-      descDefault: 'AI-powered market data processing',
+      descDefault: 'AI駆動の市場データ処理',
     },
     {
       id: 'quantum',
       icon: TrendingUp,
       titleKey: 'feature2_title',
-      titleDefault: 'Quantum Speed',
+      titleDefault: '量子速度処理',
       descKey: 'feature2_description',
-      descDefault: 'Real-time data visualization',
+      descDefault: 'リアルタイムデータ可視化',
     },
     {
       id: 'matrix',
       icon: BarChart3,
       titleKey: 'feature3_title',
-      titleDefault: 'Data Matrix',
+      titleDefault: 'データマトリックス',
       descKey: 'feature3_description',
-      descDefault: 'Multi-dimensional analysis',
+      descDefault: '多次元分析システム',
     },
   ];
 
@@ -61,123 +61,154 @@ export function TemplateTechFuture({ template, getContent }: TemplateProps) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 relative overflow-hidden flex flex-col">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-900/20 via-slate-950 to-slate-950"></div>
+    <div className="min-h-screen bg-black flex flex-col lg:flex-row overflow-hidden">
+      {/* Left side - Data visualization animation */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-950 via-blue-950 to-slate-950 relative overflow-hidden items-center justify-center">
+        {/* Matrix rain effect */}
+        <div className="absolute inset-0">
+          {Array.from({ length: 20 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute top-0 w-px h-full"
+              style={{
+                left: `${i * 5}%`,
+                background: 'linear-gradient(180deg, transparent, rgba(6, 182, 212, 0.5), transparent)',
+                animation: `slide ${3 + Math.random() * 2}s linear infinite`,
+                animationDelay: `${Math.random() * 2}s`,
+              }}
+            />
+          ))}
+        </div>
 
-      <div className="absolute inset-0 opacity-20">
-        {Array.from({ length: 50 }).map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-cyan-400 rounded-full animate-pulse"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${2 + Math.random() * 3}s`,
-            }}
-          />
-        ))}
+        {/* Floating grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.1)_1px,transparent_1px)] bg-[size:50px_50px] [perspective:1000px] [transform:rotateX(60deg)_scale(2)] opacity-30"></div>
+
+        {/* Central glow */}
+        <div className="absolute w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl"></div>
+
+        {/* Scanning lines */}
+        <div className="absolute inset-0 flex flex-col justify-around opacity-30">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="w-full h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
+              style={{
+                animation: `pulse ${2 + i * 0.5}s ease-in-out infinite`,
+                animationDelay: `${i * 0.5}s`,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* 3D rotating text */}
+        <div className="relative z-10 text-center">
+          <h2 className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-4 [text-shadow:0_0_30px_rgba(6,182,212,0.5)]">
+            AI 株式
+          </h2>
+          <div className="text-cyan-400 text-sm font-mono tracking-[0.3em] opacity-70">
+            NEXT GENERATION ANALYSIS
+          </div>
+        </div>
       </div>
 
-      <div className="absolute top-20 left-10 w-32 h-32 border-2 border-cyan-500/30 transform rotate-45 rounded-lg"></div>
-      <div className="absolute bottom-40 right-20 w-24 h-24 border-2 border-sky-500/30 transform -rotate-12 rounded-lg"></div>
-
-      <div className="relative flex-1 px-6 py-12">
-        <div className="max-w-md mx-auto">
-          <div className="text-center mb-8">
-            <div className="inline-block mb-4">
-              <div className="relative">
-                <div className="absolute inset-0 bg-cyan-500 blur-xl opacity-50"></div>
-                <h1 className="relative text-3xl font-bold text-white tracking-tight">
-                  {getContent('hero_title', 'AI Stock Analysis')}
-                </h1>
+      {/* Right side - Input and features */}
+      <div className="flex-1 flex flex-col bg-black">
+        <div className="flex-1 flex items-center justify-center px-6 py-12">
+          <div className="w-full max-w-md">
+            {/* Title section */}
+            <div className="mb-10 space-y-3">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-12 h-0.5 bg-gradient-to-r from-cyan-500 to-transparent"></div>
+                <div className="text-cyan-400 text-xs font-mono tracking-widest">SYSTEM READY</div>
               </div>
-            </div>
-            <p className="text-cyan-200/80 text-sm">
-              {getContent('hero_subtitle', 'Next-generation market data visualization')}
-            </p>
-          </div>
 
-          <div className="mb-8 relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-sky-500/20 blur-xl"></div>
-            <div className="relative bg-slate-900/50 backdrop-blur-sm border border-cyan-500/30 rounded-2xl p-6 shadow-2xl">
-              <div className="flex flex-col gap-4">
-                <div className="relative">
+              <h1 className="text-4xl font-bold text-white leading-tight">
+                {getContent('hero_title', 'AI株式市場分析')}
+              </h1>
+              <p className="text-cyan-400/70 text-sm leading-relaxed">
+                {getContent('hero_subtitle', '次世代テクノロジーによる市場可視化')}
+              </p>
+            </div>
+
+            {/* Input section with terminal style */}
+            <div className="mb-10 bg-slate-950 border border-cyan-500/30 rounded-lg overflow-hidden shadow-[0_0_30px_rgba(6,182,212,0.1)]">
+              <div className="bg-slate-900/50 px-4 py-2 flex items-center gap-2 border-b border-cyan-500/30">
+                <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+                <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+                <div className="ml-2 text-xs text-cyan-400/60 font-mono">terminal.exe</div>
+              </div>
+
+              <div className="p-6 space-y-4">
+                <div className="space-y-2">
+                  <div className="text-cyan-400 text-xs font-mono">$ analyze --stock</div>
                   <input
                     type="text"
                     value={diagnosis.stockCode}
                     onChange={(e) => diagnosis.setStockCode(e.target.value)}
-                    placeholder={getContent('input_placeholder', 'Enter stock code')}
-                    className="w-full px-6 py-4 bg-slate-950/80 border border-cyan-500/50 rounded-xl text-white placeholder-cyan-300/40 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/50 transition-all"
+                    placeholder={getContent('input_placeholder', '株式コードを入力_')}
+                    className="w-full px-4 py-3 bg-black/50 border border-cyan-500/50 text-white placeholder-cyan-500/30 focus:outline-none focus:border-cyan-400 font-mono text-lg tracking-wider"
                     disabled={diagnosis.loading || diagnosis.analyzing}
                   />
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
                 </div>
 
                 <button
                   onClick={diagnosis.handleDiagnose}
                   disabled={!diagnosis.stockCode || diagnosis.loading || diagnosis.analyzing}
-                  className="relative group w-full py-4 rounded-xl font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all overflow-hidden"
+                  className="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-bold uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)]"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-sky-500 group-hover:from-cyan-400 group-hover:to-sky-400 transition-all"></div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-sky-400 opacity-0 group-hover:opacity-100 blur transition-opacity"></div>
-                  <span className="relative flex items-center justify-center gap-2">
-                    {diagnosis.loading || diagnosis.analyzing ? (
-                      <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        <span>{getContent('analyzing_text', 'Analyzing...')}</span>
-                      </>
-                    ) : (
-                      <span>{getContent('submit_button', 'Start Analysis')}</span>
-                    )}
-                  </span>
+                  {diagnosis.loading || diagnosis.analyzing ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>{getContent('analyzing_text', '分析中...')}</span>
+                    </span>
+                  ) : (
+                    <span>{getContent('submit_button', '診断開始')}</span>
+                  )}
                 </button>
+
+                <p className="text-xs text-cyan-500/50 font-mono text-center">
+                  {getContent('disclaimer_text', '本ツールは情報提供のみを目的としています')}
+                </p>
               </div>
-
-              <p className="mt-4 text-xs text-cyan-300/60 text-center">
-                {getContent('disclaimer_text', 'Information tool only. Not investment advice.')}
-              </p>
             </div>
-          </div>
 
-          <div className="space-y-4">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <div
-                  key={feature.id}
-                  className="group relative"
-                  style={{
-                    animationDelay: `${index * 0.1}s`,
-                  }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-sky-500/10 blur-lg opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <div className="relative bg-slate-900/40 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-5 hover:border-cyan-400/50 transition-all">
-                    <div className="flex items-start gap-4">
-                      <div className="relative flex-shrink-0">
-                        <div className="absolute inset-0 bg-cyan-500/30 blur-md"></div>
-                        <div className="relative w-12 h-12 bg-gradient-to-br from-cyan-500 to-sky-600 rounded-lg flex items-center justify-center">
-                          <Icon className="w-6 h-6 text-white" />
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-white font-semibold mb-1">
-                          {getContent(feature.titleKey, feature.titleDefault)}
-                        </h3>
-                        <p className="text-cyan-200/70 text-sm">
-                          {getContent(feature.descKey, feature.descDefault)}
-                        </p>
-                      </div>
+            {/* Features as timeline */}
+            <div className="relative space-y-6">
+              <div className="absolute left-6 top-0 bottom-0 w-px bg-gradient-to-b from-cyan-500 via-cyan-500/50 to-transparent"></div>
+
+              {features.map((feature, index) => {
+                const Icon = feature.icon;
+                return (
+                  <div key={feature.id} className="relative pl-16 group">
+                    <div className="absolute left-0 w-12 h-12 bg-slate-950 border-2 border-cyan-500 rounded-full flex items-center justify-center group-hover:border-cyan-400 group-hover:shadow-[0_0_20px_rgba(6,182,212,0.5)] transition-all">
+                      <Icon className="w-6 h-6 text-cyan-400" />
+                    </div>
+
+                    <div className="bg-slate-950/50 border border-cyan-500/20 rounded-lg p-4 hover:border-cyan-400/50 transition-all">
+                      <h3 className="text-white font-semibold mb-1 text-sm">
+                        {getContent(feature.titleKey, feature.titleDefault)}
+                      </h3>
+                      <p className="text-cyan-400/70 text-xs">
+                        {getContent(feature.descKey, feature.descDefault)}
+                      </p>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
+
+        <Footer />
       </div>
 
-      <Footer />
+      <style>{`
+        @keyframes slide {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(100vh); }
+        }
+      `}</style>
     </div>
   );
 }
