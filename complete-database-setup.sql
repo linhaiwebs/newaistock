@@ -564,7 +564,8 @@ INSERT INTO landing_templates (name, template_key, description, is_active, confi
   ('默认模板', 'default', '経典の株式診断落地页设计、適合大多数場景', true, '{"colors": {"primary": "#2563eb", "secondary": "#1e40af", "accent": "#4f46e5"}}'::jsonb, 'stock-analysis', 0),
   ('简约模板', 'minimal', '简洁清爽の设计风格、注重内容呈现', false, '{"colors": {"primary": "#0f172a", "secondary": "#334155", "accent": "#64748b"}}'::jsonb, 'general', 0),
   ('专业模板', 'professional', '商务专业风格、適合企业用户', false, '{"colors": {"primary": "#0c4a6e", "secondary": "#075985", "accent": "#0284c7"}}'::jsonb, 'stock-analysis', 2),
-  ('现代模板', 'modern', '時尚现代の设计、吸引年轻投资者', false, '{"colors": {"primary": "#7c3aed", "secondary": "#6d28d9", "accent": "#8b5cf6"}}'::jsonb, 'stock-analysis', 1)
+  ('现代模板', 'modern', '時尚现代の设计、吸引年轻投资者', false, '{"colors": {"primary": "#7c3aed", "secondary": "#6d28d9", "accent": "#8b5cf6"}}'::jsonb, 'stock-analysis', 1),
+  ('AI株式分析テンプレート', 'ai-stock', 'AIをテーマにしたカラフルでモダンなモバイル向けデザイン、傾斜カード効果付き', false, '{"colors": {"primary": "#3b82f6", "secondary": "#8b5cf6", "accent": "#f97316"}}'::jsonb, 'stock-analysis', 3)
 ON CONFLICT (template_key) DO NOTHING;
 
 -- テンプレートコンテンツ（デフォルトテンプレート用）
@@ -594,6 +595,32 @@ LATERAL (VALUES
   ('analyzing_title', 'AI分析中', 'text'),
   ('analyzing_description', '正在详细分析株票数据...', 'text'),
   ('footer_text', '© 2024 AI株票诊断系统. 版权所有.', 'text')
+) AS content_data(content_key, content_value, content_type)
+ON CONFLICT (template_id, content_key) DO NOTHING;
+
+-- テンプレートコンテンツ（AI株式分析テンプレート用）
+WITH ai_stock_template AS (
+  SELECT id FROM landing_templates WHERE template_key = 'ai-stock' LIMIT 1
+)
+INSERT INTO template_content (template_id, content_key, content_value, content_type)
+SELECT
+  id,
+  content_key,
+  content_value,
+  content_type
+FROM ai_stock_template,
+LATERAL (VALUES
+  ('hero_title', '株式情報をもっとわかりやすく', 'text'),
+  ('hero_subtitle', 'AIが公開市場データを理解し、ニュースを整理し、より直感的な株式トレンドを表示します。', 'text'),
+  ('feature1_title', 'AI株式トレンド解読', 'text'),
+  ('feature1_description', 'AIが公開データを分析し、市場トレンドの変化を理解しやすくします。', 'text'),
+  ('feature2_title', '市場ニュースのスマート整理', 'text'),
+  ('feature2_description', '公開された財務ニュースとホットトピックを自動的にまとめ、重要な情報を素早く把握します。', 'text'),
+  ('feature3_title', 'パーソナライズされたデータパネル', 'text'),
+  ('feature3_description', 'あなたが注目する株式とセクターの公開データを表示し、カスタマイズされた表示方法をサポートします。', 'text'),
+  ('form_title', '株式コードを入力してください', 'text'),
+  ('input_placeholder', '株式コードを入力', 'text'),
+  ('submit_button', '分析開始', 'text')
 ) AS content_data(content_key, content_value, content_type)
 ON CONFLICT (template_id, content_key) DO NOTHING;
 
