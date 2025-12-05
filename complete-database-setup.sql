@@ -299,6 +299,7 @@ CREATE TABLE IF NOT EXISTS landing_templates (
   config jsonb DEFAULT '{}'::jsonb,
   category text DEFAULT 'general',
   category_order integer DEFAULT 0,
+  footer_config jsonb DEFAULT '{}'::jsonb,
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );
@@ -561,10 +562,11 @@ VALUES (
 
 -- 落地页模板
 INSERT INTO landing_templates (name, template_key, description, is_active, config, category, category_order) VALUES
-  ('默认模板', 'default', '経典の株式診断落地页设计、適合大多数場景', true, '{"colors": {"primary": "#2563eb", "secondary": "#1e40af", "accent": "#4f46e5"}}'::jsonb, 'stock-analysis', 0),
-  ('简约模板', 'minimal', '简洁清爽の设计风格、注重内容呈现', false, '{"colors": {"primary": "#0f172a", "secondary": "#334155", "accent": "#64748b"}}'::jsonb, 'general', 0),
-  ('专业模板', 'professional', '商务专业风格、適合企业用户', false, '{"colors": {"primary": "#0c4a6e", "secondary": "#075985", "accent": "#0284c7"}}'::jsonb, 'stock-analysis', 2),
-  ('现代模板', 'modern', '時尚现代の设计、吸引年轻投资者', false, '{"colors": {"primary": "#7c3aed", "secondary": "#6d28d9", "accent": "#8b5cf6"}}'::jsonb, 'stock-analysis', 1)
+  ('默认模板', 'default', '功能齐全的默认落地页模板，包含完整的诊断流程和结果展示', true, '{"colors": {"primary": "#2563eb", "secondary": "#1e40af", "accent": "#4f46e5"}}'::jsonb, 'general', 0),
+  ('简约模板', 'minimal', '简洁清爽的极简设计模板，注重内容呈现和用户体验', false, '{"colors": {"primary": "#0f172a", "secondary": "#334155", "accent": "#64748b"}}'::jsonb, 'general', 1),
+  ('专业模板', 'professional', '适合企业级应用的专业模板，展现权威和信赖感', false, '{"colors": {"primary": "#0c4a6e", "secondary": "#075985", "accent": "#0284c7"}}'::jsonb, 'general', 2),
+  ('现代模板', 'modern', '现代化设计风格的模板，融合最新设计趋势和交互体验', false, '{"colors": {"primary": "#7c3aed", "secondary": "#6d28d9", "accent": "#8b5cf6"}}'::jsonb, 'general', 3),
+  ('AI 投资引导页', 'ai-invest-guide', '现代科技感移动端引导页，专为 AI 股票分析设计', false, '{"colors": {"primary": "#3b82f6", "secondary": "#1d4ed8", "accent": "#60a5fa"}}'::jsonb, 'ai-guide', 0)
 ON CONFLICT (template_key) DO NOTHING;
 
 -- テンプレートコンテンツ（デフォルトテンプレート用）
