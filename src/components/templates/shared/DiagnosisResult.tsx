@@ -24,7 +24,7 @@ export function DiagnosisResult({
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
       <DecorativeBackground color={themeColor} opacity={0.1} />
 
-      <div className="max-w-4xl mx-auto px-6 py-12 relative z-10">
+      <div className="max-w-4xl mx-auto px-6 py-4 relative z-10">
         <button
           onClick={onBack}
           className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors mb-4 group animate-fade-in"
@@ -65,7 +65,7 @@ export function DiagnosisResult({
         </div>
 
         <div
-          className="bg-white/80 backdrop-blur-sm border rounded-2xl p-8 mb-4 shadow-xl animate-slide-up relative overflow-hidden"
+          className="bg-white/80 backdrop-blur-sm border rounded-2xl p-4 mb-4 shadow-xl animate-slide-up relative overflow-hidden"
           style={{
             animationDelay: '0.2s',
             borderColor: `${themeColor}30`,
