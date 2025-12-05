@@ -607,7 +607,17 @@ INSERT INTO landing_templates (name, template_key, description, is_active, confi
   ('ミニマルテンプレート', 'minimal', 'シンプルでクリーンなデザイン、コンテンツの表示に注力', false, '{"colors": {"primary": "#0f172a", "secondary": "#334155", "accent": "#64748b"}}'::jsonb, 'general', 0),
   ('プロフェッショナルテンプレート', 'professional', 'ビジネス向けの専門的なデザイン、企業ユーザーに適しています', false, '{"colors": {"primary": "#0c4a6e", "secondary": "#075985", "accent": "#0284c7"}}'::jsonb, 'stock-analysis', 2),
   ('モダンテンプレート', 'modern', 'スタイリッシュでモダンなデザイン、若い投資家に魅力的', false, '{"colors": {"primary": "#7c3aed", "secondary": "#6d28d9", "accent": "#8b5cf6"}}'::jsonb, 'stock-analysis', 1),
-  ('AI株式分析テンプレート', 'ai-stock', 'AIをテーマにしたカラフルでモダンなモバイル向けデザイン、傾斜カード効果付き', false, '{"colors": {"primary": "#3b82f6", "secondary": "#8b5cf6", "accent": "#f97316"}}'::jsonb, 'stock-analysis', 3)
+  ('AI株式分析テンプレート', 'ai-stock', 'AIをテーマにしたカラフルでモダンなモバイル向けデザイン、傾斜カード効果付き', false, '{"colors": {"primary": "#3b82f6", "secondary": "#8b5cf6", "accent": "#f97316"}}'::jsonb, 'stock-analysis', 3),
+  ('科技未来風テンプレート', 'tech-future', '深色太空背景、霓虹色彩、3D立体效果、科技感十足', false, '{"colors": {"primary": "#0ea5e9", "secondary": "#0c4a6e", "accent": "#22d3ee"}}'::jsonb, 'stock-analysis', 4),
+  ('簡約禅意風テンプレート', 'zen-minimal', '純白背景、極簡設計、黒白配色、大量留白', false, '{"colors": {"primary": "#000000", "secondary": "#374151", "accent": "#10b981"}}'::jsonb, 'stock-analysis', 5),
+  ('金融専業風テンプレート', 'finance-pro', '深藍色主色調、金色点綴、専業金融風格', false, '{"colors": {"primary": "#1e40af", "secondary": "#172554", "accent": "#fbbf24"}}'::jsonb, 'stock-analysis', 6),
+  ('渐変流体風テンプレート', 'gradient-fluid', '柔和渐変背景、流動色彩過渡、夢幻効果', false, '{"colors": {"primary": "#a855f7", "secondary": "#7c3aed", "accent": "#ec4899"}}'::jsonb, 'stock-analysis', 7),
+  ('深色霓虹風テンプレート', 'dark-neon', '純黒背景、荧光色辺框、賽博龐克風格', false, '{"colors": {"primary": "#10b981", "secondary": "#14532d", "accent": "#ec4899"}}'::jsonb, 'stock-analysis', 8),
+  ('玻璃拟態風テンプレート', 'glass-morph', '模糊半透明背景、毛玻璃効果、精緻辺框', false, '{"colors": {"primary": "#3b82f6", "secondary": "#1e40af", "accent": "#06b6d4"}}'::jsonb, 'stock-analysis', 9),
+  ('卡片網格風テンプレート', 'card-grid', '網格布局、多彩卡片、立体投影、対称排列', false, '{"colors": {"primary": "#3b82f6", "secondary": "#1d4ed8", "accent": "#06b6d4"}}'::jsonb, 'stock-analysis', 10),
+  ('極簡線条風テンプレート', 'ultra-lines', '白色背景、黒色細線、極簡設計、線性美学', false, '{"colors": {"primary": "#18181b", "secondary": "#27272a", "accent": "#71717a"}}'::jsonb, 'stock-analysis', 11),
+  ('温暖橙調風テンプレート', 'warm-orange', '温暖橙色渐変、友好設計、圓潤風格', false, '{"colors": {"primary": "#f97316", "secondary": "#c2410c", "accent": "#fbbf24"}}'::jsonb, 'stock-analysis', 12),
+  ('商務高端風テンプレート', 'business-premium', '深灰銀色主色調、金色点綴、高端商務風格', false, '{"colors": {"primary": "#475569", "secondary": "#1e293b", "accent": "#d4af37"}}'::jsonb, 'stock-analysis', 13)
 ON CONFLICT (template_key) DO NOTHING;
 
 -- テンプレートコンテンツ（デフォルトテンプレート用）
