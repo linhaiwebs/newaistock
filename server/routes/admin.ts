@@ -2,6 +2,7 @@ import express from 'express';
 import { supabaseAdmin as supabase } from '../db/supabaseAdmin.js';
 import { authenticateToken, AuthRequest } from '../middleware/auth.js';
 import { clearCache } from '../services/cacheService.js';
+import { getSessionsWithRelatedData } from '../utils/sessionHelpers.js';
 
 const router = express.Router();
 
@@ -65,26 +66,14 @@ router.get('/users', async (req: AuthRequest, res) => {
 
     if (error) throw error;
 
-    const sessionsWithDetails = await Promise.all(
-      (sessions || []).map(async (session) => {
-        const { data: events } = await supabase
-          .from('user_events')
-          .select('*')
-          .eq('session_id', session.id)
-          .order('created_at', { ascending: false });
+    const sessionIds = (sessions || []).map(s => s.id);
+    const { eventsBySession, diagnosesBySession } = await getSessionsWithRelatedData(sessionIds);
 
-        const { data: diagnoses } = await supabase
-          .from('stock_diagnoses')
-          .select('*')
-          .eq('session_id', session.id);
-
-        return {
-          ...session,
-          events: events || [],
-          diagnoses: diagnoses || [],
-        };
-      })
-    );
+    const sessionsWithDetails = (sessions || []).map(session => ({
+      ...session,
+      events: eventsBySession.get(session.id) || [],
+      diagnoses: diagnosesBySession.get(session.id) || [],
+    }));
 
     res.json({
       users: sessionsWithDetails,
@@ -302,7 +291,14 @@ router.put('/redirects/:id', async (req: AuthRequest, res) => {
     const { id } = req.params;
     const { target_url, weight, active } = req.body;
 
-    const updates: any = { updated_at: new Date().toISOString() };
+    interface UpdateData {
+      updated_at: string;
+      target_url?: string;
+      weight?: number;
+      active?: boolean;
+    }
+
+    const updates: UpdateData = { updated_at: new Date().toISOString() };
     if (target_url !== undefined) updates.target_url = target_url;
     if (weight !== undefined) updates.weight = weight;
     if (active !== undefined) updates.active = active;
@@ -338,48 +334,6 @@ router.delete('/redirects/:id', async (req: AuthRequest, res) => {
   } catch (error) {
     console.error('Redirect deletion error:', error);
     res.status(500).json({ error: 'Failed to delete redirect' });
-  }
-});
-
-router.get('/templates', async (req: AuthRequest, res) => {
-  try {
-    const { data, error } = await supabase
-      .from('templates')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-
-    res.json(data || []);
-  } catch (error) {
-    console.error('Templates fetch error:', error);
-    res.status(500).json({ error: 'Failed to fetch templates' });
-  }
-});
-
-router.put('/templates/:id', async (req: AuthRequest, res) => {
-  try {
-    const { id } = req.params;
-    const { custom_footer, custom_text, active } = req.body;
-
-    const updates: any = { updated_at: new Date().toISOString() };
-    if (custom_footer !== undefined) updates.custom_footer = custom_footer;
-    if (custom_text !== undefined) updates.custom_text = custom_text;
-    if (active !== undefined) updates.active = active;
-
-    const { data, error } = await supabase
-      .from('templates')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
-
-    if (error) throw error;
-
-    res.json({ success: true, data });
-  } catch (error) {
-    console.error('Template update error:', error);
-    res.status(500).json({ error: 'Failed to update template' });
   }
 });
 

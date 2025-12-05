@@ -1,5 +1,6 @@
 import express from 'express';
 import { supabaseAdmin } from '../db/supabaseAdmin.js';
+import { findSessionBySessionId } from '../utils/sessionHelpers.js';
 
 const router = express.Router();
 
@@ -34,11 +35,7 @@ router.post('/event', async (req, res) => {
   try {
     const { sessionId, eventType, stockCode, eventData } = req.body;
 
-    const { data: session } = await supabaseAdmin
-      .from('user_sessions')
-      .select('id')
-      .eq('session_id', sessionId)
-      .maybeSingle();
+    const session = await findSessionBySessionId(sessionId);
 
     if (!session) {
       return res.status(404).json({ error: 'Session not found' });
@@ -64,11 +61,7 @@ router.post('/conversion', async (req, res) => {
   try {
     const { sessionId, stockCode } = req.body;
 
-    const { data: session } = await supabaseAdmin
-      .from('user_sessions')
-      .select('id')
-      .eq('session_id', sessionId)
-      .maybeSingle();
+    const session = await findSessionBySessionId(sessionId);
 
     if (!session) {
       return res.status(404).json({ error: 'Session not found' });

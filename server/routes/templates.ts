@@ -142,7 +142,17 @@ router.post('/', async (req: AuthRequest, res) => {
       return res.status(400).json({ error: 'Name and template_key are required' });
     }
 
-    const insertData: any = {
+    interface InsertData {
+      name: string;
+      template_key: string;
+      description?: string;
+      config: Record<string, any>;
+      is_active: boolean;
+      category?: string;
+      category_order?: number;
+    }
+
+    const insertData: InsertData = {
       name,
       template_key,
       description,
@@ -179,7 +189,18 @@ router.put('/:id', async (req: AuthRequest, res) => {
     const { id } = req.params;
     const { name, description, config, preview_image, category, category_order, footer_config } = req.body;
 
-    const updates: any = { updated_at: new Date().toISOString() };
+    interface UpdateData {
+      updated_at: string;
+      name?: string;
+      description?: string;
+      config?: Record<string, any>;
+      preview_image?: string;
+      category?: string;
+      category_order?: number;
+      footer_config?: Record<string, any>;
+    }
+
+    const updates: UpdateData = { updated_at: new Date().toISOString() };
     if (name !== undefined) updates.name = name;
     if (description !== undefined) updates.description = description;
     if (config !== undefined) updates.config = config;
