@@ -1,10 +1,18 @@
 import { FooterConfig } from '../../../types/template';
 import ComplianceDisclaimer from './ComplianceDisclaimer';
+import { useEffect, useState } from 'react';
 
 interface FooterProps {
   footerConfig?: FooterConfig;
   variant?: 'default' | 'modern' | 'minimal' | 'professional';
   className?: string;
+}
+
+interface FooterPage {
+  id: string;
+  title: string;
+  slug: string;
+  display_order: number;
 }
 
 const defaultFooterConfig: FooterConfig = {
@@ -20,12 +28,68 @@ const defaultFooterConfig: FooterConfig = {
   updated_date: '2025年12月',
 };
 
+function TraditionalFooter({ config }: { config: FooterConfig }) {
+  const [footerPages, setFooterPages] = useState<FooterPage[]>([]);
+
+  useEffect(() => {
+    if (config.show_footer_pages) {
+      fetch('/api/footer-pages')
+        .then(res => res.json())
+        .then(data => {
+          if (data.pages) {
+            setFooterPages(data.pages);
+          }
+        })
+        .catch(err => console.error('Failed to load footer pages:', err));
+    }
+  }, [config.show_footer_pages]);
+
+  const currentYear = new Date().getFullYear();
+  const copyrightText = config.copyright_text || `© ${currentYear} ${config.company_name || 'All rights reserved'}`;
+
+  return (
+    <footer className="w-full bg-gray-900 text-gray-300 py-8">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="flex flex-col items-center gap-6">
+          {config.show_footer_pages && footerPages.length > 0 && (
+            <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
+              {footerPages.map(page => (
+                <a
+                  key={page.id}
+                  href={`/footer-page/${page.slug}`}
+                  className="hover:text-white transition-colors"
+                >
+                  {page.title}
+                </a>
+              ))}
+            </nav>
+          )}
+
+          <div className="text-sm text-center">
+            {copyrightText}
+          </div>
+
+          {config.compliance_statement && (
+            <div className="text-xs text-gray-400 text-center max-w-2xl">
+              {config.compliance_statement}
+            </div>
+          )}
+        </div>
+      </div>
+    </footer>
+  );
+}
+
 export default function Footer({ footerConfig, variant = 'default', className = '' }: FooterProps) {
   const isValidConfig = footerConfig &&
     Object.keys(footerConfig).length > 0 &&
     footerConfig.disclaimer_title;
 
   const config = isValidConfig ? footerConfig : defaultFooterConfig;
+
+  if (config.use_traditional_footer) {
+    return <TraditionalFooter config={config} />;
+  }
 
   return (
     <footer className={`w-full py-12 ${className}`}>

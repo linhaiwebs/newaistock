@@ -31,6 +31,19 @@ export interface FooterConfig {
   data_accuracy: string;
   updated_date: string;
   contact_info?: string;
+  use_traditional_footer?: boolean;
+  copyright_text?: string;
+  company_name?: string;
+  show_footer_pages?: boolean;
+}
+
+export interface FooterPage {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  display_order: number;
+  is_active: boolean;
 }
 
 export interface TemplateData {

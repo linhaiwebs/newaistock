@@ -13,6 +13,7 @@ import templateRoutes from './routes/templates.js';
 import complianceRoutes from './routes/compliance.js';
 import domainRoutes from './routes/domains.js';
 import contentRoutes from './routes/content.js';
+import footerPagesRoutes from './routes/footerPages.js';
 import { injectSeoMetadata } from './middleware/seoInjector.js';
 
 dotenv.config();
@@ -48,6 +49,7 @@ app.use('/api/redirect', redirectRoutes);
 app.use('/api/templates', templateRoutes);
 app.use('/api/domains', domainRoutes);
 app.use('/api', contentRoutes);
+app.use('/api', footerPagesRoutes);
 
 app.use(complianceRoutes);
 

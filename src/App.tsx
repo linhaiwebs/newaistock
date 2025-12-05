@@ -13,6 +13,8 @@ import { TemplateEditor } from './components/admin/TemplateEditor';
 import { DomainsPage } from './components/admin/DomainsPage';
 import { DomainForm } from './components/admin/DomainForm';
 import ContentPage from './components/admin/ContentPage';
+import { FooterPage } from './components/FooterPage';
+import { FooterPagesPage } from './components/admin/FooterPagesPage';
 import { initializeAnalytics } from './lib/analytics';
 import { trackSession, trackDuration } from './lib/api';
 import { getSessionId, trackSessionDuration } from './lib/session';
@@ -45,6 +47,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<TemplateSwitcher />} />
+          <Route path="/footer-page/:slug" element={<FooterPage />} />
           <Route path="/admin/login" element={<LoginPage />} />
           <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
             <Route index element={<Navigate to="/admin/dashboard" replace />} />
@@ -55,6 +58,7 @@ function App() {
             <Route path="domains/new" element={<DomainForm />} />
             <Route path="domains/:id/edit" element={<DomainForm />} />
             <Route path="content" element={<ContentPage />} />
+            <Route path="footer-pages" element={<FooterPagesPage />} />
             <Route path="redirects" element={<RedirectsPage />} />
             <Route path="templates" element={<TemplatesPage />} />
             <Route path="templates/:id/edit" element={<TemplateEditor />} />

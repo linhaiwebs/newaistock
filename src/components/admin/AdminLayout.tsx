@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, BarChart3, Link2, Database, LogOut, AlertCircle, Layout, Globe, FileText } from 'lucide-react';
+import { LayoutDashboard, Users, BarChart3, Link2, Database, LogOut, AlertCircle, Layout, Globe, FileText, Book } from 'lucide-react';
 import { verifyAuth } from '../../lib/api';
 import { getToken, removeToken, isTokenExpired } from '../../lib/auth';
 
@@ -50,6 +50,7 @@ export function AdminLayout() {
     { path: '/admin/analytics', icon: BarChart3, label: '数据分析' },
     { path: '/admin/domains', icon: Globe, label: '域名管理' },
     { path: '/admin/content', icon: FileText, label: '内容管理' },
+    { path: '/admin/footer-pages', icon: Book, label: '页脚页面' },
     { path: '/admin/redirects', icon: Link2, label: '重定向管理' },
     { path: '/admin/templates', icon: Layout, label: '模板管理' },
     { path: '/admin/cache', icon: Database, label: '缓存管理' },
