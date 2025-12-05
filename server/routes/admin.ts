@@ -341,48 +341,6 @@ router.delete('/redirects/:id', async (req: AuthRequest, res) => {
   }
 });
 
-router.get('/templates', async (req: AuthRequest, res) => {
-  try {
-    const { data, error } = await supabase
-      .from('templates')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-
-    res.json(data || []);
-  } catch (error) {
-    console.error('Templates fetch error:', error);
-    res.status(500).json({ error: 'Failed to fetch templates' });
-  }
-});
-
-router.put('/templates/:id', async (req: AuthRequest, res) => {
-  try {
-    const { id } = req.params;
-    const { custom_footer, custom_text, active } = req.body;
-
-    const updates: any = { updated_at: new Date().toISOString() };
-    if (custom_footer !== undefined) updates.custom_footer = custom_footer;
-    if (custom_text !== undefined) updates.custom_text = custom_text;
-    if (active !== undefined) updates.active = active;
-
-    const { data, error } = await supabase
-      .from('templates')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
-
-    if (error) throw error;
-
-    res.json({ success: true, data });
-  } catch (error) {
-    console.error('Template update error:', error);
-    res.status(500).json({ error: 'Failed to update template' });
-  }
-});
-
 router.delete('/cache', async (req: AuthRequest, res) => {
   try {
     const { stockCode } = req.query;

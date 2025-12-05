@@ -13,6 +13,12 @@
   - 初期データ
   - 制約とチェック
 
+  テンプレートシステム：
+  - landing_templates: ランディングページテンプレート（新システム）
+  - template_content: テンプレートのコンテンツ管理
+  - footer_pages: グローバルフッターページ（全テンプレートで共有）
+  - domain_configs.footer_config: ドメイン固有のフッター設定（オプション）
+
   実行方法：
   1. Supabase ダッシュボードを開く
   2. SQL Editor に移動
@@ -205,36 +211,7 @@ CREATE POLICY "Admins can delete cache"
   USING (true);
 
 -- ========================================
--- 7. テンプレートテーブル
--- ========================================
-
-CREATE TABLE IF NOT EXISTS templates (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  template_name text UNIQUE NOT NULL,
-  template_slug text UNIQUE NOT NULL,
-  html_structure text,
-  custom_footer text,
-  custom_text jsonb DEFAULT '{}'::jsonb,
-  active boolean DEFAULT false,
-  created_at timestamptz DEFAULT now(),
-  updated_at timestamptz DEFAULT now()
-);
-
-ALTER TABLE templates ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Public can read active templates"
-  ON templates FOR SELECT
-  TO anon
-  USING (active = true);
-
-CREATE POLICY "Admins can manage templates"
-  ON templates FOR ALL
-  TO authenticated
-  USING (true)
-  WITH CHECK (true);
-
--- ========================================
--- 8. アナリティクス設定テーブル（シングルトン）
+-- 7. アナリティクス設定テーブル（シングルトン）
 -- ========================================
 
 CREATE TABLE IF NOT EXISTS analytics_config (
@@ -286,7 +263,7 @@ BEGIN
 END $$;
 
 -- ========================================
--- 9. 落地页模板系统
+-- 8. 落地页模板系统
 -- ========================================
 
 CREATE TABLE IF NOT EXISTS landing_templates (
@@ -374,7 +351,7 @@ CREATE POLICY "Authenticated users can delete template content"
   USING (true);
 
 -- ========================================
--- 10. ドメイン設定テーブル
+-- 9. ドメイン設定テーブル
 -- ========================================
 
 CREATE TABLE IF NOT EXISTS domain_configs (
@@ -423,7 +400,7 @@ CREATE POLICY "Authenticated users can manage domain configs"
   WITH CHECK (true);
 
 -- ========================================
--- 11. サイトコンテンツ管理テーブル
+-- 10. サイトコンテンツ管理テーブル
 -- ========================================
 
 CREATE TABLE IF NOT EXISTS site_content (
@@ -464,7 +441,7 @@ CREATE POLICY "Authenticated users can delete content"
   USING (true);
 
 -- ========================================
--- 12. フッターページテーブル
+-- 11. フッターページテーブル
 -- ========================================
 
 CREATE TABLE IF NOT EXISTS footer_pages (
@@ -529,7 +506,7 @@ CREATE POLICY "Admins can delete footer pages"
   );
 
 -- ========================================
--- 13. インデックス作成
+-- 12. インデックス作成
 -- ========================================
 
 CREATE INDEX IF NOT EXISTS idx_user_sessions_session_id ON user_sessions(session_id);
@@ -553,7 +530,7 @@ CREATE INDEX IF NOT EXISTS idx_footer_pages_display_order ON footer_pages(displa
 CREATE INDEX IF NOT EXISTS idx_footer_pages_is_active ON footer_pages(is_active);
 
 -- ========================================
--- 14. トリガー関数と自動更新
+-- 13. トリガー関数と自動更新
 -- ========================================
 
 -- updated_at 自動更新関数
@@ -611,7 +588,7 @@ CREATE TRIGGER enforce_single_active_template
   EXECUTE FUNCTION ensure_single_active_template();
 
 -- ========================================
--- 15. 初期データ挿入
+-- 14. 初期データ挿入
 -- ========================================
 
 -- デフォルト管理者アカウント
@@ -624,21 +601,12 @@ INSERT INTO analytics_config (enabled, singleton_guard)
 VALUES (false, 1)
 ON CONFLICT (singleton_guard) DO NOTHING;
 
--- デフォルトテンプレート
-INSERT INTO templates (template_name, template_slug, active, custom_text)
-VALUES (
-  'デフォルトテンプレート',
-  'default',
-  true,
-  '{"title": "AI株式診断", "subtitle": "最新のAI技術で株式を分析", "button_text": "今すぐ診断", "convert_button": "詳細を見る"}'::jsonb
-) ON CONFLICT (template_slug) DO NOTHING;
-
--- 落地页模板
+-- ランディングページテンプレート
 INSERT INTO landing_templates (name, template_key, description, is_active, config, category, category_order) VALUES
-  ('默认模板', 'default', '経典の株式診断落地页设计、適合大多数場景', true, '{"colors": {"primary": "#2563eb", "secondary": "#1e40af", "accent": "#4f46e5"}}'::jsonb, 'stock-analysis', 0),
-  ('简约模板', 'minimal', '简洁清爽の设计风格、注重内容呈现', false, '{"colors": {"primary": "#0f172a", "secondary": "#334155", "accent": "#64748b"}}'::jsonb, 'general', 0),
-  ('专业模板', 'professional', '商务专业风格、適合企业用户', false, '{"colors": {"primary": "#0c4a6e", "secondary": "#075985", "accent": "#0284c7"}}'::jsonb, 'stock-analysis', 2),
-  ('现代模板', 'modern', '時尚现代の设计、吸引年轻投资者', false, '{"colors": {"primary": "#7c3aed", "secondary": "#6d28d9", "accent": "#8b5cf6"}}'::jsonb, 'stock-analysis', 1),
+  ('デフォルトテンプレート', 'default', 'クラシックな株式診断デザイン、多くのシーンに適しています', true, '{"colors": {"primary": "#2563eb", "secondary": "#1e40af", "accent": "#4f46e5"}}'::jsonb, 'stock-analysis', 0),
+  ('ミニマルテンプレート', 'minimal', 'シンプルでクリーンなデザイン、コンテンツの表示に注力', false, '{"colors": {"primary": "#0f172a", "secondary": "#334155", "accent": "#64748b"}}'::jsonb, 'general', 0),
+  ('プロフェッショナルテンプレート', 'professional', 'ビジネス向けの専門的なデザイン、企業ユーザーに適しています', false, '{"colors": {"primary": "#0c4a6e", "secondary": "#075985", "accent": "#0284c7"}}'::jsonb, 'stock-analysis', 2),
+  ('モダンテンプレート', 'modern', 'スタイリッシュでモダンなデザイン、若い投資家に魅力的', false, '{"colors": {"primary": "#7c3aed", "secondary": "#6d28d9", "accent": "#8b5cf6"}}'::jsonb, 'stock-analysis', 1),
   ('AI株式分析テンプレート', 'ai-stock', 'AIをテーマにしたカラフルでモダンなモバイル向けデザイン、傾斜カード効果付き', false, '{"colors": {"primary": "#3b82f6", "secondary": "#8b5cf6", "accent": "#f97316"}}'::jsonb, 'stock-analysis', 3)
 ON CONFLICT (template_key) DO NOTHING;
 
@@ -654,21 +622,21 @@ SELECT
   content_type
 FROM default_template,
 LATERAL (VALUES
-  ('hero_title', 'AI株票诊断', 'text'),
-  ('hero_subtitle', '最新のAI技术为您分析株票', 'text'),
-  ('hero_description', '输入株票代码、立即获取详细の投资分析报告', 'text'),
-  ('hero_button_text', '開始诊断', 'text'),
-  ('feature_1_title', '実時数据分析', 'text'),
-  ('feature_1_description', '获取最新の株票市场数据并进行深度分析', 'text'),
-  ('feature_2_title', 'AI智能诊断', 'text'),
-  ('feature_2_description', '利用先进のAI算法提供专业の投资建议', 'text'),
-  ('feature_3_title', '详细分析报告', 'text'),
-  ('feature_3_description', '生成全面の株票分析报告、助您做出明智决策', 'text'),
-  ('result_title', 'AI株票诊断結果', 'text'),
-  ('result_button_text', '查看详细信息', 'text'),
+  ('hero_title', 'AI株式診断', 'text'),
+  ('hero_subtitle', '最新のAI技術で株式を分析', 'text'),
+  ('hero_description', '株式コードを入力して、詳細な投資分析レポートを即座に取得', 'text'),
+  ('hero_button_text', '診断開始', 'text'),
+  ('feature_1_title', 'リアルタイムデータ分析', 'text'),
+  ('feature_1_description', '最新の株式市場データを取得し、深度分析を実施', 'text'),
+  ('feature_2_title', 'AIスマート診断', 'text'),
+  ('feature_2_description', '先進的なAIアルゴリズムで専門的な投資アドバイスを提供', 'text'),
+  ('feature_3_title', '詳細分析レポート', 'text'),
+  ('feature_3_description', '包括的な株式分析レポートを生成し、賢明な判断をサポート', 'text'),
+  ('result_title', 'AI株式診断結果', 'text'),
+  ('result_button_text', '詳細を見る', 'text'),
   ('analyzing_title', 'AI分析中', 'text'),
-  ('analyzing_description', '正在详细分析株票数据...', 'text'),
-  ('footer_text', '© 2024 AI株票诊断系统. 版权所有.', 'text')
+  ('analyzing_description', '株式データを詳細に分析中...', 'text'),
+  ('footer_text', '© 2024 AI株式診断システム. All rights reserved.', 'text')
 ) AS content_data(content_key, content_value, content_type)
 ON CONFLICT (template_id, content_key) DO NOTHING;
 
@@ -769,34 +737,6 @@ INSERT INTO site_content (key, content, category, description) VALUES
   ('form.placeholder', '例：7203 (トヨタ自動車)', 'form', 'フォームプレースホルダー'),
   ('form.button', '診断する', 'form', '診断ボタン'),
   ('form.analyzing', '分析中...', 'form', '分析中のメッセージ'),
-
-  -- 追加コンテンツ
-  ('back_button', '戻る', 'navigation', '戻るボタン'),
-  ('form_label', '銘柄コード', 'form', 'フォームラベル'),
-  ('form_placeholder', '例：7203', 'form', 'フォームプレースホルダー'),
-
-  -- 機能ラベル
-  ('feature_stocks', '株式', 'features', '株式機能'),
-  ('feature_bond', '債券', 'features', '債券機能'),
-  ('feature_realestate', '不動産', 'features', '不動産機能'),
-  ('feature_etfs', 'ETF', 'features', 'ETF機能'),
-  ('feature_mutualfund', '投資信託', 'features', '投資信託機能'),
-  ('feature_commodity', 'コモディティ', 'features', 'コモディティ機能'),
-  ('feature_crypto', '暗号資産', 'features', '暗号資産機能'),
-  ('feature_other', 'その他', 'features', 'その他の機能'),
-
-  -- メインコンテンツキー
-  ('hero_title', '最も興味のある資産はどれですか？', 'hero', 'ヒーローセクションのタイトル'),
-  ('selection_hint', '最も希望する3つのカテゴリを選択してください。', 'hero', '選択のヒント'),
-  ('hero_button_text', '続ける', 'form', 'メインボタンテキスト'),
-  ('none_button_text', 'どれでもない', 'form', 'なしボタンテキスト'),
-  ('loading_text', '読み込み中...', 'form', '読み込みテキスト'),
-
-  -- 分析関連
-  ('analyzing_title', 'AI分析中', 'analysis', '分析中のタイトル'),
-  ('analyzing_description', 'データを処理中...', 'analysis', '分析中の説明'),
-  ('result_title', '分析結果', 'result', '結果のタイトル'),
-  ('result_button_text', '詳細を見る', 'result', '結果ボタンテキスト'),
 
   -- 結果
   ('result.stockInfo', '株式情報', 'result', '株式情報セクション'),
