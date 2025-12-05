@@ -464,7 +464,72 @@ CREATE POLICY "Authenticated users can delete content"
   USING (true);
 
 -- ========================================
--- 12. インデックス作成
+-- 12. フッターページテーブル
+-- ========================================
+
+CREATE TABLE IF NOT EXISTS footer_pages (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  title text NOT NULL,
+  slug text UNIQUE NOT NULL,
+  content text NOT NULL DEFAULT '',
+  display_order integer DEFAULT 0,
+  is_active boolean DEFAULT true,
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE footer_pages ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can view active footer pages"
+  ON footer_pages
+  FOR SELECT
+  USING (is_active = true);
+
+CREATE POLICY "Admins can insert footer pages"
+  ON footer_pages
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM admin_users
+      WHERE admin_users.id = auth.uid()
+      AND admin_users.role = 'admin'
+    )
+  );
+
+CREATE POLICY "Admins can update footer pages"
+  ON footer_pages
+  FOR UPDATE
+  TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM admin_users
+      WHERE admin_users.id = auth.uid()
+      AND admin_users.role = 'admin'
+    )
+  )
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM admin_users
+      WHERE admin_users.id = auth.uid()
+      AND admin_users.role = 'admin'
+    )
+  );
+
+CREATE POLICY "Admins can delete footer pages"
+  ON footer_pages
+  FOR DELETE
+  TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM admin_users
+      WHERE admin_users.id = auth.uid()
+      AND admin_users.role = 'admin'
+    )
+  );
+
+-- ========================================
+-- 13. インデックス作成
 -- ========================================
 
 CREATE INDEX IF NOT EXISTS idx_user_sessions_session_id ON user_sessions(session_id);
@@ -483,9 +548,12 @@ CREATE INDEX IF NOT EXISTS idx_domain_configs_domain ON domain_configs(domain);
 CREATE INDEX IF NOT EXISTS idx_domain_configs_is_default ON domain_configs(is_default) WHERE is_default = true;
 CREATE INDEX IF NOT EXISTS idx_domain_configs_is_active ON domain_configs(is_active) WHERE is_active = true;
 CREATE INDEX IF NOT EXISTS idx_domain_configs_footer_config ON domain_configs USING gin(footer_config);
+CREATE INDEX IF NOT EXISTS idx_footer_pages_slug ON footer_pages(slug);
+CREATE INDEX IF NOT EXISTS idx_footer_pages_display_order ON footer_pages(display_order);
+CREATE INDEX IF NOT EXISTS idx_footer_pages_is_active ON footer_pages(is_active);
 
 -- ========================================
--- 13. トリガー関数と自動更新
+-- 14. トリガー関数と自動更新
 -- ========================================
 
 -- updated_at 自動更新関数
@@ -516,6 +584,12 @@ CREATE TRIGGER update_site_content_updated_at
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_footer_pages_updated_at ON footer_pages;
+CREATE TRIGGER update_footer_pages_updated_at
+  BEFORE UPDATE ON footer_pages
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
 -- シングルアクティブテンプレート保証関数
 CREATE OR REPLACE FUNCTION ensure_single_active_template()
 RETURNS TRIGGER AS $$
@@ -537,7 +611,7 @@ CREATE TRIGGER enforce_single_active_template
   EXECUTE FUNCTION ensure_single_active_template();
 
 -- ========================================
--- 14. 初期データ挿入
+-- 15. 初期データ挿入
 -- ========================================
 
 -- デフォルト管理者アカウント
@@ -752,6 +826,45 @@ ON CONFLICT (key) DO UPDATE SET
   content = EXCLUDED.content,
   category = EXCLUDED.category,
   description = EXCLUDED.description;
+
+-- フッターページの挿入
+INSERT INTO footer_pages (title, slug, content, display_order, is_active) VALUES
+  (
+    'Privacy Policy',
+    'privacy-policy',
+    E'# Privacy Policy\n\n## Information Collection\n\nThis website collects and processes data for informational purposes only.\n\n## Data Usage\n\nWe use publicly available market data to provide stock analysis visualizations. We do not collect personal financial information.\n\n## Third-Party Services\n\nWe may use third-party analytics services to understand how users interact with our website.\n\n## Data Security\n\nWe implement appropriate security measures to protect user data.\n\n## Contact\n\nFor privacy-related inquiries, please contact us through our Contact page.',
+    1,
+    true
+  ),
+  (
+    'Terms of Service',
+    'terms-of-service',
+    E'# Terms of Service\n\n## Agreement to Terms\n\nBy accessing this website, you agree to be bound by these Terms of Service.\n\n## Service Description\n\nThis is a data analysis and visualization tool that displays publicly available stock market information. This service is provided for informational and educational purposes only.\n\n## Not Financial Advice\n\nWe do not provide investment advice, financial planning, or licensed financial services. All information is provided "as is" without warranty.\n\n## User Responsibilities\n\nUsers are solely responsible for their investment decisions. Always consult with licensed financial professionals before making investment decisions.\n\n## Limitation of Liability\n\nWe are not liable for any losses or damages resulting from use of this service.\n\n## Changes to Terms\n\nWe reserve the right to modify these terms at any time.',
+    2,
+    true
+  ),
+  (
+    'Disclaimer',
+    'disclaimer',
+    E'# Disclaimer\n\n## Not Investment Advice\n\nThis website is a data analysis tool only. We do not provide investment advice or financial recommendations.\n\n## No Financial License\n\nWe do not hold any financial services licenses. We are not registered as investment advisors, broker-dealers, or financial planners.\n\n## Educational Purpose Only\n\nAll content is provided for informational and educational purposes only. It should not be construed as professional financial advice.\n\n## Market Data\n\nWe display publicly available market data and analysis. Data may be delayed or inaccurate.\n\n## No Guaranteed Returns\n\nPast performance does not guarantee future results. Investing involves risk, including potential loss of principal.\n\n## Consult Professionals\n\nAlways consult with licensed financial professionals before making investment decisions.',
+    3,
+    true
+  ),
+  (
+    'About Us',
+    'about-us',
+    E'# About Us\n\n## Our Mission\n\nWe provide accessible stock market data visualization tools to help users understand publicly available market information.\n\n## What We Do\n\nOur platform aggregates and visualizes stock market data, presenting it in an easy-to-understand format. We use AI technology to analyze trends and patterns in historical data.\n\n## What We Don\'t Do\n\n- We do not provide investment advice\n- We do not hold financial services licenses\n- We do not manage investments or client funds\n- We do not guarantee investment returns\n\n## Technology\n\nWe leverage modern web technologies and AI to provide fast, reliable data visualization.\n\n## Educational Focus\n\nOur primary goal is education and information access, not investment advisory.',
+    4,
+    true
+  ),
+  (
+    'Contact',
+    'contact',
+    E'# Contact Us\n\n## Get in Touch\n\nFor general inquiries, technical support, or feedback, please reach out to us.\n\n## Support\n\nEmail: support@example.com\n\n## Business Inquiries\n\nEmail: business@example.com\n\n## Technical Issues\n\nIf you encounter technical problems with the website, please provide:\n- Description of the issue\n- Steps to reproduce\n- Browser and device information\n\n## Response Time\n\nWe aim to respond to all inquiries within 2-3 business days.\n\n## Note\n\nWe do not provide investment advice or financial planning services through any communication channel.',
+    5,
+    true
+  )
+ON CONFLICT (slug) DO NOTHING;
 
 -- ========================================
 -- セットアップ完了
