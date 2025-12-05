@@ -27,9 +27,6 @@ function getTemplateComponent(key: string): ComponentType<TemplateProps> {
       case 'modern':
         TemplateComponent = lazy(() => import('./modern').then(m => ({ default: m.TemplateModern })));
         break;
-      case 'ai-invest-guide':
-        TemplateComponent = lazy(() => import('./ai-invest-guide').then(m => ({ default: m.TemplateAiInvestGuide })));
-        break;
       default:
         TemplateComponent = lazy(() =>
           import(`./${key}/index.tsx`).then(m => ({

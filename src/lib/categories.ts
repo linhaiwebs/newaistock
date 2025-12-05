@@ -35,13 +35,6 @@ export const TEMPLATE_CATEGORIES: Record<string, TemplateCategory> = {
     color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
     icon: '🏅',
   },
-  'ai-guide': {
-    id: 'ai-guide',
-    name: 'AI Guide',
-    description: 'AI-powered intelligent guide page templates',
-    color: 'bg-cyan-100 text-cyan-800 border-cyan-200',
-    icon: '🤖',
-  },
   'options': {
     id: 'options',
     name: 'Options Trading',

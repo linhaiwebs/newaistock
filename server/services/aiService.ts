@@ -70,3 +70,14 @@ export async function analyzeStockWithAI(params: StockAnalysisParams): Promise<A
 
   return generateResponse();
 }
+
+export async function getFullAIAnalysis(params: StockAnalysisParams): Promise<string> {
+  const generator = await analyzeStockWithAI(params);
+  let fullText = '';
+
+  for await (const chunk of generator) {
+    fullText += chunk;
+  }
+
+  return fullText;
+}

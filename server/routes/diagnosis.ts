@@ -1,5 +1,5 @@
 import express from 'express';
-import { analyzeStockWithAI } from '../services/aiService.js';
+import { analyzeStockWithAI, getFullAIAnalysis } from '../services/aiService.js';
 import { getCachedDiagnosis, setCachedDiagnosis } from '../services/cacheService.js';
 import { supabaseAdmin } from '../db/supabaseAdmin.js';
 
