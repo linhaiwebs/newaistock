@@ -30,6 +30,36 @@ function getTemplateComponent(key: string): ComponentType<TemplateProps> {
       case 'ai-stock':
         TemplateComponent = lazy(() => import('./ai-stock').then(m => ({ default: m.TemplateAiStock })));
         break;
+      case 'tech-future':
+        TemplateComponent = lazy(() => import('./tech-future').then(m => ({ default: m.TemplateTechFuture })));
+        break;
+      case 'zen-minimal':
+        TemplateComponent = lazy(() => import('./zen-minimal').then(m => ({ default: m.TemplateZenMinimal })));
+        break;
+      case 'finance-pro':
+        TemplateComponent = lazy(() => import('./finance-pro').then(m => ({ default: m.TemplateFinancePro })));
+        break;
+      case 'gradient-fluid':
+        TemplateComponent = lazy(() => import('./gradient-fluid').then(m => ({ default: m.TemplateGradientFluid })));
+        break;
+      case 'dark-neon':
+        TemplateComponent = lazy(() => import('./dark-neon').then(m => ({ default: m.TemplateDarkNeon })));
+        break;
+      case 'glass-morph':
+        TemplateComponent = lazy(() => import('./glass-morph').then(m => ({ default: m.TemplateGlassMorph })));
+        break;
+      case 'card-grid':
+        TemplateComponent = lazy(() => import('./card-grid').then(m => ({ default: m.TemplateCardGrid })));
+        break;
+      case 'ultra-lines':
+        TemplateComponent = lazy(() => import('./ultra-lines').then(m => ({ default: m.TemplateUltraLines })));
+        break;
+      case 'warm-orange':
+        TemplateComponent = lazy(() => import('./warm-orange').then(m => ({ default: m.TemplateWarmOrange })));
+        break;
+      case 'business-premium':
+        TemplateComponent = lazy(() => import('./business-premium').then(m => ({ default: m.TemplateBusinessPremium })));
+        break;
       default:
         TemplateComponent = lazy(() =>
           import(`./${key}/index.tsx`).then(m => ({
