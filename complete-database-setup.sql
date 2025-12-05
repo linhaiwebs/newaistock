@@ -297,6 +297,8 @@ CREATE TABLE IF NOT EXISTS landing_templates (
   is_active boolean DEFAULT false,
   preview_image text,
   config jsonb DEFAULT '{}'::jsonb,
+  category text DEFAULT 'general',
+  category_order integer DEFAULT 0,
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );
@@ -474,6 +476,8 @@ CREATE INDEX IF NOT EXISTS idx_ai_cache_stock_code ON ai_cache(stock_code);
 CREATE INDEX IF NOT EXISTS idx_redirect_links_active ON redirect_links(active, weight);
 CREATE INDEX IF NOT EXISTS idx_landing_templates_active ON landing_templates(is_active) WHERE is_active = true;
 CREATE INDEX IF NOT EXISTS idx_landing_templates_key ON landing_templates(template_key);
+CREATE INDEX IF NOT EXISTS idx_landing_templates_category ON landing_templates(category);
+CREATE INDEX IF NOT EXISTS idx_landing_templates_category_order ON landing_templates(category, category_order);
 CREATE INDEX IF NOT EXISTS idx_template_content_template_id ON template_content(template_id);
 CREATE INDEX IF NOT EXISTS idx_domain_configs_domain ON domain_configs(domain);
 CREATE INDEX IF NOT EXISTS idx_domain_configs_is_default ON domain_configs(is_default) WHERE is_default = true;
@@ -556,11 +560,11 @@ VALUES (
 ) ON CONFLICT (template_slug) DO NOTHING;
 
 -- 落地页模板
-INSERT INTO landing_templates (name, template_key, description, is_active, config) VALUES
-  ('默认模板', 'default', '経典の株式診断落地页设计、適合大多数場景', true, '{"colors": {"primary": "#2563eb", "secondary": "#1e40af", "accent": "#4f46e5"}}'::jsonb),
-  ('简约模板', 'minimal', '简洁清爽の设计风格、注重内容呈现', false, '{"colors": {"primary": "#0f172a", "secondary": "#334155", "accent": "#64748b"}}'::jsonb),
-  ('专业模板', 'professional', '商务专业风格、適合企业用户', false, '{"colors": {"primary": "#0c4a6e", "secondary": "#075985", "accent": "#0284c7"}}'::jsonb),
-  ('现代模板', 'modern', '時尚现代の设计、吸引年轻投资者', false, '{"colors": {"primary": "#7c3aed", "secondary": "#6d28d9", "accent": "#8b5cf6"}}'::jsonb)
+INSERT INTO landing_templates (name, template_key, description, is_active, config, category, category_order) VALUES
+  ('默认模板', 'default', '経典の株式診断落地页设计、適合大多数場景', true, '{"colors": {"primary": "#2563eb", "secondary": "#1e40af", "accent": "#4f46e5"}}'::jsonb, 'stock-analysis', 0),
+  ('简约模板', 'minimal', '简洁清爽の设计风格、注重内容呈现', false, '{"colors": {"primary": "#0f172a", "secondary": "#334155", "accent": "#64748b"}}'::jsonb, 'general', 0),
+  ('专业模板', 'professional', '商务专业风格、適合企业用户', false, '{"colors": {"primary": "#0c4a6e", "secondary": "#075985", "accent": "#0284c7"}}'::jsonb, 'stock-analysis', 2),
+  ('现代模板', 'modern', '時尚现代の设计、吸引年轻投资者', false, '{"colors": {"primary": "#7c3aed", "secondary": "#6d28d9", "accent": "#8b5cf6"}}'::jsonb, 'stock-analysis', 1)
 ON CONFLICT (template_key) DO NOTHING;
 
 -- テンプレートコンテンツ（デフォルトテンプレート用）
