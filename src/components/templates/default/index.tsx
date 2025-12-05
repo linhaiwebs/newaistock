@@ -179,7 +179,7 @@ export function TemplateDefault({ template, getContent }: TemplateProps) {
         </div>
       </div>
 
-      <Footer footerConfig={template.footerConfig} variant="default" />
+      <Footer />
     </div>
   );
 }

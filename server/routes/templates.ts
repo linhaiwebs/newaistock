@@ -38,15 +38,6 @@ router.get('/active', async (req, res) => {
       };
     });
 
-    // 优先使用模板的 footer_config，如果没有则使用域名的 footer_config
-    let footerConfig = template.footer_config || null;
-
-    // 如果模板没有配置或配置为空对象，回退到域名配置
-    if (!footerConfig || Object.keys(footerConfig).length === 0) {
-      const domainConfig = await domainDetector.getConfigForRequest(req);
-      footerConfig = domainConfig?.footer_config || null;
-    }
-
     const configUpdatedAt = template.updated_at || template.created_at || null;
 
     res.json({
@@ -57,7 +48,6 @@ router.get('/active', async (req, res) => {
         config: template.config,
       },
       content: contentMap,
-      footerConfig,
       configUpdatedAt,
     });
   } catch (error) {

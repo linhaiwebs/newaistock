@@ -116,7 +116,7 @@ export function TemplateAiStock({ template, getContent }: TemplateProps) {
 
             {/* Disclaimer */}
             <div className="mt-4 text-xs text-gray-500 text-center leading-relaxed">
-              {getContent('disclaimer_text', 'This is a data analysis tool only. Not investment advice. We do not hold financial licenses.')}
+              {getContent('disclaimer_text', '本ツールはデータ分析のみを目的としています。投資助言ではありません。金融ライセンスは保有していません。')}
             </div>
           </div>
 
@@ -160,7 +160,7 @@ export function TemplateAiStock({ template, getContent }: TemplateProps) {
         </div>
       </div>
 
-      <Footer footerConfig={template.footerConfig} variant="default" />
+      <Footer />
     </div>
   );
 }

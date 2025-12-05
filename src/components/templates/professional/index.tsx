@@ -179,7 +179,7 @@ export function TemplateProfessional({ template, getContent }: TemplateProps) {
         </div>
       </div>
 
-      <Footer footerConfig={template.footerConfig} variant="professional" />
+      <Footer />
     </div>
   );
 }

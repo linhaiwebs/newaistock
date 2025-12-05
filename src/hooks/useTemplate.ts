@@ -70,7 +70,6 @@ export function useTemplate() {
         template_key: response.template.template_key,
         config: response.template.config,
         content: response.content,
-        footerConfig: response.footerConfig,
       };
 
       setTemplate(templateData);

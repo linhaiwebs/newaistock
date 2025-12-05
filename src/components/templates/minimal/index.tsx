@@ -179,7 +179,7 @@ export function TemplateMinimal({ template, getContent }: TemplateProps) {
         </div>
       </div>
 
-      <Footer footerConfig={template.footerConfig} variant="minimal" />
+      <Footer />
     </div>
   );
 }
