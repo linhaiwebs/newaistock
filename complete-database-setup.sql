@@ -744,8 +744,8 @@ INSERT INTO site_content (key, content, category, description) VALUES
   ('result.backButton', '新しい診断', 'result', '戻るボタン'),
 
   -- フッター
-  ('footer.disclaimer', '本サービスは投資助言を目的としたものではありません。投資判断は自己責任で行ってください。', 'footer', '免責事項'),
-  ('footer.copyright', '© 2024 株式診断ツール. All rights reserved.', 'footer', '著作権表示'),
+  ('footer.disclaimer', '本サービスは情報提供のみを目的としており、投資助言サービスではありません。金融商品取引業の登録は行っておりません。投資判断は必ず自己責任で行い、専門家にご相談ください。', 'footer', '免責事項'),
+  ('footer.copyright', '© 2024 AI株式診断ツール. 情報提供・教育目的のみ', 'footer', '著作権表示'),
 
   -- エラーメッセージ
   ('error.notFound', '株式が見つかりませんでした', 'error', '見つからないエラー'),
@@ -770,41 +770,45 @@ ON CONFLICT (key) DO UPDATE SET
 -- フッターページの挿入
 INSERT INTO footer_pages (title, slug, content, display_order, is_active) VALUES
   (
-    'Privacy Policy',
+    'プライバシーポリシー',
     'privacy-policy',
-    E'# Privacy Policy\n\n## Information Collection\n\nThis website collects and processes data for informational purposes only.\n\n## Data Usage\n\nWe use publicly available market data to provide stock analysis visualizations. We do not collect personal financial information.\n\n## Third-Party Services\n\nWe may use third-party analytics services to understand how users interact with our website.\n\n## Data Security\n\nWe implement appropriate security measures to protect user data.\n\n## Contact\n\nFor privacy-related inquiries, please contact us through our Contact page.',
+    E'# プライバシーポリシー\n\n最終更新日：2024年12月\n\n## 1. 基本方針\n\n当サイトは、ユーザーの個人情報保護を重要視し、個人情報保護法その他の関連法令を遵守します。\n\n## 2. 収集する情報\n\n当サイトでは、サービス提供のため以下の情報を収集する場合があります：\n\n- アクセスログ（IPアドレス、ブラウザ情報、アクセス日時など）\n- Cookie情報\n- 検索された銘柄コードや企業名（統計目的のみ）\n\n**個人を特定する情報や金融資産情報は一切収集しません。**\n\n## 3. 情報の利用目的\n\n収集した情報は以下の目的でのみ利用します：\n\n- サービスの提供・改善\n- アクセス解析と統計情報の作成\n- サーバーの保守・管理\n\n## 4. 第三者提供\n\n当サイトは、法令に基づく場合を除き、収集した情報を第三者に提供することはありません。\n\n## 5. アクセス解析ツール\n\n当サイトでは、サービス向上のためGoogle Analyticsなどのアクセス解析ツールを使用する場合があります。これらのツールはCookieを使用して情報を収集しますが、個人を特定する情報は含まれません。\n\n## 6. お問い合わせ\n\nプライバシーポリシーに関するご質問は、お問い合わせページよりご連絡ください。',
     1,
     true
   ),
   (
-    'Terms of Service',
+    '利用規約',
     'terms-of-service',
-    E'# Terms of Service\n\n## Agreement to Terms\n\nBy accessing this website, you agree to be bound by these Terms of Service.\n\n## Service Description\n\nThis is a data analysis and visualization tool that displays publicly available stock market information. This service is provided for informational and educational purposes only.\n\n## Not Financial Advice\n\nWe do not provide investment advice, financial planning, or licensed financial services. All information is provided "as is" without warranty.\n\n## User Responsibilities\n\nUsers are solely responsible for their investment decisions. Always consult with licensed financial professionals before making investment decisions.\n\n## Limitation of Liability\n\nWe are not liable for any losses or damages resulting from use of this service.\n\n## Changes to Terms\n\nWe reserve the right to modify these terms at any time.',
+    E'# 利用規約\n\n最終更新日：2024年12月\n\n## 1. 規約への同意\n\n本サイトをご利用いただくことで、本利用規約に同意したものとみなされます。\n\n## 2. サービスの内容\n\n本サイトは、公開されている株式市場の情報を収集・分析し、視覚的に表示する**情報提供・教育目的のツール**です。\n\n## 3. サービスの性質と制限\n\n**重要な注意事項：**\n\n- 本サイトは投資助言サービスではありません\n- 金融商品取引業の登録は行っておりません\n- 投資推奨や売買の勧誘は一切行いません\n- 表示される情報は参考情報であり、投資判断の根拠とすべきではありません\n\n## 4. データの正確性について\n\n- 表示されるデータは公開情報に基づきますが、遅延や誤差が含まれる可能性があります\n- データの正確性、完全性、適時性について保証するものではありません\n- システムエラーやデータ提供元の問題により、情報が不正確になる場合があります\n\n## 5. ユーザーの責任\n\n- 投資判断は必ずご自身の責任で行ってください\n- 投資を行う際は、金融商品取引業の登録を受けた専門家にご相談ください\n- 本サイトの情報のみに基づいた投資判断による損失について、当サイトは一切の責任を負いません\n\n## 6. 免責事項\n\n本サイトの利用により生じた損害（投資損失、機会損失、データ消失など）について、当サイトは一切の責任を負いません。\n\n## 7. 規約の変更\n\n当サイトは、本規約を予告なく変更する権利を有します。変更後の規約は、本サイトに掲載した時点で効力を生じます。',
     2,
     true
   ),
   (
-    'Disclaimer',
+    '免責事項',
     'disclaimer',
-    E'# Disclaimer\n\n## Not Investment Advice\n\nThis website is a data analysis tool only. We do not provide investment advice or financial recommendations.\n\n## No Financial License\n\nWe do not hold any financial services licenses. We are not registered as investment advisors, broker-dealers, or financial planners.\n\n## Educational Purpose Only\n\nAll content is provided for informational and educational purposes only. It should not be construed as professional financial advice.\n\n## Market Data\n\nWe display publicly available market data and analysis. Data may be delayed or inaccurate.\n\n## No Guaranteed Returns\n\nPast performance does not guarantee future results. Investing involves risk, including potential loss of principal.\n\n## Consult Professionals\n\nAlways consult with licensed financial professionals before making investment decisions.',
+    E'# 免責事項\n\n## 投資助言ではありません\n\n**本サイトは投資助言サービスではありません。**\n\n本サイトは、公開されている株式市場データを分析・視覚化して表示する情報提供ツールです。特定の銘柄の購入や売却を推奨するものではなく、投資判断の助言を行うものでもありません。\n\n## 金融商品取引業の登録について\n\n当サイトは金融商品取引法に基づく以下の登録を行っておりません：\n\n- 投資助言・代理業\n- 投資運用業\n- 第一種金融商品取引業\n- 第二種金融商品取引業\n\n## サービスの目的\n\n本サイトは**教育および情報提供のみ**を目的としています：\n\n- 株式市場データの視覚化\n- 公開情報の分析結果の表示\n- 市場データへのアクセス支援\n\n## データの制限\n\n- 表示されるデータは公開情報に基づきますが、リアルタイムではない場合があります\n- データの遅延、誤差、欠損が生じる可能性があります\n- AIによる分析結果は統計的な処理に基づくものであり、将来の投資成果を保証するものではありません\n\n## リスクについて\n\n**投資にはリスクが伴います：**\n\n- 過去の実績は将来の結果を保証するものではありません\n- 株式投資には元本割れのリスクがあります\n- 市場の変動により、投資資金を失う可能性があります\n\n## 推奨事項\n\n投資を行う際は：\n\n- **必ず金融商品取引業の登録を受けた専門家にご相談ください**\n- 複数の情報源を参照し、総合的に判断してください\n- ご自身のリスク許容度を十分に考慮してください\n- 投資は必ず自己責任で行ってください\n\n## 責任の制限\n\n本サイトの情報利用により生じたいかなる損害（直接損害、間接損害、特別損害、派生的損害を含む）についても、当サイトは一切の責任を負いません。',
     3,
     true
   ),
   (
-    'About Us',
+    '運営について',
     'about-us',
-    E'# About Us\n\n## Our Mission\n\nWe provide accessible stock market data visualization tools to help users understand publicly available market information.\n\n## What We Do\n\nOur platform aggregates and visualizes stock market data, presenting it in an easy-to-understand format. We use AI technology to analyze trends and patterns in historical data.\n\n## What We Don\'t Do\n\n- We do not provide investment advice\n- We do not hold financial services licenses\n- We do not manage investments or client funds\n- We do not guarantee investment returns\n\n## Technology\n\nWe leverage modern web technologies and AI to provide fast, reliable data visualization.\n\n## Educational Focus\n\nOur primary goal is education and information access, not investment advisory.',
+    E'# 運営について\n\n## 当サイトの目的\n\n当サイトは、株式市場の公開情報をわかりやすく視覚化し、投資に興味のある方への情報提供・教育を目的として運営しています。\n\n## 提供するサービス\n\n### 情報の視覚化\n\n- 公開されている株式市場データの収集\n- データの分析と視覚的な表示\n- 過去のデータトレンドの分析\n\n### AI技術の活用\n\nAI技術を用いて過去のデータパターンを分析し、統計情報を提供します。ただし、これは将来の予測や投資推奨ではありません。\n\n## 提供しないサービス\n\n**当サイトは以下のサービスを提供しません：**\n\n- 投資助言や推奨\n- 個別銘柄の売買推奨\n- 資産運用サービス\n- 顧客資金の管理\n- 投資収益の保証\n- 金融商品の販売\n\n## 金融ライセンスについて\n\n当サイトは金融商品取引法に基づく金融商品取引業の登録を行っておりません。投資助言業務、投資運用業務、金融商品仲介業務などは一切行いません。\n\n## 技術について\n\n最新のWeb技術とAIアルゴリズムを活用し、高速で信頼性の高いデータ視覚化を実現しています。\n\n## 教育重視の姿勢\n\n当サイトの最優先目標は、情報へのアクセスと金融リテラシーの向上支援です。投資助言や金融サービスの提供は行いません。\n\n## コンプライアンス\n\n当サイトは、日本の金融商品取引法、個人情報保護法、その他関連法令を遵守して運営しています。',
     4,
     true
   ),
   (
-    'Contact',
+    'お問い合わせ',
     'contact',
-    E'# Contact Us\n\n## Get in Touch\n\nFor general inquiries, technical support, or feedback, please reach out to us.\n\n## Support\n\nEmail: support@example.com\n\n## Business Inquiries\n\nEmail: business@example.com\n\n## Technical Issues\n\nIf you encounter technical problems with the website, please provide:\n- Description of the issue\n- Steps to reproduce\n- Browser and device information\n\n## Response Time\n\nWe aim to respond to all inquiries within 2-3 business days.\n\n## Note\n\nWe do not provide investment advice or financial planning services through any communication channel.',
+    E'# お問い合わせ\n\n## ご連絡方法\n\n一般的なお問い合わせ、技術的なサポート、フィードバックについては、以下の方法でご連絡ください。\n\n## サポート\n\nメールアドレス：support@example.com\n\n## お問い合わせ時の注意事項\n\n**以下の内容についてはお答えできません：**\n\n- 個別銘柄の投資推奨\n- 売買タイミングの助言\n- ポートフォリオの構築方法\n- その他投資助言に該当する内容\n\n当サイトは投資助言サービスではありません。投資に関するご相談は、金融商品取引業の登録を受けた専門家にご相談ください。\n\n## 技術的な問題の報告\n\nWebサイトの技術的な問題が発生した場合、以下の情報をご提供いただけるとスムーズです：\n\n- 問題の詳細な説明\n- 再現手順\n- 使用しているブラウザとデバイスの情報\n- エラーメッセージのスクリーンショット（可能な場合）\n\n## 対応時間\n\nお問い合わせには、通常2〜3営業日以内に対応させていただきます。\n\n## 重要な注意\n\nどのような通信手段においても、投資助言や金融商品の勧誘は一切行いません。',
     5,
     true
   )
-ON CONFLICT (slug) DO NOTHING;
+ON CONFLICT (slug) DO UPDATE SET
+  title = EXCLUDED.title,
+  content = EXCLUDED.content,
+  display_order = EXCLUDED.display_order,
+  is_active = EXCLUDED.is_active;
 
 -- ========================================
 -- セットアップ完了
