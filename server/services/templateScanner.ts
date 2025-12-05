@@ -12,12 +12,14 @@ export interface TemplateMetadata {
   version?: string;
   preview_image?: string;
   features?: string[];
+  category?: string;
 }
 
 export interface ScannedTemplate {
   template_key: string;
   name: string;
   description: string;
+  category: string;
   metadata: TemplateMetadata;
   hasIndexFile: boolean;
   folderPath: string;
@@ -79,6 +81,7 @@ export class TemplateScanner {
           template_key: templateKey,
           name: metadata.name,
           description: metadata.description,
+          category: metadata.category || 'general',
           metadata,
           hasIndexFile,
           folderPath,

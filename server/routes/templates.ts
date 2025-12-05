@@ -504,6 +504,7 @@ router.post('/sync', async (req: AuthRequest, res) => {
           name: template.name,
           template_key: template.template_key,
           description: template.description,
+          category: template.category,
           config: {},
           is_active: false,
           preview_image: template.metadata.preview_image || null,
@@ -526,6 +527,7 @@ router.post('/sync', async (req: AuthRequest, res) => {
         .update({
           name: template.name,
           description: template.description,
+          category: template.category,
           preview_image: template.metadata.preview_image || null,
           updated_at: new Date().toISOString(),
         })
